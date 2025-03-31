@@ -13,6 +13,8 @@ const Categories = () => {
     `,
     ).then((data) => setCategories(data));
   }, []);
+
+
   return (
     <ScrollView
       horizontal
