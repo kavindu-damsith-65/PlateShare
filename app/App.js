@@ -1,26 +1,25 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { TailwindProvider } from "tailwindcss-react-native";
-import HomeScreen from "./screens/HomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import RestaurantScreen from "./screens/RestaurantScreen";
 import { Provider } from "react-redux";
-import { store } from "./store";
-import BasketScreen from "./screens/BasketScreen";
 import {
     CardStyleInterpolators,
     TransitionPresets,
     TransitionSpecs,
 } from "@react-navigation/stack";
-import PreparingScreen from "./screens/PreparingScreen";
-import DeliveryScreen from "./screens/DeliveryScreen";
-import Dummy from "./screens/Dummy";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import ProfileScreen from "./screens/ProfileScreen";
 import { useState } from "react";
 import  {useNavigation} from "@react-navigation/native";
+
+import HomeScreen from "./screens/HomeScreen";
+import RestaurantScreen from "./screens/RestaurantScreen";
+import { store } from "./store";
+import BasketScreen from "./screens/BasketScreen";
+import PreparingScreen from "./screens/PreparingScreen";
+import DeliveryScreen from "./screens/DeliveryScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +47,7 @@ const MainTabs = ({setProfileVisible}) => {
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-             <Tab.Screen name="Basket" component={BasketScreen} options={{ headerShown: false }} />
+            <Tab.Screen name="Basket" component={BasketScreen} options={{ headerShown: false }} />
             <Tab.Screen
                 name="Profile"
                 component={HomeScreen}

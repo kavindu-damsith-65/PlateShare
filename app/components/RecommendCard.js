@@ -1,7 +1,7 @@
 import React from "react";
-import { Image, Text, Touchable, TouchableOpacity } from "react-native";
+import { Image, Text, TouchableOpacity } from "react-native";
 
-const CategoryCard = ({ imgUrl, title }) => {
+const RecommendCard = ({ imgUrl, title }) => {
   return (
     <TouchableOpacity className="mr-2 relative">
       <Image
@@ -13,4 +13,4 @@ const CategoryCard = ({ imgUrl, title }) => {
   );
 };
 
-export default CategoryCard;
+export default RecommendCard;

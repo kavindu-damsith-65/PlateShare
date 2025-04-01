@@ -17,6 +17,7 @@ const RestaurantScreen = ({ route, navigation }) => {
   const {
     params: { id, imgUrl, title, rating, genre, address, short_description, dishes, long, lat },
   } = route;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,

@@ -36,6 +36,7 @@ export default function RestaurantCard({
       }}
       className="bg-white mr-3 shadow-md rounded-sm"
     >
+
       <Image
         source={{
           uri: urlFor(imgUrl).url(),

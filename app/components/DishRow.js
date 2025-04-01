@@ -10,7 +10,7 @@ import {
   selectBasketItemsWithId,
   removeFromBasket,
 } from "../slices/basketSlice";
-const DishRow = ({ id, name, description, price, image }) => {
+const DishRow = ({ id, name, description, price }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const dispatch = useDispatch();
@@ -40,16 +40,16 @@ const DishRow = ({ id, name, description, price, image }) => {
             </Text>
           </View>
           <View>
-            <Image
-              style={{
-                borderWidth: 1,
-                borderColor: "#f3f3f4",
-              }}
-              source={{
-                uri: urlFor(image).url(),
-              }}
-              className="h-20 w-20 bg-gray-300 p-4 rounded-md"
-            />
+            {/*<Image*/}
+            {/*  style={{*/}
+            {/*    borderWidth: 1,*/}
+            {/*    borderColor: "#f3f3f4",*/}
+            {/*  }}*/}
+            {/*  source={{*/}
+            {/*    uri: urlFor(image).url(),*/}
+            {/*  }}*/}
+            {/*  className="h-20 w-20 bg-gray-300 p-4 rounded-md"*/}
+            {/*/>*/}
           </View>
         </View>
       </TouchableOpacity>

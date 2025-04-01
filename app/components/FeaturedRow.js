@@ -7,6 +7,8 @@ import SanityClient from "../sanity";
 const FeaturedRow = ({ title, description, id }) => {
   const [restaurants, setRestaurants] = useState([]);
 
+
+  // set restaurants for the user based on location
   useEffect(() => {
     SanityClient.fetch(
       `
