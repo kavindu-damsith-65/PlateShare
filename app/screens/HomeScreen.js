@@ -1,6 +1,6 @@
-import { useNavigation, useNavigationState } from "@react-navigation/native";
-import React, { useLayoutEffect, useState, useEffect } from "react";
-import { Image, LogBox, ScrollView, Text, TextInput, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import React, { useLayoutEffect } from "react";
+import { Image, ScrollView, Text, TextInput, View , ImageBackground, TouchableOpacity, Dimensions} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -9,40 +9,20 @@ import {
   MagnifyingGlassIcon,
   AdjustmentsVerticalIcon,
 } from "react-native-heroicons/outline";
-import Categories from "../components/Categories";
-import FeaturedRow from "../components/FeaturedRow";
-import SanityClient from "../sanity";
+import Recommended from "../components/Recommended";
+import Restaurants from "../components/Restaurants";
 
 const HomeScreen = () => {
   // state and hooks
   const navigation = useNavigation();
-  const [featuredCategories, setFeaturedCategories] = useState([]);
+
+  const category =  {"_createdAt": "2023-02-17T15:18:29Z", "_id": "f64c7e94-5eb4-49a0-8aeb-f623963ccbca", "_rev": "I13aVDhieoHVSVfjQjpB2w", "_type": "featured", "_updatedAt": "2023-02-17T18:35:01Z", "name": "Satisfy Your Cravings", "restaurants": [[Object], [Object], [Object]], "short_description": "Appetizing, varied, savory, creamy, crunchy"};
 
   // side effects
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
-  }, []);
-
-  useEffect(() => {
-    SanityClient.fetch(
-      `
-      *[_type == "featured"]{
-        ...,
-        restaurants[]->{
-          ...,
-        dishes[]->
-          
-        }
-     }
-    `,
-    )
-      .then((data) => setFeaturedCategories(data))
-      .catch((err) => {
-        console.log("error");
-        console.log(err);
-      });
   }, []);
 
 
@@ -77,18 +57,36 @@ const HomeScreen = () => {
 
         {/* body */}
         <ScrollView className="bg-gray-100" contentContainerStyle={{ paddingBottom: 100 }}>
-          {/* categories */}
-          <Categories />
+
+          {/* Recommended section */}
+          <Recommended />
 
           {/* featured rows */}
-          {featuredCategories.map((category) => (
-            <FeaturedRow
+          <Restaurants
               key={category._id}
               title={category.name}
               description={category.short_description}
               id={category._id}
-            />
-          ))}
+          />
+
+          {/* Give a hand section */}
+          <View style={{ width: Dimensions.get("window").width - 30, height: 200 }} className="bg-white rounded-lg m-4 shadow-lg overflow-hidden">
+            <ImageBackground
+                source={require('./assets/hand.jpg')}
+                style={{ flex: 1, width: "100%" }}
+                resizeMode="cover"
+            >
+              <View className="flex-1 justify-center p-4 bg-black/30">
+                <Text className="text-xl font-black text-white mb-2">Be a Hero, Deliver Hope!</Text>
+                <Text className="text-white mb-4 font-medium">Join our mission to fight food waste and feed those in need.</Text>
+                <TouchableOpacity className="bg-[#00CCBB] rounded-full px-4 py-2 mt-2 self-start">
+                  <Text className="text-white font-bold text-center">Sign Up for Delivery</Text>
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </View>
+
+
         </ScrollView>
       </SafeAreaView>
     </>
