@@ -5,7 +5,7 @@ const sequelize = require("../config/db");
 const User = sequelize.define('user', {
     id: { type: DataTypes.STRING, primaryKey: true },
     role: { type: DataTypes.STRING, defaultValue: 'user' },
-    verified: { type: DataTypes.INTEGER, defaultValue: 0 },
+    verified: { type: DataTypes.BOOLEAN, defaultValue: true },
     password: { type: DataTypes.STRING, allowNull: false },
 });
 
@@ -13,7 +13,7 @@ const User = sequelize.define('user', {
 const BuyerDetails = sequelize.define('buyer_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
     name: { type: DataTypes.STRING },
-    email: { type: DataTypes.BOOLEAN },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -22,14 +22,13 @@ const BuyerDetails = sequelize.define('buyer_details', {
 
 // Seller Details Model
 const SellerDetails = sequelize.define('seller_details', {
-    user_id: { type: DataTypes.STRING },
+    user_id: { type: DataTypes.STRING ,primaryKey: true},
     name: { type: DataTypes.STRING },
-    email: { type: DataTypes.BOOLEAN },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    restaurant_id: { type: DataTypes.STRING },
-}, { primaryKey: ['user_id', 'restaurant_id'] });
+});
 
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
@@ -44,32 +43,47 @@ const OrgDetails = sequelize.define('org_details', {
     additional_images: { type: DataTypes.STRING },
 });
 
-// Product Model
-const Product = sequelize.define('product', {
-    id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
-    type: { type: DataTypes.BOOLEAN, defaultValue: false },
-    available: { type: DataTypes.BOOLEAN, defaultValue: true },
-    quantity: { type: DataTypes.INTEGER },
-    restaurant_id: { type: DataTypes.STRING }
-});
-
 // Restaurant Model
 const Restaurant = sequelize.define('restaurant', {
     id: { type: DataTypes.STRING, primaryKey: true },
     name: { type: DataTypes.STRING },
-    user_id: { type: DataTypes.STRING }
+    user_id: { type: DataTypes.STRING},
 });
 
-// Sub Products Model
-const SubProduct = sequelize.define('sub_products', {
+// Product Model
+const Product = sequelize.define('product', {
     id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
+    name: { type: DataTypes.STRING, defaultValue: 'user' },
     type: { type: DataTypes.BOOLEAN, defaultValue: false },
     available: { type: DataTypes.BOOLEAN, defaultValue: true },
-    product_id: { type: DataTypes.STRING },
-    price: { type: DataTypes.DECIMAL(5,2) }
+    quantity: { type: DataTypes.INTEGER },
+    restaurant_id: { type: DataTypes.STRING, allowNull: false },
+    has_subs: { type: DataTypes.BOOLEAN, defaultValue: false },
+    image: { type: DataTypes.STRING },
+    price: { type: DataTypes.DECIMAL(5, 2) },
+    description: { type: DataTypes.STRING }
 });
+
+// Sub Product Model
+const SubProduct = sequelize.define('sub_products', {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    name: { type: DataTypes.STRING, defaultValue: 'user' },
+    type: { type: DataTypes.BOOLEAN, defaultValue: false },
+    available: { type: DataTypes.BOOLEAN, defaultValue: true },
+    restaurant_id: { type: DataTypes.STRING, allowNull: false },
+    price: { type: DataTypes.DECIMAL(5, 2) },
+    image: { type: DataTypes.STRING }
+});
+
+// Product-SubProduct Relationship Model
+const ProductSubProduct = sequelize.define('product_subproduct', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    product_id: { type: DataTypes.STRING, allowNull: false },
+    subproduct_id: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER, allowNull: false },
+    image: { type: DataTypes.STRING }
+});
+
 
 // Food Request Model
 const FoodRequest = sequelize.define('food_request', {
@@ -141,5 +155,5 @@ User.hasOne(BuyerDetails, { foreignKey: 'user_id' });
 
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order
+    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct
 };

@@ -17,7 +17,6 @@ backend/
 │── middleware/
 │   ├── authMiddleware.js  # JWT & Role-based auth
 │── models/
-│   ├── index.js       # ORM models initialization
 │   ├── AuthModel.js        # Auth model
 │── routes/
 │   ├── authRoutes.js  # Auth-related routes
@@ -49,13 +48,16 @@ backend/
    JWT_SECRET=supersecretkey
    JWT_EXPIRES_IN=1h
    ```
-4. Set up the database:
-   ```bash
-   npx sequelize db:migrate
-   ```
-5. Start the server:
+4.Start the server:
    ```bash
    npm start
+   ```
+5.Set up the database:
+   ```bash
+    npx sequelize db:seed:all
+   ```
+   ```bash
+    npx sequelize db:seed:undo
    ```
 
 ---
