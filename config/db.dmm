@@ -1549,27 +1549,6 @@
 					"enum": "",
 					"estimatedSize": "",
 					"fk": false
-				},
-				{
-					"id": "00e549b1-fd75-4aaa-affc-66fc6460a86c",
-					"name": "completed",
-					"datatype": "BOOLEAN",
-					"param": "",
-					"pk": false,
-					"nn": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": null,
-					"charset": null,
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": "",
-					"fk": false
 				}
 			],
 			"relations": [
@@ -2449,7 +2428,7 @@
 			"c_mp": "true",
 			"c_mch": "true",
 			"c_p": "one",
-			"c_ch": "many",
+			"c_ch": "one",
 			"c_cp": "",
 			"c_cch": "",
 			"cols": [
@@ -2621,7 +2600,7 @@
 			"quotationExistance": "if_needed"
 		},
 		"connectionVersion": "",
-		"lastSaved": 1743536676871,
+		"lastSaved": 1743540152212,
 		"synchronizationSettings": {
 			"preserveData": "use_temporary_tables",
 			"ignoreSystemDefaults": "yes",
@@ -2736,8 +2715,8 @@
 				},
 				"33f1a330-f96e-47b8-b1a8-c11bdc68a1e2": {
 					"referencedItemId": "33f1a330-f96e-47b8-b1a8-c11bdc68a1e2",
-					"x": 1426,
-					"y": 793,
+					"x": 1423,
+					"y": 775,
 					"gHeight": 117,
 					"gWidth": 283,
 					"color": "#ffffff",
@@ -2762,9 +2741,9 @@
 				},
 				"42717462-d5ed-4308-a483-5530339bb54f": {
 					"referencedItemId": "42717462-d5ed-4308-a483-5530339bb54f",
-					"x": 957,
-					"y": 872,
-					"gHeight": 117,
+					"x": 995,
+					"y": 848,
+					"gHeight": 99,
 					"gWidth": 236,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -2788,8 +2767,8 @@
 				},
 				"4c33a2f3-1304-4f85-8e85-a4b4f789cbda": {
 					"referencedItemId": "4c33a2f3-1304-4f85-8e85-a4b4f789cbda",
-					"x": 1097,
-					"y": 596,
+					"x": 1104,
+					"y": 605,
 					"gHeight": 81,
 					"gWidth": 223,
 					"color": "#ffffff",
@@ -2801,8 +2780,8 @@
 				},
 				"2523f2a4-06cf-46c0-a4fd-dcb4757340bf": {
 					"referencedItemId": "2523f2a4-06cf-46c0-a4fd-dcb4757340bf",
-					"x": 1399,
-					"y": 583,
+					"x": 1416,
+					"y": 580,
 					"gHeight": 117,
 					"gWidth": 266,
 					"color": "#ffffff",

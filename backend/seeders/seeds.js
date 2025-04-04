@@ -49,19 +49,13 @@ module.exports = {
 
     await queryInterface.bulkInsert('seller_details', sellers);
 
-    const restaurants = [];
-    sellers.forEach((seller, index) => {
-      const numberOfRestaurants = Math.floor(Math.random() * 3) + 1; // 1 to 3 restaurants per seller
-      for (let i = 1; i <= numberOfRestaurants; i++) {
-        restaurants.push({
-          id: `restaurant_${seller.user_id}_${i}`,
-          name: `Restaurant ${index + 1}-${i}`,
+      const restaurants = sellers.map((seller, index) => ({
+          id: `restaurant_${seller.user_id}_1`, // Only one restaurant per seller
+          name: `Restaurant ${index + 1}`,
           user_id: seller.user_id, // Linking the restaurant to the seller
           createdAt: new Date(),
           updatedAt: new Date(),
-        });
-      }
-    });
+      }));
 
     await queryInterface.bulkInsert('restaurants', restaurants);
 
@@ -202,6 +196,8 @@ module.exports = {
 
       const productSubProducts = [];
 
+      let idCounter = 1; // Initialize an ID counter
+
       restaurants.forEach(restaurant => {
           // Find all products and sub-products for the current restaurant
           const restaurantProducts = products.filter(product => product.restaurant_id === restaurant.id && product.has_subs === true);
@@ -211,6 +207,7 @@ module.exports = {
           restaurantProducts.forEach(product => {
               restaurantSubProducts.forEach(subProduct => {
                   productSubProducts.push({
+                      id: idCounter++, // Assign a unique ID and increment
                       product_id: product.id, // Link to the product
                       subproduct_id: subProduct.id, // Link to the sub-product
                       quantity: Math.floor(Math.random() * 3) + 1, // Random quantity (1 to 3)
@@ -221,6 +218,7 @@ module.exports = {
               });
           });
       });
+
 
       await queryInterface.bulkInsert('product_subproducts', productSubProducts);
 

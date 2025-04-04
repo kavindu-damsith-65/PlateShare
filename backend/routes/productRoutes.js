@@ -1,8 +1,7 @@
 const express = require("express");
-const { signUp, signIn } = require("../controllers/authController");
+const {showNearByProducts} = require("../controllers/productController");
 
 const router = express.Router();
-router.post("/signup", signUp);
-router.post("/signin", signIn);
+router.get("/:location", showNearByProducts);
 
 module.exports = router;

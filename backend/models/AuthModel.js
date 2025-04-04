@@ -77,11 +77,19 @@ const SubProduct = sequelize.define('sub_products', {
 
 // Product-SubProduct Relationship Model
 const ProductSubProduct = sequelize.define('product_subproduct', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true },
     product_id: { type: DataTypes.STRING, allowNull: false },
     subproduct_id: { type: DataTypes.STRING, allowNull: false },
     quantity: { type: DataTypes.INTEGER, allowNull: false },
     image: { type: DataTypes.STRING }
+},
+    {
+        indexes: [
+            {
+                unique: true,
+                fields: ['product_id', 'subproduct_id']
+            }
+        ]
 });
 
 
@@ -134,24 +142,35 @@ const Order = sequelize.define('order', {
 });
 
 // Relationships
-User.hasOne(BuyerDetails, { foreignKey: 'user_id' });
-// User.hasOne(OrgDetails, { foreignKey: 'user_id' });
-// User.hasOne(SellerDetails, { foreignKey: 'user_id' });
-//
-// User.hasMany(Order, { foreignKey: 'user_id' });
-// User.hasMany(FoodBucket, { foreignKey: 'user_id' });
-// User.hasMany(FoodRequest, { foreignKey: 'org_details_user_id' });
-// User.hasMany(Restaurant, { foreignKey: 'user_id' });
-//
-// Restaurant.hasMany(Product, { foreignKey: 'restaurant_id' });
-// Product.hasMany(SubProduct, { foreignKey: 'product_id' });
-// Product.hasMany(RequestInfo, { foreignKey: 'product_id' });
-// Product.hasMany(FoodBucket, { foreignKey: 'product_id' });
-//
-// Order.hasOne(Payment, { foreignKey: 'order_id' });
-// Order.hasMany(FoodBucket, { foreignKey: 'food_bucket_ids' });
-//
-// FoodRequest.hasMany(RequestInfo, { foreignKey: 'food_request_id' });
+User.hasOne(BuyerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
+BuyerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+User.hasOne(SellerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
+SellerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+User.hasOne(OrgDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
+OrgDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+
+SellerDetails.hasOne(Restaurant, {foreignKey: "user_id", onDelete: "CASCADE"});
+Restaurant.belongsTo(SellerDetails, {foreignKey: "user_id"});
+
+Restaurant.hasMany(Product, {foreignKey: "restaurant_id", onDelete: "CASCADE"});
+Product.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
+
+Restaurant.hasMany(SubProduct, {foreignKey: "restaurant_id", onDelete: "CASCADE"});
+SubProduct.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
+
+Product.belongsToMany(SubProduct, {
+    through: ProductSubProduct,
+    foreignKey: "product_id",
+    otherKey: "subproduct_id",
+    onDelete: "CASCADE"
+});
+
+SubProduct.belongsToMany(Product, {
+    through: ProductSubProduct,
+    foreignKey: "subproduct_id",
+    otherKey: "product_id",
+    onDelete: "CASCADE"
+});
 
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
