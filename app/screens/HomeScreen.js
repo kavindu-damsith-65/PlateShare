@@ -11,6 +11,7 @@ import {
 } from "react-native-heroicons/outline";
 import Recommended from "../components/Recommended";
 import Restaurants from "../components/Restaurants";
+import NearbyFoods from "../components/NearbyFoods";
 
 const HomeScreen = () => {
   // state and hooks
@@ -27,7 +28,6 @@ const HomeScreen = () => {
 
 
   return (
-    <>
       <SafeAreaView className="bg-white pt-5">
         {/* header */}
         <View className="flex-row pb-3 items-center mx-4 space-x-2">
@@ -56,7 +56,7 @@ const HomeScreen = () => {
         </View>
 
         {/* body */}
-        <ScrollView className="bg-gray-100" contentContainerStyle={{ paddingBottom: 100 }}>
+        <ScrollView className="bg-gray-200" contentContainerStyle={{ paddingBottom: 100 }}>
 
           {/* Recommended section */}
           <Recommended />
@@ -68,6 +68,9 @@ const HomeScreen = () => {
               description={category.short_description}
               id={category._id}
           />
+
+          <NearbyFoods/>
+
 
           {/* Give a hand section */}
           <View style={{ width: Dimensions.get("window").width - 30, height: 200 }} className="bg-white rounded-lg m-4 shadow-lg overflow-hidden">
@@ -89,7 +92,6 @@ const HomeScreen = () => {
 
         </ScrollView>
       </SafeAreaView>
-    </>
   );
 };
 

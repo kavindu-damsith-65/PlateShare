@@ -3,6 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    // Helper function to get random picsum image URL
+    const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
+
     const users = [
       { id: 'user_1', role: 'buyer', verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
       { id: 'user_2', role: 'seller', verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
@@ -27,7 +30,7 @@ module.exports = {
           phone: `123456789${index + 1}`,
           address: `Buyer Address ${index + 1}`,
           location: `Buyer Location ${index + 1}`,
-          profile_picture: `buyer${index + 1}.jpg`,
+          profile_picture: getRandomPicsumImage(),
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
@@ -68,7 +71,7 @@ module.exports = {
               quantity: 10,
               restaurant_id: restaurant.id, // Linking to the current restaurant
               has_subs: true,
-              image: 'rice_curry.jpg',
+              image: getRandomPicsumImage(),
               price: 8.99,
               description: 'A traditional rice dish served with a variety of curries.',
               createdAt: new Date(),
@@ -82,7 +85,7 @@ module.exports = {
               quantity: 15,
               restaurant_id: restaurant.id,
               has_subs: true,
-              image: 'fried_rice.jpg',
+              image: getRandomPicsumImage(),
               price: 10.99,
               description: 'Delicious stir-fried rice with vegetables and protein.',
               createdAt: new Date(),
@@ -96,7 +99,7 @@ module.exports = {
               quantity: 20,
               restaurant_id: restaurant.id,
               has_subs: false,
-              image: 'burger.jpg',
+              image: getRandomPicsumImage(),
               price: 6.99,
               description: 'A juicy beef or chicken burger served with fresh toppings.',
               createdAt: new Date(),
@@ -110,7 +113,7 @@ module.exports = {
               quantity: 8,
               restaurant_id: restaurant.id,
               has_subs: false,
-              image: 'pizza.jpg',
+              image: getRandomPicsumImage(),
               price: 12.99,
               description: 'Classic Italian-style pizza with various toppings.',
               createdAt: new Date(),
@@ -124,7 +127,7 @@ module.exports = {
               quantity: 12,
               restaurant_id: restaurant.id,
               has_subs: false,
-              image: 'pasta.jpg',
+              image: getRandomPicsumImage(),
               price: 9.99,
               description: 'Creamy or tomato-based pasta with cheese and herbs.',
               createdAt: new Date(),
@@ -142,7 +145,7 @@ module.exports = {
               available: true,
               restaurant_id: restaurant.id,
               price: 2.00,
-              image: 'rice.jpg',
+              image: getRandomPicsumImage(),
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -153,7 +156,7 @@ module.exports = {
               available: true,
               restaurant_id: restaurant.id,
               price: 1.50,
-              image: 'dhal.jpg',
+              image: getRandomPicsumImage(),
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -164,7 +167,7 @@ module.exports = {
               available: true,
               restaurant_id: restaurant.id,
               price: 3.00,
-              image: 'chicken_curry.jpg',
+              image: getRandomPicsumImage(),
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -175,7 +178,7 @@ module.exports = {
               available: true,
               restaurant_id: restaurant.id,
               price: 1.00,
-              image: 'mango_chutney.jpg',
+              image: getRandomPicsumImage(),
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -186,7 +189,7 @@ module.exports = {
               available: true,
               restaurant_id: restaurant.id,
               price: 1.50,
-              image: 'egg.jpg',
+              image: getRandomPicsumImage(),
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -211,7 +214,7 @@ module.exports = {
                       product_id: product.id, // Link to the product
                       subproduct_id: subProduct.id, // Link to the sub-product
                       quantity: Math.floor(Math.random() * 3) + 1, // Random quantity (1 to 3)
-                      image: `${product.name.toLowerCase().replace(/\s+/g, '_')}_combo.jpg`, // Generate image based on product name
+                      image: getRandomPicsumImage(),
                       createdAt: new Date(),
                       updatedAt: new Date(),
                   });

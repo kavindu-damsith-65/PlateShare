@@ -1,4 +1,4 @@
-const { Product, Restaurant, SellerDetails } = require("../models/AuthModel");
+const { Product, Restaurant, SellerDetails, SubProduct} = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByProducts = async (req, res) => {

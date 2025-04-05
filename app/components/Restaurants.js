@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import {View, ScrollView, Text} from "react-native";
 import React, { useEffect, useState } from "react";
 import RestaurantCard from "./RestaurantCard";
 import SanityClient from "../sanity";
@@ -36,6 +36,7 @@ const Restaurants = ({ id }) => {
 
     return (
         <View>
+            <Text className="font-bold text-lg px-4 pt-3">Restaurants Near You</Text>
             <ScrollView
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 15 }}
