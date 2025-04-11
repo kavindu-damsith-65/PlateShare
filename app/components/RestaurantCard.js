@@ -34,17 +34,16 @@ export default function RestaurantCard({
           lat,
         });
       }}
-      className="bg-white mr-3 shadow-md rounded-sm"
-    >
-
+      className="w-64 mr-4 overflow-hidden bg-white rounded-lg shadow"
+   >
       <Image
         source={{
           uri: urlFor(imgUrl).url(),
         }}
-        className="h-36 w-64 rounded-sm"
+        className="w-full h-36"
       />
       <View className="px-3 pb-4 space-y-1">
-        <Text className="font-bold text-xl pt-2">{title}</Text>
+        <Text className="pt-2 text-xl font-bold">{title}</Text>
         <View className="flex-row items-center space-x-1">
           <StarIcon color="green" opacity={0.5} size={22} />
           <Text className="text-xs text-gray-500">
