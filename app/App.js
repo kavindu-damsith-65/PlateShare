@@ -64,8 +64,7 @@ const MainTabs = ({setProfileVisible}) => {
     );
 };
 
-
-export default function App() {
+function App(){
 
     const [isProfileVisible, setProfileVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state for login status
@@ -124,3 +123,5 @@ export default function App() {
         </NavigationContainer>
     );
 }
+
+export default App;

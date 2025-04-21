@@ -47,7 +47,7 @@ const RestaurantScreen = ({ route, navigation }) => {
       <BasketContainer />
       <ScrollView>
         <View className="relative">
-          <Image source={{ uri: urlFor(imgUrl).url() }} className="w-full h-56 bg-gray-300 p-4" />
+          <Image source={{ uri: imgUrl }} className="w-full h-56 bg-gray-300 p-4" />
           <TouchableOpacity
             className="absolute top-14 left-5 p-2 bg-white rounded-full"
             onPress={() => navigation.goBack(null)}
@@ -92,7 +92,7 @@ const RestaurantScreen = ({ route, navigation }) => {
               name={dish.name}
               description={dish.short_description}
               price={dish.price}
-              image={dish.image}
+              image={"https://picsum.photos/400/300?random=127"}
             />
           ))}
         </View>

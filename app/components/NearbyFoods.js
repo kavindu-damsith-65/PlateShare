@@ -14,7 +14,7 @@ const NearbyFoods = () => {
     const fetchNearbyFoods = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://192.168.68.113:3001/api/products/${location}`);
+        const response = await axios.get(`http://192.168.33.16:3001/api/products/${location}`);
         setDishes(response.data.products || []);
         setError(null);
       } catch (error) {
@@ -27,6 +27,10 @@ const NearbyFoods = () => {
 
     fetchNearbyFoods();
   }, []);
+
+  useEffect(() => {
+    console.log(dishes);
+  }, [dishes]);
 
   // Render horizontal item
   const renderHorizontalItem = ({ item: dish }) => (

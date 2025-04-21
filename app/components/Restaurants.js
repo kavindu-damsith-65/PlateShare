@@ -31,6 +31,9 @@ const Restaurants = ({ id }) => {
         ).then((data) => setRestaurants(data?.restaurants));
     }, [id]);
 
+    useEffect(() => {
+        console.log(restaurants);
+    }, [restaurants]);
 
 
 
@@ -48,7 +51,7 @@ const Restaurants = ({ id }) => {
                     <RestaurantCard
                         key={restaurant._id}
                         id={restaurant._id}
-                        imgUrl={restaurant.image}
+                        imgUrl={"https://picsum.photos/400/300?random=127"}
                         title={restaurant.name}
                         rating={restaurant.rating}
                         genre={restaurant.type?.name}

@@ -38,7 +38,7 @@ export default function RestaurantCard({
    >
       <Image
         source={{
-          uri: urlFor(imgUrl).url(),
+          uri: imgUrl,
         }}
         className="w-full h-36"
       />
