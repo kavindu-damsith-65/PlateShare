@@ -956,12 +956,55 @@
 					"enum": "",
 					"estimatedSize": "",
 					"fk": true
+				},
+				{
+					"id": "5e4fee29-7d4a-402d-abfc-eadb6dd4ff12",
+					"name": "reviews_id",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "f6ce6361-e723-4a42-b2e0-cc8b05a13c3e",
+					"name": "restaurant_id",
+					"datatype": "VARCHAR",
+					"param": "150",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": null,
+					"charset": null,
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"fk": false
 				}
 			],
 			"relations": [
 				"444dd36b-dc71-451e-a5dc-e33699b21b39",
 				"3179a10c-4978-43fe-833f-2b39803a663d",
-				"d982d6e1-f0dc-4d52-a01c-3d1e9849d960"
+				"d982d6e1-f0dc-4d52-a01c-3d1e9849d960",
+				"924feb41-0879-4a48-88ef-b1aed2bb3873"
 			],
 			"lines": [],
 			"keys": [
@@ -2128,6 +2171,150 @@
 			"initautoinc": "",
 			"temporary": false,
 			"ifnotexists": false
+		},
+		"30ab713d-15f7-44f0-adac-156207b8ad9d": {
+			"id": "30ab713d-15f7-44f0-adac-156207b8ad9d",
+			"visible": true,
+			"name": "reviews",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "ecc0c508-3e1d-419a-b696-0ce6b759ce7a",
+					"name": "id",
+					"datatype": "INT",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "640b43c6-ee07-41c7-90d5-2690f78f3ec9",
+					"name": "description",
+					"datatype": "TEXT",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "530668e4-b00c-4047-9c82-90a4fb17da25",
+					"name": "rating",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "bfd5e985-65f1-4c39-94c2-c15bb6eba414",
+					"name": "reviews_id",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "7ef08a88-ef51-443a-a76c-a9abeda63840",
+					"name": "restaurant_id",
+					"datatype": "VARCHAR",
+					"param": "150",
+					"pk": false,
+					"nn": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": null,
+					"charset": null,
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"fk": true
+				}
+			],
+			"relations": [
+				"924feb41-0879-4a48-88ef-b1aed2bb3873"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "ce0d71b5-00b5-4f43-b738-ecd01ab2de9b",
+					"name": "PRIMARY",
+					"isPk": true,
+					"cols": [
+						{
+							"id": "919bccd1-e1d0-4a61-9497-aafb9556b2b2",
+							"colid": "ecc0c508-3e1d-419a-b696-0ce6b759ce7a"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"tabletype": "",
+			"collation": "",
+			"charset": "",
+			"rowformat": "",
+			"database": "",
+			"initautoinc": "",
+			"temporary": false,
+			"ifnotexists": false
 		}
 	},
 	"relations": {
@@ -2546,6 +2733,32 @@
 			"generateCustomCode": true,
 			"customCode": "",
 			"relationColor": "transparent"
+		},
+		"924feb41-0879-4a48-88ef-b1aed2bb3873": {
+			"id": "924feb41-0879-4a48-88ef-b1aed2bb3873",
+			"name": "restaurant_reviews",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "5c4aab3e-26e4-4243-881d-ea2756324119",
+			"parent": "d7f7c8a9-f2da-47fd-b68c-394a8670831d",
+			"child": "30ab713d-15f7-44f0-adac-156207b8ad9d",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "7146361b-c805-405a-b870-b48ccb3c47bf",
+					"parentcol": "905f14a8-3380-4cb6-99ea-f8979a510a5f",
+					"childcol": "7ef08a88-ef51-443a-a76c-a9abeda63840"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
 		}
 	},
 	"notes": {},
@@ -2600,7 +2813,7 @@
 			"quotationExistance": "if_needed"
 		},
 		"connectionVersion": "",
-		"lastSaved": 1743540152212,
+		"lastSaved": 1744153151376,
 		"synchronizationSettings": {
 			"preserveData": "use_temporary_tables",
 			"ignoreSystemDefaults": "yes",
@@ -2616,7 +2829,7 @@
 			"id": "b14488f9-ac7b-4b89-b88f-d2e24157a4b6",
 			"keysgraphics": true,
 			"linegraphics": "detailed",
-			"zoom": 0.9,
+			"zoom": 0.8,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -2691,8 +2904,8 @@
 					"referencedItemId": "d7f7c8a9-f2da-47fd-b68c-394a8670831d",
 					"x": 927,
 					"y": 309,
-					"gHeight": 81,
-					"gWidth": 217,
+					"gHeight": 117,
+					"gWidth": 251,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,
@@ -2803,6 +3016,19 @@
 					"autoExpand": true,
 					"backgroundOpacity": "10",
 					"collapsed": false
+				},
+				"30ab713d-15f7-44f0-adac-156207b8ad9d": {
+					"referencedItemId": "30ab713d-15f7-44f0-adac-156207b8ad9d",
+					"x": 867,
+					"y": 116,
+					"gHeight": 118,
+					"gWidth": 258,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": true,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false
 				}
 			},
 			"scroll": {
@@ -2856,6 +3082,7 @@
 		"4c33a2f3-1304-4f85-8e85-a4b4f789cbda",
 		"2523f2a4-06cf-46c0-a4fd-dcb4757340bf",
 		"97bbe417-6d15-40e7-837e-ec0dce1ca952",
+		"30ab713d-15f7-44f0-adac-156207b8ad9d",
 		"55ecaa6f-c2ce-49c2-bb78-2a2932bdaf50",
 		"7dc125f4-d009-4512-b00d-5370c3ed7c84",
 		"5d54b462-a120-4d53-9060-5cce4914dff1",
@@ -2871,7 +3098,8 @@
 		"68a702c9-be88-4997-992f-ceb0fcd28662",
 		"d982d6e1-f0dc-4d52-a01c-3d1e9849d960",
 		"e5c761a9-c564-4f85-bc88-fae7e3b2af54",
-		"d3d79c6f-afb7-4467-8f70-f9547a6fdf35"
+		"d3d79c6f-afb7-4467-8f70-f9547a6fdf35",
+		"924feb41-0879-4a48-88ef-b1aed2bb3873"
 	],
 	"collapsedTreeItems": [],
 	"reverseStats": {}
