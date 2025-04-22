@@ -29,10 +29,6 @@ const NearbyFoods = () => {
     fetchNearbyFoods();
   }, []);
 
-  useEffect(() => {
-    console.log(dishes);
-  }, [dishes]);
-
   // Render horizontal item
   const renderHorizontalItem = ({ item: dish }) => (
     <TouchableOpacity 
