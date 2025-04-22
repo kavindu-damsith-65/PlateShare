@@ -1,7 +1,8 @@
 const express = require("express");
-const {showNearByRestaurants} = require("../controllers/restaurantController");
+const {showNearByRestaurants, showRestaurantDetails} = require("../controllers/restaurantController");
 
 const router = express.Router();
+router.get("/unique/:id", showRestaurantDetails);
 router.get("/:location", showNearByRestaurants);
 
 module.exports = router;

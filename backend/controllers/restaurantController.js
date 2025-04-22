@@ -1,4 +1,4 @@
-const {Restaurant, SellerDetails } = require("../models/AuthModel");
+const {Restaurant, SellerDetails, Product, SubProduct } = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByRestaurants = async (req, res) => {
@@ -32,3 +32,44 @@ exports.showNearByRestaurants = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
+exports.showRestaurantDetails = async (req, res) => {
+    try {
+        // Get restaurant ID from params
+        const { id } = req.params;
+        console.log("Restaurant ID:", id);
+
+        // Find the restaurant by ID
+        const restaurant = await Restaurant.findOne({
+            where: { id },
+            include: [
+                {
+                    model: SellerDetails,
+                    attributes: ["name", "email", "phone", "address", "location"]
+                },
+                {
+                    model: Product,
+                    include: [
+                        {
+                            model: SubProduct,
+                            through: { attributes: [] }, // Exclude join table attributes
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
+
+        // Return the restaurant details
+        return res.status(200).json({ restaurant });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+
