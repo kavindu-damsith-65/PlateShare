@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { BACKEND_URL } from "@env"; 
 
 const NearbyFoods = () => {
   const [dishes, setDishes] = useState([]);
@@ -14,7 +15,7 @@ const NearbyFoods = () => {
     const fetchNearbyFoods = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://192.168.33.16:3001/api/products/${location}`);
+        const response = await axios.get(`${BACKEND_URL}/api/products/${location}`);
         setDishes(response.data.products || []);
         setError(null);
       } catch (error) {
