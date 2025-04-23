@@ -145,10 +145,10 @@ const Order = sequelize.define('order', {
 
 // Reviews Model
 const Review = sequelize.define('review', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    description: { type: DataTypes.TEXT, allowNull: false },
-    rating: { type: DataTypes.INTEGER, allowNull: false },
-    restaurant_id: { type: DataTypes.STRING, allowNull: false },
+    id: { type: DataTypes.INTEGER, primaryKey: true},
+    description: { type: DataTypes.TEXT },
+    rating: { type: DataTypes.INTEGER, },
+    restaurant_id: { type: DataTypes.STRING }
 });
 
 // Relationships

@@ -53,19 +53,21 @@ module.exports = {
     await queryInterface.bulkInsert('seller_details', sellers);
 
       const restaurants = sellers.map((seller, index) => ({
-          id: `restaurant_${seller.user_id}_1`, // Only one restaurant per seller
+          id: `restaurant_${seller.user_id}`, // Only one restaurant per seller
           name: `Restaurant ${index + 1}`,
           user_id: seller.user_id, // Linking the restaurant to the seller
-          createdAt: new Date(),
-          updatedAt: new Date(),
           image: getRandomPicsumImage(),
           description: `A cozy place for delicious food ${index + 1}.`,
+          createdAt: new Date(),
+          updatedAt: new Date(),
       }));
 
     await queryInterface.bulkInsert('restaurants', restaurants);
 
+    let ReviewId = 1;
     const reviews = restaurants.flatMap((restaurant, index) => [
         {
+          id: ReviewId++,
           description: `Great food and excellent service at ${restaurant.name}.`,
           rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
           restaurant_id: restaurant.id,
@@ -73,6 +75,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          id: ReviewId++,
           description: `The ambiance at ${restaurant.name} is amazing.`,
           rating: Math.floor(Math.random() * 5) + 1,
           restaurant_id: restaurant.id,
@@ -80,8 +83,8 @@ module.exports = {
           updatedAt: new Date(),
         },
       ]);
-  
-      await queryInterface.bulkInsert("reviews", reviews);
+
+    await queryInterface.bulkInsert("reviews", reviews);
 
       const products = restaurants.flatMap(restaurant => [
           {
@@ -156,7 +159,7 @@ module.exports = {
           },
       ]);
 
-      await queryInterface.bulkInsert('products', products);
+    await queryInterface.bulkInsert('products', products);
 
       const subProducts = restaurants.flatMap(restaurant => [
           {
@@ -216,7 +219,7 @@ module.exports = {
           },
       ]);
 
-      await queryInterface.bulkInsert('sub_products', subProducts);
+    await queryInterface.bulkInsert('sub_products', subProducts);
 
       const productSubProducts = [];
 
@@ -244,7 +247,7 @@ module.exports = {
       });
 
 
-      await queryInterface.bulkInsert('product_subproducts', productSubProducts);
+    await queryInterface.bulkInsert('product_subproducts', productSubProducts);
 
   },
 
