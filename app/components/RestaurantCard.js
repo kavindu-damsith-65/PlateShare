@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-
-import React from "react";
+import React, {useEffect} from "react";
 import { StarIcon, MapPinIcon } from "react-native-heroicons/solid";
-import { urlFor } from "../sanity";
 import { useNavigation } from "@react-navigation/native";
 
 export default function RestaurantCard({
@@ -16,6 +14,10 @@ export default function RestaurantCard({
   long,
   lat,
 }) {
+    useEffect(() => {
+        console.log(title);
+    }, []);
+
   const navigation = useNavigation();
   return (
     <TouchableOpacity

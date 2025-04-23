@@ -16,9 +16,35 @@ import { BACKEND_URL } from "@env";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const RestaurantScreen = ({ route, navigation }) => {
-  const { id } = route.params;
+  const {
+    id,
+    imgUrl,
+    title,
+    rating,
+    genre,
+    short_description,
+    dishes: initialDishes,
+    long,
+    lat,
+  } = route.params;
 
-  const [restaurant, setRestaurantData] = useState(null);
+  useEffect(() => {
+    console.log(title);
+  }, []);
+
+  const [restaurantData, setRestaurantData] = useState({
+    id,
+    imgUrl,
+    title,
+    rating,
+    genre,
+    short_description,
+    dishes: initialDishes || [],
+    long,
+    lat,
+    address: "Loading address...",
+  });
+
   const [showSubProducts, setShowSubProducts] = useState(false);
 
   useLayoutEffect(() => {
@@ -35,34 +61,30 @@ const RestaurantScreen = ({ route, navigation }) => {
         const response = await axios.get(
           `${BACKEND_URL}/api/restaurants/unique/${id}`
         );
-        const data = response.data.restaurant;
+        const data = response.data.restaurantData;
 
         // Hardcode ratings and descriptions for now
         const restaurantData = {
           ...data,
-          rating: 4.5,
-          genre: "Italian",
-          short_description: "A cozy place for delicious Italian cuisine.",
           dishes: data.products || [],
-          imgUrl: "https://picsum.photos/400/300",
           address: data.seller_detail.location || "Unknown Address",
         };
 
         setRestaurantData(restaurantData);
 
         dispatch(
-          setRestaurant({
-            id: restaurantData.id,
-            imgUrl: restaurantData.imgUrl,
-            title: restaurantData.name,
-            rating: restaurantData.rating,
-            genre: restaurantData.genre,
-            address: restaurantData.location,
-            short_description: restaurantData.short_description,
-            dishes: restaurantData.dishes,
-            long: restaurantData.long || 0,
-            lat: restaurantData.lat || 0,
-          })
+            setRestaurant({
+              id,
+              imgUrl,
+              title,
+              rating,
+              genre,
+              short_description,
+              dishes: data.products || initialDishes,
+              long,
+              lat,
+              address: data.seller_detail?.location || "Unknown Address",
+            })
         );
       } catch (error) {
         console.error("Error fetching restaurant details:", error);
@@ -72,7 +94,7 @@ const RestaurantScreen = ({ route, navigation }) => {
     fetchRestaurantDetails();
   }, [dispatch, id]);
 
-  if (!restaurant) {
+  if (!restaurantData) {
     return (
       <View className="items-center justify-center flex-1">
         <Text>Loading...</Text>
@@ -86,7 +108,7 @@ const RestaurantScreen = ({ route, navigation }) => {
       <ScrollView>
         <View className="relative">
           <Image
-            source={{ uri: restaurant.imgUrl }}
+            source={{ uri: imgUrl }}
             className="w-full h-56 p-4 bg-gray-300"
           />
           <TouchableOpacity
@@ -96,42 +118,35 @@ const RestaurantScreen = ({ route, navigation }) => {
             <ArrowLeftIcon size={20} color="#00ccbb" />
           </TouchableOpacity>
         </View>
-        <View className="bg-white">
+        <View className="bg-gray-200">
           <View className="px-4 pt-4">
-            <Text className="text-3xl font-bold ">{restaurant.title}</Text>
+            <Text className="text-xl font-bold">{title}</Text>
             <View className="flex-row my-1 space-x-2">
               <View className="flex-row items-center space-x-1">
                 <StarIcon color="green" opacity={0.5} size={22} />
                 <Text className="text-xs text-gray-500">
                   <Text className="text-green-500">
-                    {restaurant.rating} . {restaurant.genre}
+                    {rating} . {genre}
                   </Text>
                 </Text>
               </View>
               <View className="flex-row items-center space-x-1">
                 <MapPinIcon color="gray" opacity={0.5} size={22} />
                 <Text className="text-xs text-gray-500">
-                  Nearby . {restaurant.address}
+                  Nearby . {restaurantData.address}
                 </Text>
               </View>
             </View>
             <Text className="pb-4 mt-2 text-gray-500">
-              {restaurant.short_description}
+              {short_description}
             </Text>
           </View>
-          <TouchableOpacity className="flex-row items-center p-4 space-x-2 border-gray-100 border-y-2 ">
-            <QuestionMarkCircleIcon color="gray" opacity={0.5} size={20} />
-            <Text className="flex-1 pl-2 text-sm font-bold">
-              Have a food allergy?
-            </Text>
-            <ChevronRightIcon color="#00ccbb" />
-          </TouchableOpacity>
         </View>
         <View className="pb-36">
           <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
 
-          {restaurant?.dishes?.length > 0 ? (
-            restaurant.dishes.map((dish) => (
+          {restaurantData?.dishes?.length > 0 ? (
+              restaurantData.dishes.map((dish) => (
               <View key={dish.id}>
                 <DishRow
                   id={dish.id}

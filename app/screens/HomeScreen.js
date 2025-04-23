@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  ScrollView
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native";
 
 import {
   UserIcon,
@@ -26,17 +26,6 @@ import NearbyFoods from "../components/NearbyFoods";
 const HomeScreen = () => {
   const navigation = useNavigation();
 
-  const category = {
-    _createdAt: "2023-02-17T15:18:29Z",
-    _id: "f64c7e94-5eb4-49a0-8aeb-f623963ccbca",
-    _rev: "I13aVDhieoHVSVfjQjpB2w",
-    _type: "featured",
-    _updatedAt: "2023-02-17T18:35:01Z",
-    name: "Satisfy Your Cravings",
-    restaurants: [[Object], [Object], [Object]],
-    short_description: "Appetizing, varied, savory, creamy, crunchy",
-  };
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -50,12 +39,7 @@ const HomeScreen = () => {
       <Recommended key="recommended" />,
 
       // Restaurants section
-      <Restaurants
-        key={category._id}
-        title={category.name}
-        description={category.short_description}
-        id={category._id}
-      />,
+      <Restaurants key = "restaurants" />,
 
       // NearbyFoods section
       <NearbyFoods key="nearbyFoods" />,
