@@ -61,7 +61,7 @@ const RestaurantScreen = ({ route, navigation }) => {
         const response = await axios.get(
           `${BACKEND_URL}/api/restaurants/unique/${id}`
         );
-        const data = response.data.restaurantData;
+        const data = response.data.restaurant;
 
         // Hardcode ratings and descriptions for now
         const restaurantData = {
