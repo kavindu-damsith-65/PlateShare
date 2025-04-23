@@ -48,6 +48,8 @@ const Restaurant = sequelize.define('restaurant', {
     id: { type: DataTypes.STRING, primaryKey: true },
     name: { type: DataTypes.STRING },
     user_id: { type: DataTypes.STRING},
+    image: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT }, 
 });
 
 // Product Model
@@ -77,7 +79,7 @@ const SubProduct = sequelize.define('sub_products', {
 
 // Product-SubProduct Relationship Model
 const ProductSubProduct = sequelize.define('product_subproduct', {
-    id: { type: DataTypes.INTEGER, primaryKey: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     product_id: { type: DataTypes.STRING, allowNull: false },
     subproduct_id: { type: DataTypes.STRING, allowNull: false },
     quantity: { type: DataTypes.INTEGER, allowNull: false },
@@ -141,6 +143,14 @@ const Order = sequelize.define('order', {
     price: { type: DataTypes.DECIMAL(5,2) }
 });
 
+// Reviews Model
+const Review = sequelize.define('review', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    description: { type: DataTypes.TEXT, allowNull: false },
+    rating: { type: DataTypes.INTEGER, allowNull: false },
+    restaurant_id: { type: DataTypes.STRING, allowNull: false },
+});
+
 // Relationships
 User.hasOne(BuyerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
 BuyerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
@@ -158,6 +168,9 @@ Product.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
 Restaurant.hasMany(SubProduct, {foreignKey: "restaurant_id", onDelete: "CASCADE"});
 SubProduct.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
 
+Restaurant.hasMany(Review, { foreignKey: "restaurant_id", onDelete: "CASCADE" });
+Review.belongsTo(Restaurant, { foreignKey: "restaurant_id" });
+
 Product.belongsToMany(SubProduct, {
     through: ProductSubProduct,
     foreignKey: "product_id",
@@ -174,5 +187,5 @@ SubProduct.belongsToMany(Product, {
 
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct
+    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct, Review
 };
