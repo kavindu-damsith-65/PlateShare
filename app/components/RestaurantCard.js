@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { StarIcon, MapPinIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 
@@ -8,15 +8,13 @@ export default function RestaurantCard({
   imgUrl,
   title,
   rating,
-  genre,
   short_description,
-  dishes,
   long,
   lat,
 }) {
-    useEffect(() => {
-        console.log(title);
-    }, []);
+  useEffect(() => {
+    console.log(title);
+  }, []);
 
   const navigation = useNavigation();
   return (
@@ -27,15 +25,13 @@ export default function RestaurantCard({
           imgUrl,
           title,
           rating,
-          genre,
           short_description,
-          dishes,
           long,
           lat,
         });
       }}
       className="w-64 mr-4 overflow-hidden bg-white rounded-lg shadow"
-   >
+    >
       <Image
         source={{
           uri: imgUrl,
@@ -44,18 +40,18 @@ export default function RestaurantCard({
       />
       <View className="px-3 pb-4 space-y-1">
         <Text className="pt-2 text-xl font-bold">{title}</Text>
-        <View className="flex-row items-center space-x-1">
-          <StarIcon color="green" opacity={0.5} size={22} />
-          <Text className="text-xs text-gray-500">
-            <Text className="text-green-500">{rating}</Text>
-          </Text>
-        </View>
-          <View className="flex-row items-center justify-between mt-2">
-            <Text className="font-bold text-green-600">{genre}</Text>
-                <View className="px-2 py-1 bg-green-100 rounded-full">
-                  <Text className="text-xs text-green-700">1.2 km away</Text>
-                </View>
+        <Text className="text-sm text-gray-500" numberOfLines={2}>{short_description}</Text>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center space-x-1">
+            <StarIcon color="green" opacity={0.5} size={22} />
+            <Text className="text-xs text-gray-500">
+              <Text className="text-green-500">{rating}</Text>
+            </Text>
           </View>
+          <View className="px-2 py-1 bg-green-100 rounded-full">
+            <Text className="text-xs text-green-700">1.2 km away</Text>
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );

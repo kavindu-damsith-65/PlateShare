@@ -10,7 +10,7 @@ const NearbyFoods = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = "Buyer Location 1";
-
+  
   useEffect(() => {
     const fetchNearbyFoods = async () => {
       setLoading(true);

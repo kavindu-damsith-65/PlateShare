@@ -1,9 +1,8 @@
-const {Restaurant, SellerDetails, Product, SubProduct } = require("../models/AuthModel");
+const {Restaurant, SellerDetails, Product, SubProduct, Review} = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByRestaurants = async (req, res) => {
     try {
-        // Get location from params
         const { location } = req.params;
 
         // Find sellers based on location
@@ -17,14 +16,35 @@ exports.showNearByRestaurants = async (req, res) => {
         // Find restaurants owned by these sellers
         const restaurants = await Restaurant.findAll({
             where: { user_id: { [Op.in]: sellerIds } },
+            include: [
+                {
+                    model: SellerDetails,
+                    attributes: ["name", "email", "phone", "address", "location"]
+                },
+                {
+                    model: Review,
+                    attributes: ["id", "rating"]
+                }
+
+            ]
         });
 
         if (restaurants.length === 0) {
             return res.status(404).json({ message: "No restaurants found for this location" });
         }
 
-        // Return the found restaurants
-        return res.status(200).json({ restaurants });
+        const restaurantsWithRatings = await Promise.all(
+            restaurants.map(async (restaurant) => {
+                const averageRating = await averageRatingForRestaurant(restaurant.id);
+                return {
+                    ...restaurant.toJSON(),
+                    averageRating
+                };
+            })
+        );
+
+       return res.status(200).json({ restaurants: restaurantsWithRatings });
+
 
 
     } catch (error) {
@@ -35,11 +55,7 @@ exports.showNearByRestaurants = async (req, res) => {
 
 exports.showRestaurantDetails = async (req, res) => {
     try {
-        // Get restaurant ID from params
         const { id } = req.params;
-        console.log("Restaurant ID:", id);
-
-        // Find the restaurant by ID
         const restaurant = await Restaurant.findOne({
             where: { id },
             include: [
@@ -52,9 +68,13 @@ exports.showRestaurantDetails = async (req, res) => {
                     include: [
                         {
                             model: SubProduct,
-                            through: { attributes: [] }, // Exclude join table attributes
+                            through: { attributes: [] },
                         }
                     ]
+                },
+                {
+                    model: Review,
+                    attributes: ["id", "rating"]
                 }
             ]
         });
@@ -63,12 +83,31 @@ exports.showRestaurantDetails = async (req, res) => {
             return res.status(404).json({ message: "Restaurant not found" });
         }
 
-        // Return the restaurant details
         return res.status(200).json({ restaurant });
 
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
+    }
+};
+
+averageRatingForRestaurant = async (restaurantId) => {
+    try {
+        const reviews = await Review.findAll({
+            where: { restaurant_id: restaurantId },
+            attributes: ["rating"]
+        });
+
+        if (!reviews || reviews.length === 0) {
+            return "N/A";
+        }
+
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = parseFloat((totalRating / reviews.length).toFixed(1));
+
+        return averageRating;
+    } catch (error) {
+        throw new Error("Failed to calculate average rating");
     }
 };
 

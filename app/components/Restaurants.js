@@ -13,16 +13,7 @@ const Restaurants = () => {
       try {
         const response = await axios.get(`${BACKEND_URL}/api/restaurants/${location}`); 
         const data = response.data.restaurants;
-
-        // Hardcode ratings and descriptions for now
-        const updatedRestaurants = data.map((restaurant) => ({
-          ...restaurant,
-          rating: 4.5,
-          genre: "Italian",
-          short_description: "A cozy place for delicious Italian cuisine.",
-        }));
-
-        setRestaurants(updatedRestaurants);
+        setRestaurants(data);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       }
@@ -44,12 +35,10 @@ const Restaurants = () => {
           <RestaurantCard
             key={restaurant.id}
             id={restaurant.id}
-            imgUrl={restaurant.image || "https://picsum.photos/400/300"}
+            imgUrl={restaurant.image}
             title={restaurant.name}
-            rating={restaurant.rating}
-            genre={restaurant.genre}
-            short_description={restaurant.short_description}
-            dishes={restaurant.products || []}
+            rating={restaurant.averageRating}
+            short_description={restaurant.description}
             long={restaurant.long || 0}
             lat={restaurant.lat || 0}
           />

@@ -2,46 +2,35 @@ import { View, Text, ScrollView, LogBox } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ArrowRightIcon } from "react-native-heroicons/outline";
 import RestaurantCard from "./RestaurantCard";
-import SanityClient from "../sanity";
 
 const FeaturedRow = ({ title, description, id }) => {
   const [restaurants, setRestaurants] = useState([]);
+  const location = "Buyer Location 1";
 
-
-  // set restaurants for the user based on location
   useEffect(() => {
-    SanityClient.fetch(
-      `
-      
-      *[_type == "featured" && _id == $id]{
-        ...,
-        restaurants[]->{
-          ...,
-        dishes[]->,
-          type-> {
-            name
-          }
-          
-        }
-     }[0]
+    const fetchRestaurants = async () => {
+      try {
+        const response = await axios.get(
+          `${BACKEND_URL}/api/restaurants/${location}`
+        );
+        const data = response.data.restaurants;
+        setRestaurants(data);
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      }
+    };
 
-
-      `,
-      { id },
-    ).then((data) => setRestaurants(data?.restaurants));
-  }, [id]);
-
-
-  
+    fetchRestaurants();
+  }, []);
 
   return (
     <View>
-      <View className="mt-4 flex-row items-center justify-between px-4">
-        <Text className="font-bold text-lg">{title}</Text>
+      <View className="flex-row items-center justify-between px-4 mt-4">
+        <Text className="text-lg font-bold">{title}</Text>
         <ArrowRightIcon color="#00ccbb" />
       </View>
 
-      <Text className="text-xs text-gray-500 px-4 ">{description}</Text>
+      <Text className="px-4 text-xs text-gray-500 ">{description}</Text>
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -50,19 +39,16 @@ const FeaturedRow = ({ title, description, id }) => {
         className="pt-4"
       >
         {/* restaurant cards */}
-        {restaurants?.map((restaurant) => (
+        {restaurants.map((restaurant) => (
           <RestaurantCard
-            key={restaurant._id}
-            id={restaurant._id}
+            key={restaurant.id}
+            id={restaurant.id}
             imgUrl={restaurant.image}
             title={restaurant.name}
-            rating={restaurant.rating}
-            genre={restaurant.type?.name}
-            address={restaurant.address}
-            short_description={restaurant.short_description}
-            dishes={restaurant.dishes}
-            long={restaurant.long}
-            lat={restaurant.lat}
+            rating={restaurant.averageRating}
+            short_description={restaurant.description}
+            long={restaurant.long || 0}
+            lat={restaurant.lat || 0}
           />
         ))}
       </ScrollView>

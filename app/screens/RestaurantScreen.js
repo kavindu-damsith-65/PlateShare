@@ -2,9 +2,7 @@ import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   ArrowLeftIcon,
-  ChevronRightIcon,
   MapPinIcon,
-  QuestionMarkCircleIcon,
   StarIcon,
 } from "react-native-heroicons/solid";
 import DishRow from "../components/DishRow";
@@ -21,9 +19,7 @@ const RestaurantScreen = ({ route, navigation }) => {
     imgUrl,
     title,
     rating,
-    genre,
     short_description,
-    dishes: initialDishes,
     long,
     lat,
   } = route.params;
@@ -37,15 +33,14 @@ const RestaurantScreen = ({ route, navigation }) => {
     imgUrl,
     title,
     rating,
-    genre,
     short_description,
-    dishes: initialDishes || [],
+    dishes: [],
     long,
     lat,
     address: "Loading address...",
   });
 
-  const [showSubProducts, setShowSubProducts] = useState(false);
+  const [expandedDishes, setExpandedDishes] = useState({});
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -63,11 +58,10 @@ const RestaurantScreen = ({ route, navigation }) => {
         );
         const data = response.data.restaurant;
 
-        // Hardcode ratings and descriptions for now
         const restaurantData = {
           ...data,
-          dishes: data.products || [],
-          address: data.seller_detail.location || "Unknown Address",
+          dishes: data.products,
+          address: data.seller_detail.address || "Unknown Address",
         };
 
         setRestaurantData(restaurantData);
@@ -78,12 +72,11 @@ const RestaurantScreen = ({ route, navigation }) => {
               imgUrl,
               title,
               rating,
-              genre,
               short_description,
-              dishes: data.products || initialDishes,
+              dishes: data.products,
               long,
               lat,
-              address: data.seller_detail?.location || "Unknown Address",
+              address: data.seller_detail?.address || "Unknown Address",
             })
         );
       } catch (error) {
@@ -93,6 +86,13 @@ const RestaurantScreen = ({ route, navigation }) => {
 
     fetchRestaurantDetails();
   }, [dispatch, id]);
+
+  const toggleSubProducts = (dishId) => {
+    setExpandedDishes((prevState) => ({
+      ...prevState,
+      [dishId]: !prevState[dishId], // Toggle the state for the specific dish
+    }));
+  };
 
   if (!restaurantData) {
     return (
@@ -126,7 +126,7 @@ const RestaurantScreen = ({ route, navigation }) => {
                 <StarIcon color="green" opacity={0.5} size={22} />
                 <Text className="text-xs text-gray-500">
                   <Text className="text-green-500">
-                    {rating} . {genre}
+                    {rating}
                   </Text>
                 </Text>
               </View>
@@ -153,21 +153,21 @@ const RestaurantScreen = ({ route, navigation }) => {
                   name={dish.name}
                   description={dish.description}
                   price={dish.price}
-                  image={dish.image || "https://picsum.photos/400/300"}
+                  image={dish.image}
                 />
                 {/* Render sub-products */}
                 {dish.has_subs && dish.sub_products?.length > 0 && (
                   <View className="pb-5 pl-6">
                     <TouchableOpacity
                       className="flex-row items-center"
-                      onPress={() => setShowSubProducts(!showSubProducts)}
+                      onPress={() => toggleSubProducts(dish.id)}
                     >
                       <Text className="mr-1 font-medium text-green-600">
-                        {showSubProducts ? "Show Less" : "See Menu"}
+                        {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
                       </Text>
                       <Icon name="chevron-right" size={16} color="#16a34a" />
                     </TouchableOpacity>
-                    {showSubProducts && (
+                    {expandedDishes[dish.id] && (
                       <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
