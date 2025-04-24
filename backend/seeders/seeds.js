@@ -7,17 +7,17 @@ module.exports = {
     const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
 
     const users = [
-      { id: 'user_1', role: 'buyer', verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_2', role: 'seller', verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_3', role: 'organization', verified: 1, password: 'hashedpassword3', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_4', role: 'admin', verified: 1, password: 'hashedpassword4', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_5', role: 'seller', verified: 1, password: 'hashedpassword5', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_6', role: 'buyer', verified: 1, password: 'hashedpassword6', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_7', role: 'seller', verified: 1, password: 'hashedpassword7', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_8', role: 'buyer', verified: 1, password: 'hashedpassword8', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_9', role: 'seller', verified: 1, password: 'hashedpassword9', createdAt: new Date(), updatedAt: new Date() },
-      { id: 'user_10', role: 'buyer', verified: 1, password: 'hashedpassword10', createdAt: new Date(), updatedAt: new Date() },
-    ];
+        { id: 'user_1', role: 'buyer', verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_2', role: 'seller', verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_3', role: 'organization', verified: 1, password: 'hashedpassword3', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_4', role: 'admin', verified: 1, password: 'hashedpassword4', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_5', role: 'seller', verified: 1, password: 'hashedpassword5', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_6', role: 'buyer', verified: 1, password: 'hashedpassword6', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_7', role: 'seller', verified: 1, password: 'hashedpassword7', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_8', role: 'buyer', verified: 1, password: 'hashedpassword8', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_9', role: 'seller', verified: 1, password: 'hashedpassword9', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_10', role: 'buyer', verified: 1, password: 'hashedpassword10', createdAt: new Date(), updatedAt: new Date() },
+      ];  
 
     await queryInterface.bulkInsert('users', users);
 
@@ -45,7 +45,7 @@ module.exports = {
           email: `seller${index + 1}@example.com`,
           phone: `987654321${index + 1}`,
           address: `Seller Address ${index + 1}`,
-          location: `Seller Location ${index + 1}`,
+          location: 'Buyer Location 1',
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
@@ -53,14 +53,40 @@ module.exports = {
     await queryInterface.bulkInsert('seller_details', sellers);
 
       const restaurants = sellers.map((seller, index) => ({
-          id: `restaurant_${seller.user_id}_1`, // Only one restaurant per seller
+          id: `restaurant_${seller.user_id}`, // Only one restaurant per seller
           name: `Restaurant ${index + 1}`,
           user_id: seller.user_id, // Linking the restaurant to the seller
+          image: getRandomPicsumImage(),
+          description: 'A cozy place where delicious food and a warm atmosphere.',
           createdAt: new Date(),
           updatedAt: new Date(),
       }));
 
     await queryInterface.bulkInsert('restaurants', restaurants);
+
+    let ReviewId = 1;
+    const reviews = restaurants.flatMap((restaurant, index) => [
+        {
+          id: ReviewId++,
+          description: `Great food and excellent service at ${restaurant.name}.`,
+          rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+          restaurant_id: restaurant.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
+        },
+        {
+          id: ReviewId++,
+          description: `The ambiance at ${restaurant.name} is amazing.`,
+          rating: Math.floor(Math.random() * 5) + 1,
+          restaurant_id: restaurant.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
+        },
+      ]);
+
+    await queryInterface.bulkInsert("reviews", reviews);
 
       const products = restaurants.flatMap(restaurant => [
           {
@@ -135,7 +161,7 @@ module.exports = {
           },
       ]);
 
-      await queryInterface.bulkInsert('products', products);
+    await queryInterface.bulkInsert('products', products);
 
       const subProducts = restaurants.flatMap(restaurant => [
           {
@@ -195,7 +221,7 @@ module.exports = {
           },
       ]);
 
-      await queryInterface.bulkInsert('sub_products', subProducts);
+    await queryInterface.bulkInsert('sub_products', subProducts);
 
       const productSubProducts = [];
 
@@ -223,7 +249,7 @@ module.exports = {
       });
 
 
-      await queryInterface.bulkInsert('product_subproducts', productSubProducts);
+    await queryInterface.bulkInsert('product_subproducts', productSubProducts);
 
   },
 
@@ -235,5 +261,6 @@ module.exports = {
     await queryInterface.bulkDelete('product_subproducts', null, {});
     await queryInterface.bulkDelete('sub_products', null, {});
     await queryInterface.bulkDelete('products', null, {});
+    await queryInterface.bulkDelete('reviews', null, {});
   },
 };
