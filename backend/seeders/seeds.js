@@ -45,7 +45,7 @@ module.exports = {
           email: `seller${index + 1}@example.com`,
           phone: `987654321${index + 1}`,
           address: `Seller Address ${index + 1}`,
-          location: `Seller Location ${index + 1}`,
+          location: 'Buyer Location 1',
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
@@ -57,7 +57,7 @@ module.exports = {
           name: `Restaurant ${index + 1}`,
           user_id: seller.user_id, // Linking the restaurant to the seller
           image: getRandomPicsumImage(),
-          description: `A cozy place for delicious food ${index + 1}.`,
+          description: 'A cozy place where delicious food and a warm atmosphere.',
           createdAt: new Date(),
           updatedAt: new Date(),
       }));
@@ -73,6 +73,7 @@ module.exports = {
           restaurant_id: restaurant.id,
           createdAt: new Date(),
           updatedAt: new Date(),
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
         },
         {
           id: ReviewId++,
@@ -81,6 +82,7 @@ module.exports = {
           restaurant_id: restaurant.id,
           createdAt: new Date(),
           updatedAt: new Date(),
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
         },
       ]);
 

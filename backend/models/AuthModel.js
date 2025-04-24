@@ -148,7 +148,8 @@ const Review = sequelize.define('review', {
     id: { type: DataTypes.INTEGER, primaryKey: true},
     description: { type: DataTypes.TEXT },
     rating: { type: DataTypes.INTEGER, },
-    restaurant_id: { type: DataTypes.STRING }
+    restaurant_id: { type: DataTypes.STRING },
+    user_id: { type: DataTypes.STRING },
 });
 
 // Relationships
@@ -170,6 +171,9 @@ SubProduct.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
 
 Restaurant.hasMany(Review, { foreignKey: "restaurant_id", onDelete: "CASCADE" });
 Review.belongsTo(Restaurant, { foreignKey: "restaurant_id" });
+
+User.hasMany(Review, { foreignKey: "user_id", onDelete: "CASCADE" });
+Review.belongsTo(User, { foreignKey: "user_id" });
 
 Product.belongsToMany(SubProduct, {
     through: ProductSubProduct,
