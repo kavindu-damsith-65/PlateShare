@@ -16,7 +16,6 @@ const AllRestaurantsScreen = ({ route, navigation }) => {
           imgUrl: restaurant.image,
           title: restaurant.name,
           rating: restaurant.averageRating,
-          genre: restaurant.genre,
           short_description: restaurant.description,
           dishes: restaurant.products || [],
           long: restaurant.long || 0,
@@ -52,16 +51,6 @@ const AllRestaurantsScreen = ({ route, navigation }) => {
           {restaurant.description}
         </Text>
 
-        {/*<View className="flex-row items-center justify-between mt-2">*/}
-        {/*  <View className="flex-row items-center">*/}
-        {/*    <Text className="text-xs text-gray-500">*/}
-        {/*      {(restaurant.products || []).length} items*/}
-        {/*    </Text>*/}
-        {/*  </View>*/}
-        {/*  <View className="px-2 py-1 bg-green-100 rounded-full">*/}
-        {/*    <Text className="text-xs text-green-700">Open</Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
       </View>
     </TouchableOpacity>
   );
