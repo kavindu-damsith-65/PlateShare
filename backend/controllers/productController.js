@@ -1,4 +1,5 @@
-const { Product, Restaurant, SellerDetails, SubProduct} = require("../models/AuthModel");
+const sequelize = require("../config/db");
+const { Product, Restaurant, SellerDetails, SubProduct, FoodRequest, FoodBucket} = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByProducts = async (req, res) => {
@@ -50,6 +51,47 @@ exports.showNearByProducts = async (req, res) => {
 
         // Return the found products
         return res.status(200).json({ products });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+exports.getRecommendedProducts = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const foodRequestProducts = await FoodRequest.findAll({
+            where: { org_details_user_id: userId },
+            attributes: ["product_id"]
+        });
+
+        const foodBucketProducts = await FoodBucket.findAll({
+            where: { user_id: userId },
+            attributes: ["product_id"]
+        });
+
+        const productIds = [
+            ...foodRequestProducts.map(item => item.product_id),
+            ...foodBucketProducts.map(item => item.product_id)
+        ];
+
+        if (productIds.length > 0) {
+            const products = await Product.findAll({
+                where: { id: { [Op.in]: productIds } }
+            });
+
+            return res.status(200).json({ products });
+        }
+
+        const randomProducts = await Product.findAll({
+            where: { available: true },
+            order: sequelize.random(),
+            limit: 6
+        });
+
+        return res.status(200).json({ products: randomProducts });
 
     } catch (error) {
         console.error(error);

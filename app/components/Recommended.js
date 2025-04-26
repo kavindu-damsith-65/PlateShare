@@ -1,29 +1,34 @@
 import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import RecommendCard from "./RecommendCard";
-import SanityClient, { urlFor } from "../sanity";
-
+import axios from "axios";
+import { BACKEND_URL } from "@env"; 
 
 const Recommended = () => {
     const [recommendations, setRecommendations] = useState([]);
 
-    /*
-     TODO : Add recommended foods for the user based on past data
-        and set those to recommendations
-     */
-    useEffect(() => {
-        SanityClient.fetch(
-            `
+    // TODO: Replace with actual user ID 
+    const userId = "user_1";
 
-    *[_type == "category"]
-    `,
-        ).then((data) => setRecommendations(data));
-    }, []);
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            try {
+                const response = await axios.get(
+                    `${BACKEND_URL}/api/products/recommendations/${userId}`
+                );
+                setRecommendations(response.data.products);
+            } catch (error) {
+                console.error("Error fetching recommendations:", error);
+            }
+        };
+
+        fetchRecommendations();
+    }, [userId]);
 
 
     return (
         <View>
-            <Text className="font-bold text-lg px-4 pt-2">Recommended For You</Text>
+            <Text className="px-4 pt-2 text-lg font-bold">Recommended For You</Text>
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -35,8 +40,8 @@ const Recommended = () => {
                 {/* Recommendation Card */}
                 {recommendations.map((recommendation) => (
                     <RecommendCard
-                        imgUrl={urlFor(recommendation.image).width(500).url()}
-                        key={recommendation._id}
+                        imgUrl={recommendation.image}
+                        key={recommendation.id}
                         title={recommendation.name}
                     />
                 ))}
