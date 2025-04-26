@@ -2,11 +2,12 @@ import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { BACKEND_URL } from "@env"; 
+import { BACKEND_URL } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
 const NearbyFoods = () => {
+  const navigation = useNavigation();
   const [dishes, setDishes] = useState([]);
-  const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = "Buyer Location 1";
@@ -53,29 +54,6 @@ const NearbyFoods = () => {
     </TouchableOpacity>
   );
 
-  // Render vertical item (for "See All" view)
-  const renderVerticalItem = ({ item: dish }) => (
-    <TouchableOpacity 
-      className="flex-row mx-4 mb-4 bg-white rounded-lg shadow ovrflow-hidden"
-      activeOpacity={0.7}
-    >
-      <Image 
-        source={{ uri: dish.image }} 
-        className="w-24 h-full "
-        resizeMode="cover"
-      />
-      <View className="justify-center flex-1 p-3">
-        <Text className="text-lg font-bold" numberOfLines={1}>{dish.name}</Text>
-        <Text className="text-sm text-gray-500" numberOfLines={2}>{dish.description || dish.short_description}</Text>
-        <View className="flex-row items-center justify-between mt-2">
-          <Text className="font-bold text-green-600">{dish.price === 0 ? "Free" : `Rs. ${dish.price}`}</Text>
-          <View className="px-2 py-1 bg-green-100 rounded-full">
-            <Text className="text-xs text-green-700">1.2 km away</Text>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
 
   if (loading) {
     return (
@@ -99,48 +77,35 @@ const NearbyFoods = () => {
     </View>
   );
 
+  const handleSeeAllPress = () => {
+    navigation.navigate("AllNearbyFoodsScreen", { dishes });
+  };
+
   return (
     <View className="pb-4">
       <View className="flex-row items-center justify-between px-4 pt-2">
         <Text className="text-lg font-bold">Foods Near You</Text>
         <TouchableOpacity 
           className="flex-row items-center" 
-          onPress={() => setShowAll(!showAll)}
+          onPress={handleSeeAllPress}
         >
-          <Text className="mr-1 font-medium text-green-600">
-            {showAll ? "Show Less" : "See All"}
-          </Text>
+          <Text className="mr-1 font-medium text-green-600">See All</Text>
           <Icon name="chevron-right" size={16} color="#16a34a" />
         </TouchableOpacity>
       </View>
 
-      {!showAll ? (
-        // Horizontal list using FlatList instead of ScrollView
-        <FlatList
-          data={dishes.slice(0, 5)}
-          renderItem={renderHorizontalItem}
-          keyExtractor={(item) => item._id || item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            paddingTop: 10,
-          }}
-          ListEmptyComponent={EmptyListComponent}
-        />
-      ) : (
-        // Vertical full list view
-        <FlatList
-          data={dishes}
-          renderItem={renderVerticalItem}
-          keyExtractor={(item) => item._id || item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 15,
-            paddingTop: 10,
-          }}
-          ListEmptyComponent={EmptyListComponent}
-        />
-      )}
+      <FlatList
+        data={dishes.slice(0, 5)}
+        renderItem={renderHorizontalItem}
+        keyExtractor={(item) => item._id || item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          paddingTop: 10,
+        }}
+        ListEmptyComponent={EmptyListComponent}
+      />
     </View>
   );
 };

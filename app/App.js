@@ -19,6 +19,8 @@ import BasketScreen from "./screens/BasketScreen";
 import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AllRestaurantsScreen from "./screens/AllRestaurantsScreen";
+import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -104,6 +106,20 @@ function App(){
                         <Stack.Screen
                             name="Delivery"
                             component={DeliveryScreen}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="AllRestaurantsScreen"
+                            component={AllRestaurantsScreen}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="AllNearbyFoodsScreen"
+                            component={AllNearbyFoodsScreen}
                             options={{
                                 headerShown: false,
                             }}

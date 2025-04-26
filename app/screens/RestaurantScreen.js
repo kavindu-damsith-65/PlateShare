@@ -24,10 +24,6 @@ const RestaurantScreen = ({ route, navigation }) => {
     lat,
   } = route.params;
 
-  useEffect(() => {
-    console.log(title);
-  }, []);
-
   const [restaurantData, setRestaurantData] = useState({
     id,
     imgUrl,
