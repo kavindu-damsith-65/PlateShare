@@ -5,11 +5,7 @@ import {
   Text,
   TextInput,
   View,
-  ImageBackground,
-  TouchableOpacity,
-  Dimensions,
   FlatList,
-  ScrollView
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
