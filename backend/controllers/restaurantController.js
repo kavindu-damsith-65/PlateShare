@@ -19,7 +19,7 @@ exports.showNearByRestaurants = async (req, res) => {
             include: [
                 {
                     model: SellerDetails,
-                    attributes: ["name", "email", "phone", "address", "location"]
+                    attributes: ["email", "phone", "address", "location"]
                 },
                 {
                     model: Review,
@@ -61,7 +61,7 @@ exports.showRestaurantDetails = async (req, res) => {
             include: [
                 {
                     model: SellerDetails,
-                    attributes: ["name", "email", "phone", "address", "location"]
+                    attributes: ["email", "phone", "address", "location"]
                 },
                 {
                     model: Product,

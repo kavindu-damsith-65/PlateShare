@@ -7,7 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const productRoutes = require("./routes/productRoutes");
 const restaurantRoutes = require("./routes/restaurantRoutes");
-
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 app.use(cors());
@@ -17,6 +17,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/reviews", reviewRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 sequelize.sync().then(() => {

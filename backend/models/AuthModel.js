@@ -4,7 +4,9 @@ const sequelize = require("../config/db");
 // User Model
 const User = sequelize.define('user', {
     id: { type: DataTypes.STRING, primaryKey: true },
+    name: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'user' },
+    profile_picture: { type: DataTypes.STRING, allowNull: true },
     verified: { type: DataTypes.BOOLEAN, defaultValue: true },
     password: { type: DataTypes.STRING, allowNull: false },
 });
@@ -12,18 +14,15 @@ const User = sequelize.define('user', {
 // Buyer Details Model
 const BuyerDetails = sequelize.define('buyer_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    profile_picture: { type: DataTypes.STRING },
 });
 
 // Seller Details Model
 const SellerDetails = sequelize.define('seller_details', {
     user_id: { type: DataTypes.STRING ,primaryKey: true},
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
@@ -33,12 +32,10 @@ const SellerDetails = sequelize.define('seller_details', {
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.BOOLEAN },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    profile_picture: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
 });
@@ -145,7 +142,7 @@ const Order = sequelize.define('order', {
 
 // Reviews Model
 const Review = sequelize.define('review', {
-    id: { type: DataTypes.INTEGER, primaryKey: true},
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     description: { type: DataTypes.TEXT },
     rating: { type: DataTypes.INTEGER, },
     restaurant_id: { type: DataTypes.STRING },
