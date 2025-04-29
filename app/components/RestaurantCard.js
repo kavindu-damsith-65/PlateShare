@@ -12,9 +12,6 @@ export default function RestaurantCard({
   long,
   lat,
 }) {
-  useEffect(() => {
-    console.log(title);
-  }, []);
 
   const navigation = useNavigation();
   return (
