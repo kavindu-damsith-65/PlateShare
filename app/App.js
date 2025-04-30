@@ -3,9 +3,7 @@ import { TailwindProvider } from "tailwindcss-react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider } from "react-redux";
 import {
-    CardStyleInterpolators,
     TransitionPresets,
-    TransitionSpecs,
 } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -19,6 +17,8 @@ import BasketScreen from "./screens/BasketScreen";
 import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import AllRestaurantsScreen from "./screens/AllRestaurantsScreen";
+import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -104,6 +104,20 @@ function App(){
                         <Stack.Screen
                             name="Delivery"
                             component={DeliveryScreen}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="AllRestaurantsScreen"
+                            component={AllRestaurantsScreen}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="AllNearbyFoodsScreen"
+                            component={AllNearbyFoodsScreen}
                             options={{
                                 headerShown: false,
                             }}
