@@ -19,13 +19,13 @@ exports.showNearByRestaurants = async (req, res) => {
             include: [
                 {
                     model: SellerDetails,
-                    attributes: ["name", "email", "phone", "address", "location"]
+                    as: "seller_detail", // Make sure this matches the association alias
+                    attributes: ["user_id", "email", "phone", "address", "location"]
                 },
                 {
                     model: Review,
                     attributes: ["id", "rating"]
                 }
-
             ]
         });
 
@@ -45,8 +45,6 @@ exports.showNearByRestaurants = async (req, res) => {
 
        return res.status(200).json({ restaurants: restaurantsWithRatings });
 
-
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
@@ -61,7 +59,8 @@ exports.showRestaurantDetails = async (req, res) => {
             include: [
                 {
                     model: SellerDetails,
-                    attributes: ["name", "email", "phone", "address", "location"]
+                    as: "seller_detail",
+                    attributes: ["email", "phone", "address", "location"]
                 },
                 {
                     model: Product,

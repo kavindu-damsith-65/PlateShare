@@ -58,6 +58,28 @@ exports.showNearByProducts = async (req, res) => {
     }
 };
 
+
+exports.searchProducts = async (req, res) => {
+    try {
+        const { name } = req.params;
+
+        if (!name) {
+            return res.status(400).json({ message: "name is required" });
+        }
+
+        const products = await Product.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${name}%`
+                }
+            }
+        });
+        return res.status(200).json(products);
+    } catch (error) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
 exports.getRecommendedProducts = async (req, res) => {
     try {
         const { userId } = req.params;

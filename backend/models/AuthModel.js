@@ -4,7 +4,9 @@ const sequelize = require("../config/db");
 // User Model
 const User = sequelize.define('user', {
     id: { type: DataTypes.STRING, primaryKey: true },
+    name: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'user' },
+    profile_picture: { type: DataTypes.STRING, allowNull: true },
     verified: { type: DataTypes.BOOLEAN, defaultValue: true },
     password: { type: DataTypes.STRING, allowNull: false },
 });
@@ -12,18 +14,15 @@ const User = sequelize.define('user', {
 // Buyer Details Model
 const BuyerDetails = sequelize.define('buyer_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    profile_picture: { type: DataTypes.STRING },
 });
 
 // Seller Details Model
 const SellerDetails = sequelize.define('seller_details', {
     user_id: { type: DataTypes.STRING ,primaryKey: true},
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
@@ -33,12 +32,10 @@ const SellerDetails = sequelize.define('seller_details', {
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    name: { type: DataTypes.STRING },
     email: { type: DataTypes.BOOLEAN },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    profile_picture: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
 });
@@ -145,7 +142,7 @@ const Order = sequelize.define('order', {
 
 // Reviews Model
 const Review = sequelize.define('review', {
-    id: { type: DataTypes.INTEGER, primaryKey: true},
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     description: { type: DataTypes.TEXT },
     rating: { type: DataTypes.INTEGER, },
     restaurant_id: { type: DataTypes.STRING },
@@ -154,14 +151,22 @@ const Review = sequelize.define('review', {
 
 // Relationships
 User.hasOne(BuyerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-BuyerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+BuyerDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 User.hasOne(SellerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-SellerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+SellerDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 User.hasOne(OrgDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-OrgDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+OrgDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 
-SellerDetails.hasOne(Restaurant, {foreignKey: "user_id", onDelete: "CASCADE"});
-Restaurant.belongsTo(SellerDetails, {foreignKey: "user_id"});
+// Update this relationship with an explicit alias
+SellerDetails.hasOne(Restaurant, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    as: "restaurant"
+});
+Restaurant.belongsTo(SellerDetails, {
+    foreignKey: "user_id",
+    as: "seller_detail"
+});
 
 Restaurant.hasMany(Product, {foreignKey: "restaurant_id", onDelete: "CASCADE"});
 Product.belongsTo(Restaurant, {foreignKey: "restaurant_id"});

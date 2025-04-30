@@ -7,16 +7,16 @@ module.exports = {
     const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
 
     const users = [
-        { id: 'user_1', role: 'buyer', verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_2', role: 'seller', verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_3', role: 'organization', verified: 1, password: 'hashedpassword3', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_4', role: 'admin', verified: 1, password: 'hashedpassword4', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_5', role: 'seller', verified: 1, password: 'hashedpassword5', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_6', role: 'buyer', verified: 1, password: 'hashedpassword6', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_7', role: 'seller', verified: 1, password: 'hashedpassword7', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_8', role: 'buyer', verified: 1, password: 'hashedpassword8', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_9', role: 'seller', verified: 1, password: 'hashedpassword9', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_10', role: 'buyer', verified: 1, password: 'hashedpassword10', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_1', name:'Ross', role: 'buyer', profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_2', name:'Monica', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_3', name:'Rachel', role: 'organization',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword3', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_4', name:'Pheobe', role: 'admin',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword4', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_5', name:'Chandler', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword5', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_6', name:'Joey', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword6', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_7', name:'Ben', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword7', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_8', name:'Paul', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword8', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_9', name:'Riana', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword9', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_10', name:'Ashka', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword10', createdAt: new Date(), updatedAt: new Date() },
       ];  
 
     await queryInterface.bulkInsert('users', users);
@@ -25,12 +25,12 @@ module.exports = {
         .filter(user => user.role === 'buyer')
         .map((buyer, index) => ({
           user_id: buyer.id,
-          name: `Buyer ${index + 1}`,
+          // name: `Buyer ${index + 1}`,
           email: `buyer${index + 1}@example.com`,
           phone: `123456789${index + 1}`,
           address: `Buyer Address ${index + 1}`,
           location: `Buyer Location ${index + 1}`,
-          profile_picture: getRandomPicsumImage(),
+          // profile_picture: getRandomPicsumImage(),
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
@@ -41,7 +41,7 @@ module.exports = {
         .filter(user => user.role === 'seller')
         .map((seller, index) => ({
           user_id: seller.id,
-          name: `Seller ${index + 1}`,
+          // name: `Seller ${index + 1}`,
           email: `seller${index + 1}@example.com`,
           phone: `987654321${index + 1}`,
           address: `Seller Address ${index + 1}`,
