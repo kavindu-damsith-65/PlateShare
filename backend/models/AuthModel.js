@@ -151,14 +151,22 @@ const Review = sequelize.define('review', {
 
 // Relationships
 User.hasOne(BuyerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-BuyerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+BuyerDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 User.hasOne(SellerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-SellerDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+SellerDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 User.hasOne(OrgDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
-OrgDetails.belongsTo(User, { foreignKey: "user_id",constraints: false });
+OrgDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
 
-SellerDetails.hasOne(Restaurant, {foreignKey: "user_id", onDelete: "CASCADE"});
-Restaurant.belongsTo(SellerDetails, {foreignKey: "user_id"});
+// Update this relationship with an explicit alias
+SellerDetails.hasOne(Restaurant, {
+    foreignKey: "user_id",
+    onDelete: "CASCADE",
+    as: "restaurant"
+});
+Restaurant.belongsTo(SellerDetails, {
+    foreignKey: "user_id",
+    as: "seller_detail"
+});
 
 Restaurant.hasMany(Product, {foreignKey: "restaurant_id", onDelete: "CASCADE"});
 Product.belongsTo(Restaurant, {foreignKey: "restaurant_id"});
