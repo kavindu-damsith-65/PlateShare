@@ -20,12 +20,7 @@ export default function LoginScreen({ navigation }) {
       <StatusBar style="dark" />
       
       <Animatable.View animation="fadeIn" duration={1000} className="items-center mb-16">
-        {/* Uncomment when you have the logo */}
-        {/* <Image 
-          source={require('../assets/logo.png')} 
-          className="w-30 h-30 mb-5"
-          resizeMode="contain"
-        /> */}
+
         <Text className="text-3xl font-bold text-[#00CCBB] mb-2">FoodShare</Text>
         <Text className="text-base text-gray-600 text-center">Reducing waste, feeding communities</Text>
       </Animatable.View>
