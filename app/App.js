@@ -2,97 +2,78 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TailwindProvider } from "tailwindcss-react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider } from "react-redux";
-import {
-    TransitionPresets,
-} from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useState } from "react";
-import  {useNavigation} from "@react-navigation/native";
+import { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, ActivityIndicator, Platform } from 'react-native';
 
-import HomeScreen from "./screens/HomeScreen";
 import RestaurantScreen from "./screens/RestaurantScreen";
 import { store } from "./store";
-import BasketScreen from "./screens/BasketScreen";
 import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import AllRestaurantsScreen from "./screens/AllRestaurantsScreen";
 import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
+import LoginScreen from "./screens/LoginScreen";
+import BuyerTabs from "./screens/BuyerTabs";
+import OrganizationTabs from "./screens/OrganizationTabs";
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-
-const MainTabs = ({setProfileVisible}) => {
-    const  navigation = useNavigation();
-    return (
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
-                tabBarIcon: ({ color, size }) => {
-                    let iconName;
-                    if (route.name === "Home") {
-                        iconName = "home-outline";
-                    } else if (route.name === "Basket") {
-                        iconName = "list-outline";
-                    } else if (route.name === "Profile") {
-                        iconName = "person-outline";
-                    }
-                    return <Ionicons name={iconName} size={size} color={color} />;
-                },
-                tabBarActiveTintColor: "#00CCBB",
-                tabBarInactiveTintColor: "gray",
-                ...TransitionPresets.FadeFromBottomAndroid, // Add transition animation
-
-            })}
-        >
-            <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="Basket" component={BasketScreen} options={{ headerShown: false }} />
-            <Tab.Screen
-                name="Profile"
-                component={HomeScreen}
-                listeners={{
-                    tabPress: (e) => {
-                        e.preventDefault();
-                        navigation.navigate("Profile");
-                        setProfileVisible(true);
-                    },
-                }}
-                options={{ headerShown: false }}
-            />
-        </Tab.Navigator>
-    );
-};
 
 function App(){
-
     const [isProfileVisible, setProfileVisible] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Example state for login status
-    const user = { image: "https://example.com/user.jpg", name: "John Doe", email: "john@example.com" }; // Example user data
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userRole, setUserRole] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const role = await AsyncStorage.getItem('userRole');
+                setUserRole(role);
+                setIsLoggedIn(!!role);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error checking user role:', error);
+                setIsLoading(false);
+            }
+        };
+
+        checkUserRole();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+                <ActivityIndicator size="large" color="#00CCBB" />
+                <Text style={{ marginTop: 16, color: '#666' }}>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <NavigationContainer>
             <Provider store={store}>
-                <TailwindProvider>
-                    <Stack.Navigator>
+                <TailwindProvider platform={Platform.OS}>
+                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'Main' : 'OrganizationDashboard') : 'Login'}>
+                        <Stack.Screen
+                            name="Login"
+                            component={LoginScreen}
+                            options={{ headerShown: false }}
+                        />
                         <Stack.Screen
                             name="Main"
                             options={{ headerShown: false }}
                         >
-                            {() => <MainTabs setProfileVisible={setProfileVisible} />}
+                            {() => <BuyerTabs setProfileVisible={setProfileVisible} />}
                         </Stack.Screen>
+                        <Stack.Screen
+                            name="OrganizationDashboard"
+                            component={OrganizationTabs}
+                            options={{ headerShown: false }}
+                        />
                         <Stack.Screen
                             name="Restaurant"
                             component={RestaurantScreen}
-                        />
-                        <Stack.Screen
-                            name="Basket"
-                            component={BasketScreen}
-                            options={{
-                                presentation: "modal",
-                                headerShown: false,
-                            }}
                         />
                         <Stack.Screen
                             name="Prepare"
@@ -126,12 +107,6 @@ function App(){
                             <Stack.Screen name="Profile" component={ProfileScreen} />
                         </Stack.Group>
                     </Stack.Navigator>
-                    {/*<ProfileScreen*/}
-                    {/*    visible={isProfileVisible}*/}
-                    {/*    onClose={() => setProfileVisible(false)}*/}
-                    {/*    isLoggedIn={isLoggedIn}*/}
-                    {/*    user={user}*/}
-                    {/*/>*/}
                 </TailwindProvider>
             </Provider>
         </NavigationContainer>
