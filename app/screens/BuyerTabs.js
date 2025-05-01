@@ -9,10 +9,6 @@ const Tab = createBottomTabNavigator();
 
 export default function BuyerTabs({ setProfileVisible }) {
   const navigation = useNavigation();
-  
-  useEffect(() => {
-    console.log("BuyerTabs component mounted");
-  }, []);
 
   return (
     <Tab.Navigator

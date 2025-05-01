@@ -5,9 +5,9 @@ import * as Animatable from 'react-native-animatable';
 import { StatusBar } from 'expo-status-bar';
 
 export default function LoginScreen({ navigation }) {
+
   const handleLogin = async (role) => {
     try {
-      console.log("Setting user role to:", role);
       await AsyncStorage.setItem('userRole', role);
       navigation.replace(role === 'buyer' ? 'Main' : 'OrganizationDashboard');
     } catch (error) {
