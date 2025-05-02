@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
       
       <Animatable.View animation="fadeIn" duration={1000} className="items-center mb-16">
 
-        <Text className="text-3xl font-bold text-[#00CCBB] mb-2">FoodShare</Text>
+        <Text className="text-3xl font-bold text-[#00CCBB] mb-2">PlateShare</Text>
         <Text className="text-base text-gray-600 text-center">Reducing waste, feeding communities</Text>
       </Animatable.View>
       
