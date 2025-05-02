@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, TextInput, ScrollView, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, TextInput, ScrollView, Switch, TouchableOpacity, Platform } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RequestFormModal({ visible, onClose, onSubmit, editingRequest }) {
   const [formData, setFormData] = useState({
@@ -13,6 +14,9 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
     additionalNotes: '',
     visibility: false // false = Private, true = Public
   });
+  
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Reset form when modal opens or editingRequest changes
   useEffect(() => {
@@ -91,6 +95,47 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
     }
   };
 
+  const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      // If we already have a date, preserve the time part
+      let newDate;
+      if (formData.requestByDateTime) {
+        const oldDate = new Date(formData.requestByDateTime);
+        newDate = new Date(selectedDate);
+        newDate.setHours(oldDate.getHours(), oldDate.getMinutes());
+      } else {
+        newDate = selectedDate;
+      }
+      setFormData({...formData, requestByDateTime: newDate.toISOString()});
+
+      setShowTimePicker(true)
+    }
+  };
+
+  const handleTimeChange = (event, selectedTime) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      // If we already have a date, preserve the date part but update the time
+      let newDateTime;
+      if (formData.requestByDateTime) {
+        const oldDate = new Date(formData.requestByDateTime);
+        newDateTime = new Date(oldDate);
+        newDateTime.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+      } else {
+        // If no date was previously selected, use today with the selected time
+        newDateTime = new Date();
+        newDateTime.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+      }
+      setFormData({...formData, requestByDateTime: newDateTime.toISOString()});
+    }
+  };
+
+  const showDateTimePickerModal = () => {
+    // Show date picker first
+    setShowDatePicker(true);
+  };
+
   const requestTypes = ['General', 'Specific', 'Urgent'];
   const foodTypes = ['Rice', 'Burgers', 'Fruits', 'Vegetables', 'Pasta', 'Bread', 'Canned goods'];
 
@@ -99,13 +144,6 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleString();
-  };
-
-  // Set a date 2 days from now (for demo purposes)
-  const setDefaultDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() + 2);
-    setFormData({...formData, requestByDateTime: date.toISOString()});
   };
 
   return (
@@ -194,7 +232,7 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
               <Text className="text-sm font-medium text-gray-700 mb-1">Request By Date & Time</Text>
               <TouchableOpacity 
                 className="border border-gray-300 rounded-md p-2"
-                onPress={setDefaultDate}
+                onPress={showDateTimePickerModal}
               >
                 <Text className="text-gray-500">
                   {formData.requestByDateTime 
@@ -202,6 +240,24 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
                     : 'Select date and time'}
                 </Text>
               </TouchableOpacity>
+              
+              {showDatePicker && (
+                <DateTimePicker
+                  value={formData.requestByDateTime ? new Date(formData.requestByDateTime) : new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={handleDateChange}
+                />
+              )}
+              
+              {showTimePicker && (
+                <DateTimePicker
+                  value={formData.requestByDateTime ? new Date(formData.requestByDateTime) : new Date()}
+                  mode="time"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={handleTimeChange}
+                />
+              )}
             </View>
             
             <View className="mb-4">

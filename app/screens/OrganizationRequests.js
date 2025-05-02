@@ -3,7 +3,7 @@ import { View, Text, SafeAreaView, FlatList, TouchableOpacity, Alert } from 'rea
 import { StatusBar } from 'expo-status-bar';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import RequestFormModal from '../components/RequestFormModal';
-import {requestsData, addRequest, updateRequest} from '../data/dishes';
+import {requestsData, addRequest, updateRequest, deleteRequest} from '../data/dishes';
 
 export default function OrganizationRequests() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -22,17 +22,49 @@ export default function OrganizationRequests() {
 
     const handleSubmit = (formData) => {
         if (editingRequest) {
-            // Update existing request
+            /*
+            * TODO: Add backend call for editing the requests
+            */
             const updated = updateRequest(editingRequest.id, formData);
             setRequests([...requestsData]); // Update local state with the modified array
             Alert.alert("Success", "Request updated successfully");
         } else {
-            // Add new request
+            /*
+            * TODO: Add backend call for creating the requests
+            */
+
             const newRequest = addRequest(formData);
             setRequests([...requestsData]); // Update local state with the modified array
             Alert.alert("Success", "New request created successfully");
         }
         setModalVisible(false);
+    };
+
+    const handleDelete = (id) => {
+        Alert.alert(
+            "Confirm Delete",
+            "Are you sure you want to delete this request?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete",
+                    onPress: () => {
+                        const deleted = deleteRequest(id);
+                        if (deleted) {
+                            /*
+                            * TODO: Add backend call for deleting the requests
+                            */
+                            setRequests([...requestsData]); // Update local state with the modified array
+                            Alert.alert("Success", "Request deleted successfully");
+                        }
+                    },
+                    style: "destructive"
+                }
+            ]
+        );
     };
 
     const renderItem = ({ item }) => (
@@ -64,12 +96,11 @@ export default function OrganizationRequests() {
                         <Text className="text-xs text-gray-800 font-medium">Edit</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity className="bg-[#00CCBB] px-3 py-1.5 rounded mr-2">
-                        <Text className="text-xs text-white font-medium">Accept</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity className="bg-[#FF6B6B] px-3 py-1.5 rounded">
-                        <Text className="text-xs text-white font-medium">Decline</Text>
+                    <TouchableOpacity 
+                        className="bg-[#FF6B6B] px-3 py-1.5 rounded"
+                        onPress={() => handleDelete(item.id)}
+                    >
+                        <Text className="text-xs text-white font-medium">Delete</Text>
                     </TouchableOpacity>
                 </View>
             </View>

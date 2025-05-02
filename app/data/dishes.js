@@ -69,3 +69,13 @@ export const updateRequest = (id, updatedData) => {
   }
   return null;
 };
+
+// Function to delete a request
+export const deleteRequest = (id) => {
+  const index = requestsData.findIndex(req => req.id === id);
+  if (index !== -1) {
+    requestsData.splice(index, 1);
+    return true;
+  }
+  return false;
+};
