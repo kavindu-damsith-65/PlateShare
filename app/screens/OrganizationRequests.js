@@ -20,6 +20,11 @@ export default function OrganizationRequests() {
         setModalVisible(true);
     };
 
+    /*
+    * TODO: Add a mark as complete button
+    */
+
+
     const handleSubmit = (formData) => {
         if (editingRequest) {
             /*
