@@ -95,8 +95,16 @@ const ProductSubProduct = sequelize.define('product_subproduct', {
 // Food Request Model
 const FoodRequest = sequelize.define('food_request', {
     id: { type: DataTypes.INTEGER, primaryKey: true },
-    org_details_user_id: { type: DataTypes.STRING },
-    product_id: { type: DataTypes.STRING }
+    org_details_user_id: { type: DataTypes.STRING, allowNull: false },
+    title: { type: DataTypes.STRING },
+    products: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER },
+    completed: { type: DataTypes.BOOLEAN },
+    dateTime: { type: DataTypes.DATE },
+    notes: { type: DataTypes.STRING },
+    visibility: { type: DataTypes.BOOLEAN },
+    urgent: { type: DataTypes.BOOLEAN },
+    delivery: { type: DataTypes.BOOLEAN }
 });
 
 // Admin Model
@@ -149,6 +157,14 @@ const Review = sequelize.define('review', {
     user_id: { type: DataTypes.STRING },
 });
 
+// Donations Model
+const Donation = sequelize.define('donation', {
+    id: { type: DataTypes.INTEGER, primaryKey: true },
+    food_request_id: { type: DataTypes.INTEGER, allowNull: false },
+    product_id: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER }
+});
+
 // Relationships
 User.hasOne(BuyerDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE"});
 BuyerDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
@@ -194,7 +210,16 @@ SubProduct.belongsToMany(Product, {
     onDelete: "CASCADE"
 });
 
+OrgDetails.hasMany(FoodRequest, { foreignKey: "org_details_user_id", onDelete: "CASCADE" });
+FoodRequest.belongsTo(OrgDetails, { foreignKey: "org_details_user_id" });
+
+FoodRequest.hasMany(Donation, { foreignKey: "food_request_id", onDelete: "CASCADE" });
+Donation.belongsTo(FoodRequest, { foreignKey: "food_request_id" });
+
+Product.hasMany(Donation, { foreignKey: "product_id", onDelete: "CASCADE" });
+Donation.belongsTo(Product, { foreignKey: "product_id" });
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct, Review
+    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation
 };
