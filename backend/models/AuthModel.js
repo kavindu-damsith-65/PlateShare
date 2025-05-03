@@ -32,7 +32,7 @@ const SellerDetails = sequelize.define('seller_details', {
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    email: { type: DataTypes.BOOLEAN },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -213,5 +213,5 @@ Donation.belongsTo(Product, { foreignKey: "product_id" });
 
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation
+    FoodRequest, Admin, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation
 };
