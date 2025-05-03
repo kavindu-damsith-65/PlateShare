@@ -115,14 +115,6 @@ const Admin = sequelize.define('admin', {
     email: { type: DataTypes.INTEGER }
 });
 
-// Request Info Model
-const RequestInfo = sequelize.define('request_info', {
-    id: { type: DataTypes.INTEGER, primaryKey: true },
-    food_request_id: { type: DataTypes.INTEGER },
-    product_id: { type: DataTypes.STRING },
-    quantity: { type: DataTypes.INTEGER },
-    completed: { type: DataTypes.BOOLEAN }
-});
 
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
