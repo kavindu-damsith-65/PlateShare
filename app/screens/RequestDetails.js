@@ -133,11 +133,9 @@ export default function RequestDetails() {
       setLoading(true);
       const response = await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/toggle-visibility`);
 
-      const updatedRequest = response.data.foodRequest;
-      
-      if (!updatedRequest.donations && request.donations) {
-        updatedRequest.donations = request.donations;
-      }
+      // Get the updated request with all details including donations
+      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+      const updatedRequest = updatedRequestResponse.data.foodRequest;
       
       setRequest(updatedRequest);
 
@@ -158,7 +156,13 @@ export default function RequestDetails() {
   const markRequestComplete = async () => {
     try {
       setLoading(true);
-      const response = await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/complete`);
+      await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/complete`);
+
+      // Fetch the updated request to get the latest data
+      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+      const updatedRequest = updatedRequestResponse.data.foodRequest;
+
+      setRequest(updatedRequest);
 
       // Show success message
       Alert.alert(

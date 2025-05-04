@@ -5,6 +5,7 @@ import { BACKEND_URL } from '@env';
 import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);
@@ -12,13 +13,23 @@ const Requests = () => {
   const [error, setError] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRequest, setEditingRequest] = useState(null);
-  
+  const navigation = useNavigation();
+
   // TODO: Replace with actual user ID from authentication
   const orgUserId = "user_3";
 
+  // Fetch requests on initial load
   useEffect(() => {
     fetchRequests();
   }, []);
+
+  // Fetch requests whenever the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchRequests();
+      return () => {}; // cleanup function
+    }, [])
+  );
 
   const fetchRequests = async () => {
     setLoading(true);
