@@ -94,7 +94,7 @@ const ProductSubProduct = sequelize.define('product_subproduct', {
 
 // Food Request Model
 const FoodRequest = sequelize.define('food_request', {
-    id: { type: DataTypes.INTEGER, primaryKey: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     org_details_user_id: { type: DataTypes.STRING, allowNull: false },
     title: { type: DataTypes.STRING },
     products: { type: DataTypes.STRING, allowNull: false },

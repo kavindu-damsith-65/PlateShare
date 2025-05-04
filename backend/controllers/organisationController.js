@@ -203,3 +203,123 @@ exports.toggleRequestVisibility = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
+// Create a new food request
+exports.createRequest = async (req, res) => {
+    try {
+        const {
+            title,
+            products,
+            quantity,
+            dateTime,
+            notes,
+            urgent,
+            delivery,
+            visibility,
+            orgUserId
+        } = req.body;
+
+        // Create the new food request
+        const newRequest = await FoodRequest.create({
+            org_details_user_id: orgUserId,
+            title,
+            products,
+            quantity,
+            dateTime,
+            notes,
+            urgent,
+            delivery,
+            visibility: visibility === 'Public',
+            completed: false
+        });
+
+        return res.status(201).json({
+            message: "Food request created successfully",
+            foodRequest: newRequest
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Update an existing food request
+exports.updateRequest = async (req, res) => {
+    try {
+        const { requestId } = req.params;
+        const {
+            title,
+            products,
+            quantity,
+            dateTime,
+            notes,
+            urgent,
+            delivery,
+            visibility
+        } = req.body;
+
+        const foodRequest = await FoodRequest.findByPk(requestId);
+
+        if (!foodRequest) {
+            return res.status(404).json({ message: "Food request not found" });
+        }
+
+        // Update the food request
+        await foodRequest.update({
+            title,
+            products,
+            quantity,
+            dateTime,
+            notes,
+            urgent,
+            delivery,
+            visibility: visibility === 'Public'
+        });
+
+        return res.status(200).json({
+            message: "Food request updated successfully",
+            foodRequest
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Delete a food request
+exports.deleteRequest = async (req, res) => {
+    try {
+        const { requestId } = req.params;
+
+        const foodRequest = await FoodRequest.findByPk(requestId);
+
+        if (!foodRequest) {
+            return res.status(404).json({ message: "Food request not found" });
+        }
+
+        // Check if there are any donations associated with this request
+        const donationsCount = await Donation.count({
+            where: { food_request_id: requestId }
+        });
+
+        if (donationsCount > 0) {
+            return res.status(400).json({
+                message: "Cannot delete request with existing donations. Consider marking it as completed instead."
+            });
+        }
+
+        // Delete the food request
+        await foodRequest.destroy();
+
+        return res.status(200).json({
+            message: "Food request deleted successfully",
+            requestId
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
