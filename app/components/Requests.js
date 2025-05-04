@@ -86,35 +86,6 @@ const Requests = () => {
     );
   };
 
-  const handleMarkComplete = (id) => {
-    Alert.alert(
-      "Confirm Completion",
-      "Are you sure you want to mark this request as complete?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Complete",
-          onPress: async () => {
-            try {
-              // TODO: Implement actual API call
-              // await axios.put(`${BACKEND_URL}/api/organisation/requests/${id}/complete`);
-              
-              // For now, just remove it from the local state
-              setRequests(requests.filter(request => request.id !== id));
-              Alert.alert("Success", "Request marked as complete");
-            } catch (error) {
-              console.error("Error completing request:", error);
-              Alert.alert("Error", "Failed to complete request. Please try again.");
-            }
-          }
-        }
-      ]
-    );
-  };
-
   const handleSubmit = async (formData) => {
     try {
       // Transform the form data to match the API structure
@@ -167,7 +138,6 @@ const Requests = () => {
       request={item} 
       onEdit={handleEdit} 
       onDelete={handleDelete}
-      onMarkComplete={handleMarkComplete}
     />
   );
 

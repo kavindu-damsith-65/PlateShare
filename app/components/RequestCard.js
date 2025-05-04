@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const RequestCard = ({ request, onEdit, onDelete, onMarkComplete }) => {
+const RequestCard = ({ request, onEdit, onDelete }) => {
   const navigation = useNavigation();
   
   // Format date to be more readable
