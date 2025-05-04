@@ -13,7 +13,9 @@ const DishRow = ({ id, name, description, price, image, sub_products, has_subs }
   const [isPressed, setIsPressed] = useState(false);
 
   const dispatch = useDispatch();
-  const items = useSelector((state) => selectBasketItemsWithId(state, id));
+
+  // this wll cause some massive re-renders
+  // const items = useSelector((state) => selectBasketItemsWithId(state, id));
 
   const getImageUrl = (imageSource) => {
     if (!imageSource) return null;

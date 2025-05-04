@@ -84,20 +84,13 @@ exports.getRecommendedProducts = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const foodRequestProducts = await FoodRequest.findAll({
-            where: { org_details_user_id: userId },
-            attributes: ["product_id"]
-        });
-
+        // Only check food bucket
         const foodBucketProducts = await FoodBucket.findAll({
             where: { user_id: userId },
             attributes: ["product_id"]
         });
 
-        const productIds = [
-            ...foodRequestProducts.map(item => item.product_id),
-            ...foodBucketProducts.map(item => item.product_id)
-        ];
+        const productIds = foodBucketProducts.map(item => item.product_id);
 
         if (productIds.length > 0) {
             const products = await Product.findAll({
