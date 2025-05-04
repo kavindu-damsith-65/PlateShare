@@ -17,6 +17,7 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
   
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [customFoodType, setCustomFoodType] = useState('');
 
   // Reset form when modal opens or editingRequest changes
   useEffect(() => {
@@ -92,6 +93,20 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
         ...formData,
         preferredFoodTypes: [...formData.preferredFoodTypes, food]
       });
+    }
+  };
+
+  const addCustomFoodType = () => {
+    if (customFoodType.trim() === '') return;
+
+    if (!formData.preferredFoodTypes.includes(customFoodType.trim())) {
+      setFormData({
+        ...formData,
+        preferredFoodTypes: [...formData.preferredFoodTypes, customFoodType.trim()]
+      });
+      setCustomFoodType('');
+    } else {
+      alert('This food type is already added');
     }
   };
 
@@ -217,6 +232,36 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
                     }`}>{food}</Text>
                   </TouchableOpacity>
                 ))}
+
+                {/* Display custom food types that aren't in the predefined list */}
+                {formData.preferredFoodTypes
+                  .filter(type => !foodTypes.includes(type))
+                  .map(customType => (
+                    <TouchableOpacity
+                      key={customType}
+                      className="rounded-full px-3 py-1 m-1 bg-[#00CCBB]"
+                      onPress={() => toggleFoodType(customType)}
+                    >
+                      <Text className="text-sm text-white">{customType}</Text>
+                    </TouchableOpacity>
+                  ))
+                }
+              </View>
+
+              {/* Custom food type input */}
+              <View className="flex-row mt-2">
+                <TextInput
+                  className="border border-gray-300 rounded-md p-2 flex-1 mr-2"
+                  placeholder="Add custom food type"
+                  value={customFoodType}
+                  onChangeText={setCustomFoodType}
+                />
+                <TouchableOpacity
+                  className="bg-[#00CCBB] px-3 py-2 rounded-md"
+                  onPress={addCustomFoodType}
+                >
+                  <Text className="text-white">Add</Text>
+                </TouchableOpacity>
               </View>
             </View>
             
