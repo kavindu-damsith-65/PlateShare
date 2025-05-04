@@ -136,7 +136,7 @@ export default function RequestFormModal({ visible, onClose, onSubmit, editingRe
     setShowDatePicker(true);
   };
 
-  const requestTypes = ['General', 'Specific', 'Urgent'];
+  const requestTypes = ['General', 'Urgent'];
   const foodTypes = ['Rice', 'Burgers', 'Fruits', 'Vegetables', 'Pasta', 'Bread', 'Canned goods'];
 
   // Helper function to format date for display

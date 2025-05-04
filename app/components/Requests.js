@@ -1,0 +1,242 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import { BACKEND_URL } from '@env';
+import RequestCard from './RequestCard';
+import RequestFormModal from './RequestFormModal';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const Requests = () => {
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editingRequest, setEditingRequest] = useState(null);
+  
+  // TODO: Replace with actual user ID from authentication
+  const orgUserId = "user_3";
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
+  const fetchRequests = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/incomplete/${orgUserId}`);
+      setRequests(response.data.foodRequests);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+      setError("Failed to load food requests. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const openCreateModal = () => {
+    setEditingRequest(null);
+    setModalVisible(true);
+  };
+
+  const handleEdit = (request) => {
+    // Transform the request data to match the form structure
+    const formattedRequest = {
+      ...request,
+      preferredFoodTypes: request.products.split(', '),
+      requestByDateTime: request.dateTime,
+      additionalNotes: request.notes,
+      deliveryNeeded: request.delivery,
+      requestType: request.urgent ? 'Urgent' : 'General',
+      numberOfPeople: request.quantity.toString(),
+      visibility: request.visibility
+    };
+    
+    setEditingRequest(formattedRequest);
+    setModalVisible(true);
+  };
+
+  const handleDelete = (id) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this request?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            try {
+              // TODO: Implement actual API call
+              // await axios.delete(`${BACKEND_URL}/api/organisation/requests/${id}`);
+              
+              // For now, just remove it from the local state
+              setRequests(requests.filter(request => request.id !== id));
+              Alert.alert("Success", "Request deleted successfully");
+            } catch (error) {
+              console.error("Error deleting request:", error);
+              Alert.alert("Error", "Failed to delete request. Please try again.");
+            }
+          },
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
+  const handleMarkComplete = (id) => {
+    Alert.alert(
+      "Confirm Completion",
+      "Are you sure you want to mark this request as complete?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Complete",
+          onPress: async () => {
+            try {
+              // TODO: Implement actual API call
+              // await axios.put(`${BACKEND_URL}/api/organisation/requests/${id}/complete`);
+              
+              // For now, just remove it from the local state
+              setRequests(requests.filter(request => request.id !== id));
+              Alert.alert("Success", "Request marked as complete");
+            } catch (error) {
+              console.error("Error completing request:", error);
+              Alert.alert("Error", "Failed to complete request. Please try again.");
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleSubmit = async (formData) => {
+    try {
+      // Transform the form data to match the API structure
+      const apiData = {
+        title: formData.title,
+        products: formData.preferredFoodTypes.join(', '),
+        quantity: parseInt(formData.numberOfPeople),
+        dateTime: formData.requestByDateTime,
+        notes: formData.additionalNotes,
+        urgent: formData.requestType === 'Urgent',
+        delivery: formData.deliveryNeeded,
+        visibility: formData.visibility
+      };
+
+      if (editingRequest) {
+        // TODO: Implement actual API call
+        // await axios.put(`${BACKEND_URL}/api/organisation/requests/${editingRequest.id}`, apiData);
+        
+        // For now, just update the local state
+        setRequests(requests.map(request => 
+          request.id === editingRequest.id ? { ...request, ...apiData } : request
+        ));
+        Alert.alert("Success", "Request updated successfully");
+      } else {
+        // TODO: Implement actual API call
+        // const response = await axios.post(`${BACKEND_URL}/api/organisation/requests`, {
+        //   ...apiData,
+        //   orgUserId
+        // });
+        
+        // For now, just add to the local state with a fake ID
+        const newRequest = {
+          id: Date.now(),
+          ...apiData,
+          donations: []
+        };
+        setRequests([newRequest, ...requests]);
+        Alert.alert("Success", "New request created successfully");
+      }
+      
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error submitting request:", error);
+      Alert.alert("Error", "Failed to save request. Please try again.");
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <RequestCard 
+      request={item} 
+      onEdit={handleEdit} 
+      onDelete={handleDelete}
+      onMarkComplete={handleMarkComplete}
+    />
+  );
+
+  if (loading && requests.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#00CCBB" />
+        <Text className="mt-2 text-gray-500">Loading requests...</Text>
+      </View>
+    );
+  }
+
+  if (error && requests.length === 0) {
+    return (
+      <View className="flex-1 justify-center items-center p-5">
+        <Ionicons name="alert-circle-outline" size={50} color="#FF6B6B" />
+        <Text className="mt-2 text-red-500 text-center">{error}</Text>
+        <TouchableOpacity 
+          className="mt-4 bg-[#00CCBB] px-4 py-2 rounded-md"
+          onPress={fetchRequests}
+        >
+          <Text className="text-white">Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1">
+      <View className="flex-row justify-between items-center px-5 py-4 bg-white border-b border-gray-200">
+        <Text className="text-xl font-bold text-gray-800">Donation Requests</Text>
+        <TouchableOpacity 
+          className="bg-[#00CCBB] px-3 py-2 rounded-md"
+          onPress={openCreateModal}
+        >
+          <Text className="text-white font-medium">New Request</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {requests.length > 0 ? (
+        <FlatList
+          data={requests}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={{ padding: 16 }}
+          refreshing={loading}
+          onRefresh={fetchRequests}
+        />
+      ) : (
+        <View className="flex-1 justify-center items-center p-5">
+          <Ionicons name="notifications-off-outline" size={50} color="#DDD" />
+          <Text className="mt-2 text-base text-gray-500">No pending requests</Text>
+          <TouchableOpacity 
+            className="mt-4 bg-[#00CCBB] px-4 py-2 rounded-md"
+            onPress={openCreateModal}
+          >
+            <Text className="text-white font-medium">Create New Request</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      
+      <RequestFormModal 
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleSubmit}
+        editingRequest={editingRequest}
+      />
+    </View>
+  );
+};
+
+export default Requests;
