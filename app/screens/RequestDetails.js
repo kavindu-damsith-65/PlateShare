@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
@@ -79,6 +79,20 @@ export default function RequestDetails() {
     });
   };
   
+  // Calculate total donated quantity and progress percentage
+  const calculateProgress = () => {
+    if (!request || !request.donations || request.donations.length === 0) return 0;
+    
+    const totalDonated = request.donations.reduce((sum, donation) => sum + donation.quantity, 0);
+    const percentage = Math.min((totalDonated / request.quantity) * 100, 100);
+    
+    return {
+      totalDonated,
+      percentage,
+      isComplete: percentage >= 100
+    };
+  };
+  
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-white">
@@ -105,6 +119,8 @@ export default function RequestDetails() {
     );
   }
   
+  const progress = calculateProgress();
+  
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="relative py-4 shadow-sm bg-white">
@@ -121,9 +137,13 @@ export default function RequestDetails() {
         <View className="bg-white rounded-lg p-4 mb-4 shadow">
           <View className="flex-row justify-between items-center mb-2">
             <Text className="text-xl font-bold text-gray-800">{request.title}</Text>
-            {request.urgent && (
+            {request.urgent ? (
               <View className="bg-red-100 px-2 py-1 rounded-full">
                 <Text className="text-xs font-medium text-red-800">Urgent</Text>
+              </View>
+            ) : (
+              <View className="bg-yellow-100 px-2 py-1 rounded-full">
+                <Text className="text-xs font-medium text-yellow-600">General</Text>
               </View>
             )}
           </View>
@@ -132,10 +152,28 @@ export default function RequestDetails() {
             <Text className="text-gray-700 font-medium mb-1">Requested Items:</Text>
             <Text className="text-gray-600">{request.products}</Text>
           </View>
-          
-          <View className="mb-4">
+
+          <View className="mb-1">
             <Text className="text-gray-700 font-medium mb-1">Quantity Needed:</Text>
             <Text className="text-gray-600">{request.quantity} servings</Text>
+          </View>
+          
+          {/* Progress bar */}
+          <View className="mb-4">
+            <View className="flex-row justify-between items-center mb-1">
+              <Text className="text-sm text-gray-500">
+                {progress.totalDonated} of {request.quantity} servings donated
+              </Text>
+              <Text className="text-sm font-medium" style={{ color: progress.isComplete ? '#10b981' : '#f59e0b' }}>
+                {progress.percentage.toFixed(0)}%
+              </Text>
+            </View>
+            <View className="h-2.5 w-full bg-gray-200 rounded-full">
+              <View 
+                className={`h-2.5 rounded-full ${progress.isComplete ? 'bg-green-500' : 'bg-yellow-500'}`} 
+                style={{ width: `${progress.percentage}%` }}
+              />
+            </View>
           </View>
           
           <View className="mb-4">
@@ -186,14 +224,21 @@ export default function RequestDetails() {
           </TouchableOpacity>
           
           <TouchableOpacity 
-            className="bg-green-500 px-4 py-3 rounded-md flex-1 ml-2"
+            className={`px-4 py-3 rounded-md flex-1 ml-2 ${progress.isComplete ? 'bg-green-500' : 'bg-gray-400'}`}
             onPress={() => {
-              // Mark as complete logic would go here
-              alert('Request marked as complete');
-              navigation.navigate('OrganizationRequests');
+              if (progress.isComplete) {
+                // Mark as complete logic would go here
+                alert('Request marked as complete');
+                navigation.navigate('OrganizationRequests');
+              } else {
+                alert('Cannot mark as complete until all requested servings are donated');
+              }
             }}
+            disabled={!progress.isComplete}
           >
-            <Text className="text-white text-center font-medium">Mark Complete</Text>
+            <Text className="text-white text-center font-medium">
+              {progress.isComplete ? 'Mark Complete' : 'Awaiting Donations'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

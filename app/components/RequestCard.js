@@ -77,13 +77,7 @@ const RequestCard = ({ request, onEdit, onDelete, onMarkComplete }) => {
           >
             <Text className="text-xs text-white font-medium">Delete</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity 
-            className="bg-green-500 px-3 py-1.5 rounded"
-            onPress={() => onMarkComplete(request.id)}
-          >
-            <Text className="text-xs text-white font-medium">Complete</Text>
-          </TouchableOpacity>
+
         </View>
       </View>
       
