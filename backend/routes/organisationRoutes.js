@@ -2,7 +2,8 @@ const express = require("express");
 const { 
     getIncompleteRequests, 
     getRequestById, 
-    markRequestCompleted 
+    markRequestCompleted,
+    toggleRequestVisibility
 } = require("../controllers/organisationController");
 
 const router = express.Router();
@@ -15,5 +16,8 @@ router.get("/requests/:requestId", getRequestById);
 
 // Mark a food request as completed
 router.put("/requests/:requestId/complete", markRequestCompleted);
+
+// Toggle visibility of a food request (public/private)
+router.put("/requests/:requestId/toggle-visibility", toggleRequestVisibility);
 
 module.exports = router;

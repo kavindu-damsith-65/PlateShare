@@ -176,3 +176,30 @@ exports.markRequestCompleted = async (req, res) => {
         return res.status(500).json({ message: "Server error" });
     }
 };
+
+// Toggle visibility of a food request
+exports.toggleRequestVisibility = async (req, res) => {
+    try {
+        const { requestId } = req.params;
+
+        const foodRequest = await FoodRequest.findByPk(requestId);
+
+        if (!foodRequest) {
+            return res.status(404).json({ message: "Food request not found" });
+        }
+
+        // Toggle the visibility value
+        const newVisibility = !foodRequest.visibility;
+
+        await foodRequest.update({ visibility: newVisibility });
+
+        return res.status(200).json({
+            message: `Food request visibility changed to ${newVisibility ? 'public' : 'private'}`,
+            foodRequest
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};

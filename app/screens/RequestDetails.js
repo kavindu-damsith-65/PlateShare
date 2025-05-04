@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
@@ -46,9 +46,9 @@ export default function RequestDetails() {
   useEffect(() => {
     const fetchRequestDetails = async () => {
       try {
-        // In a real app, you would fetch the specific request by ID
-        const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/incomplete/user_3`);
-        const foundRequest = response.data.foodRequests.find(req => req.id === requestId);
+        // Fetch the specific request by ID using the dedicated endpoint
+        const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+        const foundRequest = response.data.foodRequest;
         
         if (foundRequest) {
           setRequest(foundRequest);
@@ -81,7 +81,13 @@ export default function RequestDetails() {
   
   // Calculate total donated quantity and progress percentage
   const calculateProgress = () => {
-    if (!request || !request.donations || request.donations.length === 0) return 0;
+    if (!request || !request.donations || request.donations.length === 0) {
+      return {
+        totalDonated: 0,
+        percentage: 0,
+        isComplete: false
+      };
+    }
     
     const totalDonated = request.donations.reduce((sum, donation) => sum + donation.quantity, 0);
     const percentage = Math.min((totalDonated / request.quantity) * 100, 100);
@@ -121,6 +127,58 @@ export default function RequestDetails() {
   
   const progress = calculateProgress();
   
+  // Add a function to toggle visibility
+  const toggleVisibility = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/toggle-visibility`);
+
+      const updatedRequest = response.data.foodRequest;
+      
+      if (!updatedRequest.donations && request.donations) {
+        updatedRequest.donations = request.donations;
+      }
+      
+      setRequest(updatedRequest);
+
+      // Show success message
+      Alert.alert(
+        "Success",
+        `Request is now ${updatedRequest.visibility ? 'public' : 'private'}`
+      );
+    } catch (error) {
+      console.error("Error toggling visibility:", error);
+      Alert.alert("Error", "Failed to update visibility. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add a function to mark request as complete
+  const markRequestComplete = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/complete`);
+
+      // Show success message
+      Alert.alert(
+        "Success",
+        "Request marked as complete",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack()
+          }
+        ]
+      );
+    } catch (error) {
+      console.error("Error marking request as complete:", error);
+      Alert.alert("Error", "Failed to mark request as complete. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <View className="relative py-4 shadow-sm bg-white">
@@ -203,8 +261,10 @@ export default function RequestDetails() {
         </View>
         
         <View className="mb-4">
-          <Text className="text-lg font-bold text-gray-800 mb-2">Donations ({request.donations.length})</Text>
-          {request.donations.length > 0 ? (
+          <Text className="text-lg font-bold text-gray-800 mb-2">
+            Donations ({request.donations ? request.donations.length : 0})
+          </Text>
+          {request.donations && request.donations.length > 0 ? (
             request.donations.map(donation => (
               <DonationItem key={donation.id} donation={donation} />
             ))
@@ -218,26 +278,19 @@ export default function RequestDetails() {
         <View className="flex-row justify-between mb-10">
           <TouchableOpacity 
             className="bg-[#00CCBB] px-4 py-3 rounded-md flex-1 mr-2"
-            onPress={() => navigation.navigate('OrganizationRequests')}
+            onPress={toggleVisibility}
           >
-            <Text className="text-white text-center font-medium">Back to Requests</Text>
+            <Text className="text-white text-center font-medium">
+              {request.visibility ? 'Make Private' : 'Make Public'}
+            </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            className={`px-4 py-3 rounded-md flex-1 ml-2 ${progress.isComplete ? 'bg-green-500' : 'bg-gray-400'}`}
-            onPress={() => {
-              if (progress.isComplete) {
-                // Mark as complete logic would go here
-                alert('Request marked as complete');
-                navigation.navigate('OrganizationRequests');
-              } else {
-                alert('Cannot mark as complete until all requested servings are donated');
-              }
-            }}
-            disabled={!progress.isComplete}
+            className={`px-4 py-3 rounded-md flex-1 ml-2 ${progress.isComplete ? 'bg-green-500' : 'bg-yellow-500'}`}
+            onPress={markRequestComplete}
           >
             <Text className="text-white text-center font-medium">
-              {progress.isComplete ? 'Mark Complete' : 'Awaiting Donations'}
+              Mark as Complete
             </Text>
           </TouchableOpacity>
         </View>
