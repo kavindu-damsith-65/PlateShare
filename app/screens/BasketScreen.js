@@ -6,7 +6,7 @@ import { removeFromBasket, selectBasketItems, selectBasketTotal } from "../slice
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import { XCircleIcon } from "react-native-heroicons/solid";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { urlFor } from "../sanity";

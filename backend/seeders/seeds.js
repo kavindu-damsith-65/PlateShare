@@ -251,9 +251,79 @@ module.exports = {
 
     await queryInterface.bulkInsert('product_subproducts', productSubProducts);
 
+    // Create organization details for the organization user
+    const organizations = users
+        .filter(user => user.role === 'organization')
+        .map((org, index) => ({
+          user_id: org.id,
+          email: `org${index + 1}@example.com`,
+          phone: `555123456${index + 1}`,
+          address: `Organization Address ${index + 1}`,
+          location: `Organization Location ${index + 1}`,
+          description: `A non-profit organization dedicated to helping the community.`,
+          additional_images: getRandomPicsumImage(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }));
+
+    await queryInterface.bulkInsert('org_details', organizations);
+
+    // Create food requests
+    const foodRequests = [];
+    let requestId = 1;
+    
+    organizations.forEach(org => {
+      // Create 3 food requests for each organization
+      for (let i = 1; i <= 3; i++) {
+        foodRequests.push({
+          id: requestId++,
+          org_details_user_id: org.user_id,
+          title: `Food Request ${i} from ${org.user_id}`,
+          products: `Rice, Vegetables, Canned Goods`,
+          quantity: Math.floor(Math.random() * 50) + 10,
+          completed: i === 3, // Mark the last one as completed
+          dateTime: new Date(new Date().getTime() + (i * 24 * 60 * 60 * 1000)), // Future dates
+          notes: `Please deliver by ${i} PM if possible.`,
+          visibility: true,
+          urgent: i === 1, // First one is urgent
+          delivery: i !== 2, // All except the second one need delivery
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+    });
+
+    await queryInterface.bulkInsert('food_requests', foodRequests);
+
+    // Create donations linked to food requests and products
+    const donations = [];
+    let donationId = 1;
+    
+    foodRequests.forEach(request => {
+      // Get random products to donate to this request
+      const randomProducts = products
+        .sort(() => 0.5 - Math.random()) // Shuffle array
+        .slice(0, 3); // Take first 3 items
+      
+      randomProducts.forEach(product => {
+        donations.push({
+          id: donationId++,
+          food_request_id: request.id,
+          product_id: product.id,
+          quantity: Math.floor(Math.random() * 5) + 1, // Random quantity between 1-5
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      });
+    });
+
+    await queryInterface.bulkInsert('donations', donations);
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete('donations', null, {});
+    await queryInterface.bulkDelete('food_requests', null, {});
+    await queryInterface.bulkDelete('org_details', null, {});
     await queryInterface.bulkDelete('restaurants', null, {});
     await queryInterface.bulkDelete('seller_details', null, {});
     await queryInterface.bulkDelete('buyer_details', null, {});

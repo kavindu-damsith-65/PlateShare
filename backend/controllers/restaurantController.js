@@ -11,6 +11,10 @@ exports.showNearByRestaurants = async (req, res) => {
             attributes: ["user_id"]
         });
 
+        if (sellers.length === 0) {
+            return res.status(404).json({ message: "No sellers found in this location" });
+        }
+
         const sellerIds = sellers.map(seller => seller.user_id);
 
         // Find restaurants owned by these sellers

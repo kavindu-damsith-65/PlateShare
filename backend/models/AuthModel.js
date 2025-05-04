@@ -32,7 +32,7 @@ const SellerDetails = sequelize.define('seller_details', {
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    email: { type: DataTypes.BOOLEAN },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -94,9 +94,17 @@ const ProductSubProduct = sequelize.define('product_subproduct', {
 
 // Food Request Model
 const FoodRequest = sequelize.define('food_request', {
-    id: { type: DataTypes.INTEGER, primaryKey: true },
-    org_details_user_id: { type: DataTypes.STRING },
-    product_id: { type: DataTypes.STRING }
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    org_details_user_id: { type: DataTypes.STRING, allowNull: false },
+    title: { type: DataTypes.STRING },
+    products: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER },
+    completed: { type: DataTypes.BOOLEAN },
+    dateTime: { type: DataTypes.DATE },
+    notes: { type: DataTypes.STRING },
+    visibility: { type: DataTypes.BOOLEAN },
+    urgent: { type: DataTypes.BOOLEAN },
+    delivery: { type: DataTypes.BOOLEAN }
 });
 
 // Admin Model
@@ -107,14 +115,6 @@ const Admin = sequelize.define('admin', {
     email: { type: DataTypes.INTEGER }
 });
 
-// Request Info Model
-const RequestInfo = sequelize.define('request_info', {
-    id: { type: DataTypes.INTEGER, primaryKey: true },
-    food_request_id: { type: DataTypes.INTEGER },
-    product_id: { type: DataTypes.STRING },
-    quantity: { type: DataTypes.INTEGER },
-    completed: { type: DataTypes.BOOLEAN }
-});
 
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
@@ -147,6 +147,14 @@ const Review = sequelize.define('review', {
     rating: { type: DataTypes.INTEGER, },
     restaurant_id: { type: DataTypes.STRING },
     user_id: { type: DataTypes.STRING },
+});
+
+// Donations Model
+const Donation = sequelize.define('donation', {
+    id: { type: DataTypes.INTEGER, primaryKey: true },
+    food_request_id: { type: DataTypes.INTEGER, allowNull: false },
+    product_id: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER }
 });
 
 // Relationships
@@ -194,7 +202,16 @@ SubProduct.belongsToMany(Product, {
     onDelete: "CASCADE"
 });
 
+OrgDetails.hasMany(FoodRequest, { foreignKey: "org_details_user_id", onDelete: "CASCADE" });
+FoodRequest.belongsTo(OrgDetails, { foreignKey: "org_details_user_id" });
+
+FoodRequest.hasMany(Donation, { foreignKey: "food_request_id", onDelete: "CASCADE" });
+Donation.belongsTo(FoodRequest, { foreignKey: "food_request_id" });
+
+Product.hasMany(Donation, { foreignKey: "product_id", onDelete: "CASCADE" });
+Donation.belongsTo(Product, { foreignKey: "product_id" });
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, RequestInfo, FoodBucket, Payment, Order, ProductSubProduct, Review
+    FoodRequest, Admin, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation
 };
