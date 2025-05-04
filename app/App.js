@@ -16,6 +16,7 @@ import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/BuyerTabs";
 import OrganizationTabs from "./screens/OrganizationTabs";
+import RequestDetails from "./screens/RequestDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,13 @@ function App(){
                         <Stack.Screen
                             name="Restaurant"
                             component={RestaurantScreen}
+                        />
+                        <Stack.Screen
+                            name="RequestDetails"
+                            component={RequestDetails}
+                            options={{
+                                headerShown: false,
+                            }}
                         />
                         <Stack.Screen
                             name="Prepare"

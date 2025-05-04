@@ -24,9 +24,13 @@ const RequestCard = ({ request, onEdit, onDelete, onMarkComplete }) => {
     >
       <View className="flex-row justify-between items-center mb-2">
         <Text className="text-lg font-bold text-gray-800">{request.title}</Text>
-        {request.urgent && (
+        {request.urgent ? (
           <View className="bg-red-100 px-2 py-1 rounded-full">
             <Text className="text-xs font-medium text-red-800">Urgent</Text>
+          </View>
+        ) : (
+          <View className="bg-yellow-100 px-2 py-1 rounded-full">
+            <Text className="text-xs font-medium text-yellow-600">General</Text>
           </View>
         )}
       </View>
