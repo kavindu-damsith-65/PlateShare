@@ -69,15 +69,24 @@ const Requests = () => {
           text: "Delete",
           onPress: async () => {
             try {
-              // TODO: Implement actual API call
-              // await axios.delete(`${BACKEND_URL}/api/organisation/requests/${id}`);
+              // Call the delete API endpoint
+              await axios.delete(`${BACKEND_URL}/api/organisation/requests/${id}`);
               
-              // For now, just remove it from the local state
+              // Remove the deleted request from the local state
               setRequests(requests.filter(request => request.id !== id));
               Alert.alert("Success", "Request deleted successfully");
             } catch (error) {
               console.error("Error deleting request:", error);
-              Alert.alert("Error", "Failed to delete request. Please try again.");
+
+              // Check if it's a specific error about donations
+              if (error.response && error.response.status === 400) {
+                Alert.alert(
+                  "Cannot Delete",
+                  "This request already has donations. Consider marking it as completed instead."
+                );
+              } else {
+                Alert.alert("Error", "Failed to delete request. Please try again.");
+              }
             }
           },
           style: "destructive"
@@ -97,32 +106,35 @@ const Requests = () => {
         notes: formData.additionalNotes,
         urgent: formData.requestType === 'Urgent',
         delivery: formData.deliveryNeeded,
-        visibility: formData.visibility
+        visibility: formData.visibility === 'Public'
       };
 
       if (editingRequest) {
-        // TODO: Implement actual API call
-        // await axios.put(`${BACKEND_URL}/api/organisation/requests/${editingRequest.id}`, apiData);
+        // Update existing request
+        const response = await axios.put(
+          `${BACKEND_URL}/api/organisation/requests/${editingRequest.id}`, 
+          apiData
+        );
         
-        // For now, just update the local state
+        // Update the local state with the updated request
         setRequests(requests.map(request => 
-          request.id === editingRequest.id ? { ...request, ...apiData } : request
+          request.id === editingRequest.id ? response.data.foodRequest : request
         ));
+        
         Alert.alert("Success", "Request updated successfully");
       } else {
-        // TODO: Implement actual API call
-        // const response = await axios.post(`${BACKEND_URL}/api/organisation/requests`, {
-        //   ...apiData,
-        //   orgUserId
-        // });
+        // Create new request
+        const response = await axios.post(
+          `${BACKEND_URL}/api/organisation/requests`, 
+          {
+            ...apiData,
+            orgUserId
+          }
+        );
         
-        // For now, just add to the local state with a fake ID
-        const newRequest = {
-          id: Date.now(),
-          ...apiData,
-          donations: []
-        };
-        setRequests([newRequest, ...requests]);
+        // Add the new request to the local state
+        setRequests([response.data.foodRequest, ...requests]);
+        
         Alert.alert("Success", "New request created successfully");
       }
       
