@@ -12,6 +12,7 @@ import { setRestaurant } from "../slices/restaurantSlice";
 import axios from "axios";
 import { BACKEND_URL } from "@env";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Reviews from "../components/Reviews";
 
 const RestaurantScreen = ({ route, navigation }) => {
   const {
@@ -138,7 +139,7 @@ const RestaurantScreen = ({ route, navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="pb-36">
+        <View className="pb-2">
           <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
 
           {restaurantData?.dishes?.length > 0 ? (
@@ -195,6 +196,10 @@ const RestaurantScreen = ({ route, navigation }) => {
             <Text className="px-4 text-gray-500">No dishes available.</Text>
           )}
         </View>
+
+         {/* Reviews Section */}
+       <Reviews restaurantId={id} />
+         
       </ScrollView>
     </>
   );
