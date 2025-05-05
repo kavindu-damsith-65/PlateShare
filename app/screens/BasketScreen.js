@@ -1,9 +1,8 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, SafeAreaView } from "react-native";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../slices/restaurantSlice";
 import { removeFromBasket, selectBasketItems, selectBasketTotal } from "../slices/basketSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import { XCircleIcon } from "react-native-heroicons/solid";
 import { ScrollView } from "react-native";
