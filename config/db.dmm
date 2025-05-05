@@ -136,10 +136,11 @@
 			],
 			"relations": [
 				"55ecaa6f-c2ce-49c2-bb78-2a2932bdaf50",
-				"7dc125f4-d009-4512-b00d-5370c3ed7c84",
 				"5d54b462-a120-4d53-9060-5cce4914dff1",
 				"f30b9438-eea6-4298-9987-c7fdc1942a16",
-				"03951d65-2349-4140-bfdc-8bbd984a8ff0"
+				"03951d65-2349-4140-bfdc-8bbd984a8ff0",
+				"cf908315-a4b3-4c82-93e2-7961753cdf0c",
+				"f180e6a8-5e20-4e69-a8ec-ac4190eae8fd"
 			],
 			"lines": [],
 			"keys": [
@@ -431,8 +432,8 @@
 				}
 			],
 			"relations": [
-				"7dc125f4-d009-4512-b00d-5370c3ed7c84",
-				"3179a10c-4978-43fe-833f-2b39803a663d"
+				"3179a10c-4978-43fe-833f-2b39803a663d",
+				"cf908315-a4b3-4c82-93e2-7961753cdf0c"
 			],
 			"lines": [],
 			"keys": [
@@ -2409,27 +2410,6 @@
 					"estimatedSize": ""
 				},
 				{
-					"id": "bfd5e985-65f1-4c39-94c2-c15bb6eba414",
-					"name": "reviews_id",
-					"datatype": "INT",
-					"param": "",
-					"pk": false,
-					"nn": true,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
 					"id": "7ef08a88-ef51-443a-a76c-a9abeda63840",
 					"name": "restaurant_id",
 					"datatype": "VARCHAR",
@@ -2449,10 +2429,32 @@
 					"enum": "",
 					"estimatedSize": "",
 					"fk": true
+				},
+				{
+					"id": "f6f945ac-a90f-4e50-9abb-184371807508",
+					"name": "user_id",
+					"datatype": "VARCHAR",
+					"param": "150",
+					"pk": false,
+					"nn": false,
+					"fk": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
 				}
 			],
 			"relations": [
-				"924feb41-0879-4a48-88ef-b1aed2bb3873"
+				"924feb41-0879-4a48-88ef-b1aed2bb3873",
+				"f180e6a8-5e20-4e69-a8ec-ac4190eae8fd"
 			],
 			"lines": [],
 			"keys": [
@@ -2503,32 +2505,6 @@
 					"id": "3f805521-768a-4607-9869-9c4a2e686a80",
 					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
 					"childcol": "caa458ac-76e2-42e0-a033-e23cf440c780"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true,
-			"customCode": "",
-			"relationColor": "transparent"
-		},
-		"7dc125f4-d009-4512-b00d-5370c3ed7c84": {
-			"id": "7dc125f4-d009-4512-b00d-5370c3ed7c84",
-			"name": "user_seller_details",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
-			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
-			"child": "6039e5ec-5ed0-487e-84fa-73b88c2b06fe",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "one",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "11d020ab-e44e-49cc-8604-279211cf62d4",
-					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
-					"childcol": "c578f7c4-f934-4b4d-80ea-3812abea1e93"
 				}
 			],
 			"generate": true,
@@ -2640,32 +2616,6 @@
 			"customCode": "",
 			"relationColor": "transparent"
 		},
-		"f30b9438-eea6-4298-9987-c7fdc1942a16": {
-			"id": "f30b9438-eea6-4298-9987-c7fdc1942a16",
-			"name": "user_food_bucket",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
-			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
-			"child": "5697302f-1fd6-4fd5-85af-d35e63810693",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "many",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "77749eba-5c5a-47f3-ae13-3221ac93e1e3",
-					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
-					"childcol": "fc1f3697-5a46-47e5-af1d-18e88bc7f4a6"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true,
-			"customCode": "",
-			"relationColor": "transparent"
-		},
 		"444dd36b-dc71-451e-a5dc-e33699b21b39": {
 			"id": "444dd36b-dc71-451e-a5dc-e33699b21b39",
 			"name": "restaurant_product",
@@ -2711,32 +2661,6 @@
 					"id": "80ee71da-6fac-47bf-a0d2-8b36bd9f27ab",
 					"parentcol": "592eab30-7605-4f10-8248-61bf8b4f1e32",
 					"childcol": "fe5c8998-193d-40d2-8553-df8ace7f7bd0"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true,
-			"customCode": "",
-			"relationColor": "transparent"
-		},
-		"03951d65-2349-4140-bfdc-8bbd984a8ff0": {
-			"id": "03951d65-2349-4140-bfdc-8bbd984a8ff0",
-			"name": "user_order",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
-			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
-			"child": "2523f2a4-06cf-46c0-a4fd-dcb4757340bf",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "many",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "81a2eaee-65ba-4573-b96c-ea7bf7333963",
-					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
-					"childcol": "b5d0c4c3-7f11-4e76-a88d-5c1dfe5da015"
 				}
 			],
 			"generate": true,
@@ -2899,6 +2823,110 @@
 			"generateCustomCode": true,
 			"customCode": "",
 			"relationColor": "transparent"
+		},
+		"f30b9438-eea6-4298-9987-c7fdc1942a16": {
+			"id": "f30b9438-eea6-4298-9987-c7fdc1942a16",
+			"name": "user_food_bucket",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
+			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
+			"child": "5697302f-1fd6-4fd5-85af-d35e63810693",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "77749eba-5c5a-47f3-ae13-3221ac93e1e3",
+					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
+					"childcol": "fc1f3697-5a46-47e5-af1d-18e88bc7f4a6"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"03951d65-2349-4140-bfdc-8bbd984a8ff0": {
+			"id": "03951d65-2349-4140-bfdc-8bbd984a8ff0",
+			"name": "user_order",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
+			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
+			"child": "2523f2a4-06cf-46c0-a4fd-dcb4757340bf",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "81a2eaee-65ba-4573-b96c-ea7bf7333963",
+					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
+					"childcol": "b5d0c4c3-7f11-4e76-a88d-5c1dfe5da015"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"cf908315-a4b3-4c82-93e2-7961753cdf0c": {
+			"id": "cf908315-a4b3-4c82-93e2-7961753cdf0c",
+			"name": "id_user_id",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
+			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
+			"child": "6039e5ec-5ed0-487e-84fa-73b88c2b06fe",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "one",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "a0dd9347-28fc-40ee-9ed3-3a8974a62ba4",
+					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
+					"childcol": "c578f7c4-f934-4b4d-80ea-3812abea1e93"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
+		},
+		"f180e6a8-5e20-4e69-a8ec-ac4190eae8fd": {
+			"id": "f180e6a8-5e20-4e69-a8ec-ac4190eae8fd",
+			"name": "id_user_id",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "0161435d-ab65-42d6-919b-c0e91f4a6925",
+			"parent": "b868ff7d-dc49-45fd-ab2b-db914402b121",
+			"child": "30ab713d-15f7-44f0-adac-156207b8ad9d",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "b25a299e-b087-4a97-aaf1-913c0ddbdbe9",
+					"parentcol": "972cd3d0-183d-481b-b2b1-fdb0f4216473",
+					"childcol": "f6f945ac-a90f-4e50-9abb-184371807508"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"relationColor": "transparent"
 		}
 	},
 	"notes": {},
@@ -2953,7 +2981,7 @@
 			"quotationExistance": "if_needed"
 		},
 		"connectionVersion": "",
-		"lastSaved": 1746300440861,
+		"lastSaved": 1746420757071,
 		"synchronizationSettings": {
 			"preserveData": "use_temporary_tables",
 			"ignoreSystemDefaults": "yes",
@@ -2977,8 +3005,8 @@
 			"diagramItems": {
 				"b868ff7d-dc49-45fd-ab2b-db914402b121": {
 					"referencedItemId": "b868ff7d-dc49-45fd-ab2b-db914402b121",
-					"x": 1788,
-					"y": 456,
+					"x": 1861,
+					"y": 449,
 					"gHeight": 135,
 					"gWidth": 257,
 					"color": "#ffffff",
@@ -3003,8 +3031,8 @@
 				},
 				"6039e5ec-5ed0-487e-84fa-73b88c2b06fe": {
 					"referencedItemId": "6039e5ec-5ed0-487e-84fa-73b88c2b06fe",
-					"x": 1340,
-					"y": 234,
+					"x": 1395,
+					"y": 271,
 					"gHeight": 117,
 					"gWidth": 221,
 					"color": "#ffffff",
@@ -3068,12 +3096,12 @@
 				},
 				"33f1a330-f96e-47b8-b1a8-c11bdc68a1e2": {
 					"referencedItemId": "33f1a330-f96e-47b8-b1a8-c11bdc68a1e2",
-					"x": 1429,
-					"y": 747,
+					"x": 1451,
+					"y": 750,
 					"gHeight": 225,
 					"gWidth": 283,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#9c27b0",
 					"resized": false,
 					"autoExpand": true,
 					"backgroundOpacity": "10",
@@ -3081,8 +3109,8 @@
 				},
 				"a47ebee4-6d9c-409b-919d-fe613ec60606": {
 					"referencedItemId": "a47ebee4-6d9c-409b-919d-fe613ec60606",
-					"x": 1184,
-					"y": 80,
+					"x": 2085,
+					"y": 32,
 					"gHeight": 99,
 					"gWidth": 192,
 					"color": "#ffffff",
@@ -3094,12 +3122,12 @@
 				},
 				"42717462-d5ed-4308-a483-5530339bb54f": {
 					"referencedItemId": "42717462-d5ed-4308-a483-5530339bb54f",
-					"x": 991,
-					"y": 820,
+					"x": 1024,
+					"y": 786,
 					"gHeight": 99,
 					"gWidth": 236,
 					"color": "#ffffff",
-					"background": "#03a9f4",
+					"background": "#9c27b0",
 					"resized": false,
 					"autoExpand": true,
 					"backgroundOpacity": "10",
@@ -3159,9 +3187,9 @@
 				},
 				"30ab713d-15f7-44f0-adac-156207b8ad9d": {
 					"referencedItemId": "30ab713d-15f7-44f0-adac-156207b8ad9d",
-					"x": 534,
-					"y": 82,
-					"gHeight": 118,
+					"x": 1443,
+					"y": 30,
+					"gHeight": 136,
 					"gWidth": 258,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -3224,7 +3252,6 @@
 		"97bbe417-6d15-40e7-837e-ec0dce1ca952",
 		"30ab713d-15f7-44f0-adac-156207b8ad9d",
 		"55ecaa6f-c2ce-49c2-bb78-2a2932bdaf50",
-		"7dc125f4-d009-4512-b00d-5370c3ed7c84",
 		"5d54b462-a120-4d53-9060-5cce4914dff1",
 		"36cff17d-2d1b-4593-9586-518597ee5130",
 		"c07022ef-7dbc-4dd1-905f-bf7a8a12191c",
@@ -3238,7 +3265,9 @@
 		"d982d6e1-f0dc-4d52-a01c-3d1e9849d960",
 		"e5c761a9-c564-4f85-bc88-fae7e3b2af54",
 		"d3d79c6f-afb7-4467-8f70-f9547a6fdf35",
-		"924feb41-0879-4a48-88ef-b1aed2bb3873"
+		"924feb41-0879-4a48-88ef-b1aed2bb3873",
+		"cf908315-a4b3-4c82-93e2-7961753cdf0c",
+		"f180e6a8-5e20-4e69-a8ec-ac4190eae8fd"
 	],
 	"collapsedTreeItems": [],
 	"reverseStats": {}
