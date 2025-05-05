@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, SafeAreaView } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectRestaurant } from "../slices/restaurantSlice";
@@ -7,7 +7,6 @@ import {
   PhoneArrowDownLeftIcon,
   XMarkIcon,
 } from "react-native-heroicons/solid";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Progress from "react-native-progress";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { Marker } from "react-native-maps";

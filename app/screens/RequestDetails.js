@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useState, useEffect } from 'react';
@@ -185,7 +184,7 @@ export default function RequestDetails() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView className="flex-1 bg-gray-100 pt-5">
       <View className="relative py-4 shadow-sm bg-white">
         <TouchableOpacity
           className="absolute z-10 p-2 bg-gray-100 rounded-full top-4 left-4"
