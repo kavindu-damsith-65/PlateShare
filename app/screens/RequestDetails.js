@@ -5,7 +5,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BACKEND_URL } from '@env';
+
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const DonationItem = ({ donation }) => (
   <View className="bg-white p-4 rounded-lg mb-3 shadow-sm">

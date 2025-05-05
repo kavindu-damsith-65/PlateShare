@@ -2,12 +2,15 @@ import {View, Text, TouchableOpacity, FlatList} from "react-native";
 import React, { useEffect, useState } from "react";
 import RestaurantCard from "./RestaurantCard";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+
 const Restaurants = () => {
   const [restaurants, setRestaurants] = useState([]);
+
+  // TODO: Replace with actual user location
   const location = "Buyer Location 1";
   const navigation = useNavigation();
 
