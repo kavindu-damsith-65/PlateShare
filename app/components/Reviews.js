@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { BACKEND_URL } from "@env";
+import ReviewCard from "./ReviewCard";
 
 const Reviews = ({ restaurantId }) => {
   const [reviews, setReviews] = useState([]);
@@ -79,33 +80,13 @@ const Reviews = ({ restaurantId }) => {
           <Text className="font-medium text-white">Add Review</Text>
         </TouchableOpacity>
       {reviews.length > 0 ? (
-        reviews.map((review) => (   
-          <View
+         reviews.map((review) => (
+          <ReviewCard
             key={review.id}
-            className="p-4 mt-4 bg-white rounded-lg shadow-md"
-          >
-            <Text className="text-lg font-bold">{review.user.name}</Text>
-            <Text className="text-gray-500">{review.description}</Text>
-            <View className="flex-row items-center justify-between mt-2">
-              <Text className="font-bold text-green-500">
-                Rating: {review.rating}
-              </Text>
-              <View className="flex-row space-x-2">
-                <TouchableOpacity
-                  className="bg-[#00CCBB] px-3 py-2 rounded-md"
-                  onPress={() => handleEditReview(review)}
-                >
-                  <Text className="font-medium text-white">Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="px-3 py-2 bg-red-500 rounded-md"
-                  onPress={() => handleDeleteReview(review.id)}
-                >
-                  <Text className="font-medium text-white">Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+            review={review}
+            onEdit={handleEditReview}
+            onDelete={handleDeleteReview}
+          />
         ))
       ) : (
         <Text className="mt-4 text-gray-500">No reviews available.</Text>
