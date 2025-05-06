@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
 
-const CreateReviewForm = ({ restaurantId, onClose, onSubmit }) => {
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+
+console.log(BACKEND_URL)
+
+const ReviewFormModal = ({ restaurantId, onClose, onSubmit }) => {
   const [rating, setRating] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -85,4 +88,4 @@ const CreateReviewForm = ({ restaurantId, onClose, onSubmit }) => {
   );
 };
 
-export default CreateReviewForm;
+export default ReviewFormModal;

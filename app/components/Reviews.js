@@ -8,9 +8,10 @@ import {
   Modal,
 } from "react-native";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
 import ReviewCard from "./ReviewCard";
 import ReviewFormModal from "./ReviewFormModal";
+
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const Reviews = ({ restaurantId }) => {
   const [reviews, setReviews] = useState([]);
