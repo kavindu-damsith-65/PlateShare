@@ -10,9 +10,11 @@ import BasketContainer from "../components/BasketContainer";
 import { useDispatch } from "react-redux";
 import { setRestaurant } from "../slices/restaurantSlice";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Reviews from "../components/Reviews";
+
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+
 
 const RestaurantScreen = ({ route, navigation }) => {
   const {

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { BACKEND_URL } from '@env';
 import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const Requests = () => {
   const [requests, setRequests] = useState([]);

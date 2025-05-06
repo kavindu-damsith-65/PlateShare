@@ -2,14 +2,17 @@ import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { BACKEND_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
+
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const NearbyFoods = () => {
   const navigation = useNavigation();
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // TODO: Replace with actual user location
   const location = "Buyer Location 1";
   
   useEffect(() => {
