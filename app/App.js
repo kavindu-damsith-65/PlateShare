@@ -15,8 +15,8 @@ import AllRestaurantsScreen from "./screens/AllRestaurantsScreen";
 import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/BuyerTabs";
-import OrganizationTabs from "./screens/OrganizationTabs";
-import RequestDetails from "./screens/RequestDetails";
+import OrganizationTabs from "./screens/organisation/OrganizationTabs";
+import RequestDetails from "./screens/organisation/RequestDetails";
 
 const Stack = createNativeStackNavigator();
 
