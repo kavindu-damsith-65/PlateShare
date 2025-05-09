@@ -1,23 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { StarIcon } from "react-native-heroicons/solid";
 import axios from "axios";
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-const ReviewFormModal = ({ visible,onClose, onSubmit, editingReview, restaurantId  }) => {
-  const [rating, setRating] = useState("");
+const ReviewFormModal = ({
+  visible,
+  onClose,
+  onSubmit,
+  editingReview,
+  restaurantId,
+}) => {
+  const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (editingReview) {
-      setRating(editingReview.rating.toString());
+      setRating(editingReview.rating);
       setDescription(editingReview.description);
     } else {
-      setRating("");
+      setRating(0);
       setDescription("");
     }
   }, [editingReview]);
+
+  const handleStarPress = (starIndex) => {
+    setRating(starIndex + 1);
+  };
 
   const handleSubmit = async () => {
     if (!rating || !description) {
@@ -28,7 +39,7 @@ const ReviewFormModal = ({ visible,onClose, onSubmit, editingReview, restaurantI
     setLoading(true);
     try {
       const reviewData = {
-        rating: parseInt(rating),
+        rating,
         description,
         restaurant_id: restaurantId,
         user_id: "user_1", // TODO: Replace with actual user ID
@@ -36,15 +47,23 @@ const ReviewFormModal = ({ visible,onClose, onSubmit, editingReview, restaurantI
 
       if (editingReview) {
         // Update existing review
-        await axios.patch(`${BACKEND_URL}/api/reviews/${editingReview.id}`, reviewData);
+        await axios.patch(
+          `${BACKEND_URL}/api/reviews/${editingReview.id}`,
+          reviewData
+        );
         Alert.alert("Success", "Review updated successfully!");
         onSubmit({ ...editingReview, ...reviewData });
       } else {
         // Create new review
-        const createResponse = await axios.post(`${BACKEND_URL}/api/reviews`, reviewData);
+        const createResponse = await axios.post(
+          `${BACKEND_URL}/api/reviews`,
+          reviewData
+        );
         const newReviewId = createResponse.data.id;
 
-        const fetchResponse = await axios.get(`${BACKEND_URL}/api/reviews/one/${newReviewId}`);
+        const fetchResponse = await axios.get(
+          `${BACKEND_URL}/api/reviews/one/${newReviewId}`
+        );
         const fullReviewData = fetchResponse.data;
 
         Alert.alert("Success", "Review created successfully!");
@@ -63,15 +82,21 @@ const ReviewFormModal = ({ visible,onClose, onSubmit, editingReview, restaurantI
   return (
     <View className="p-4 bg-white rounded-lg shadow-md">
       <Text className="mb-4 text-xl font-bold">
-      {editingReview ? "Edit Your Review" : "Add Your Review"}
-        </Text>
-      <TextInput
-        className="px-3 py-2 mb-4 border border-gray-300 rounded-md"
-        placeholder="Rating (1-5)"
-        keyboardType="numeric"
-        value={rating}
-        onChangeText={setRating}
-      />
+        {editingReview ? "Edit Your Review" : "Add Your Review"}
+      </Text>
+
+      <View className="flex-row mb-4">
+        {Array.from({ length: 5 }, (_, index) => (
+          <TouchableOpacity key={index} onPress={() => handleStarPress(index)}>
+            <StarIcon
+              size={30}
+              color={index < rating ? "green" : "gray"}
+              opacity={index < rating ? 1 : 0.5}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <TextInput
         className="px-3 py-2 mb-4 border border-gray-300 rounded-md"
         placeholder="Write your review..."
@@ -93,7 +118,7 @@ const ReviewFormModal = ({ visible,onClose, onSubmit, editingReview, restaurantI
           disabled={loading}
         >
           <Text className="font-medium text-white">
-          {loading ? "Submitting..." : editingReview ? "Update" : "Submit"}
+            {loading ? "Submitting..." : editingReview ? "Update" : "Submit"}
           </Text>
         </TouchableOpacity>
       </View>
