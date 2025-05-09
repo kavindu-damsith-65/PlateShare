@@ -77,11 +77,30 @@ const Reviews = ({ restaurantId }) => {
     );
   };
 
-  const handleReviewSubmit = async (newReview) => {
-    setReviews([newReview, ...reviews]);
-    setModalVisible(false);
-  };
+  const handleReviewSubmit = async (submittedReview) => {
+    try {
+      if (editingReview) {
+        // Updated review 
+        const response = await axios.get(`${BACKEND_URL}/api/reviews/one/${submittedReview.id}`);
+        const updatedReview = response.data;
 
+        setReviews(
+          reviews.map((review) =>
+            review.id === updatedReview.id ? updatedReview : review
+          )
+        );
+      } else {
+        setReviews([submittedReview, ...reviews]);
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+      Alert.alert("Error", "Failed to update review. Please try again.");
+    } finally {
+      setModalVisible(false);
+      setEditingReview(null); // Reset editingReview after submission
+    }
+  };
+    
   if (loading) {
     return (
       <View className="items-center justify-center flex-1">
