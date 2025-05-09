@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { StarIcon } from "react-native-heroicons/solid";
 
 const ReviewCard = ({ review, onEdit, onDelete }) => {
   return (
@@ -7,7 +8,11 @@ const ReviewCard = ({ review, onEdit, onDelete }) => {
       <Text className="text-lg font-bold">{review.user.name}</Text>
       <Text className="text-gray-500">{review.description}</Text>
       <View className="flex-row items-center justify-between mt-2">
-        <Text className="font-bold text-green-500">Rating: {review.rating}</Text>
+        <View className="flex-row">
+          {Array.from({ length: review.rating }, (_, index) => (
+             <StarIcon key={index} size={20} color="green" opacity={0.5} />
+          ))}
+        </View>
         <View className="flex-row justify-end space-x-2">
         <TouchableOpacity
           className="bg-gray-200 px-3 py-1.5 rounded"
