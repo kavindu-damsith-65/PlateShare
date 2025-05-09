@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import Requests from '../components/Requests';
+import Requests from '../../components/organisation/Requests';
 
 export default function OrganizationRequests() {
   return (
