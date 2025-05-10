@@ -12,13 +12,13 @@ const SignUpCards = () => {
       title: "Be a Hero, Deliver Hope!",
       description: "Join our mission to fight food waste and feed those in need.",
       buttonText: "Sign Up for Delivery",
-      imageSource: require("../assets/hand.jpg"),
+      imageSource: require("../../assets/hand.jpg"),
     },
     {
       title: "Turn Surplus into Success!",
       description: "Partner with us to reduce food waste and make a difference.",
       buttonText: "Sign Up for Restaurant",
-      imageSource: require("../assets/restaurant.jpg"),
+      imageSource: require("../../assets/restaurant.jpg"),
     },
   ];
 

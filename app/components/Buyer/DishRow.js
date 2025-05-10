@@ -7,9 +7,9 @@ import {
   addToBasket,
   selectBasketItemsWithId,
   removeFromBasket,
-} from "../slices/basketSlice";
+} from "../../slices/basketSlice";
 
-const DishRow = ({ id, name, description, price, image, sub_products, has_subs }) => {
+const DishRow = ({ id, name, description, price, image, sub_products }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const dispatch = useDispatch();

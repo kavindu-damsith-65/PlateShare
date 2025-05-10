@@ -6,15 +6,15 @@ import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, ActivityIndicator, Platform } from 'react-native';
 
-import RestaurantScreen from "./screens/RestaurantScreen";
+import RestaurantScreen from "./screens/Buyer/RestaurantScreen";
 import { store } from "./store";
 import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import AllRestaurantsScreen from "./screens/AllRestaurantsScreen";
-import AllNearbyFoodsScreen from "./screens/AllNearbyFoodsScreen";
+import ProfileScreen from "./screens/Buyer/ProfileScreen";
+import AllRestaurantsScreen from "./screens/Buyer/AllRestaurantsScreen";
+import AllNearbyFoodsScreen from "./screens/Buyer/AllNearbyFoodsScreen";
 import LoginScreen from "./screens/LoginScreen";
-import BuyerTabs from "./screens/BuyerTabs";
+import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
 

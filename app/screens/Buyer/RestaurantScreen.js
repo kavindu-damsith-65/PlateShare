@@ -5,13 +5,12 @@ import {
   MapPinIcon,
   StarIcon,
 } from "react-native-heroicons/solid";
-import DishRow from "../components/DishRow";
-import BasketContainer from "../components/BasketContainer";
+import DishRow from "../../components/Buyer/DishRow";
+import BasketContainer from "../../components/Buyer/BasketContainer";
 import { useDispatch } from "react-redux";
-import { setRestaurant } from "../slices/restaurantSlice";
+import { setRestaurant } from "../../slices/restaurantSlice";
 import axios from "axios";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import Reviews from "../components/Reviews";
+import Reviews from "../../components/Buyer/Reviews";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 console.log("Backend URL:", BACKEND_URL);
