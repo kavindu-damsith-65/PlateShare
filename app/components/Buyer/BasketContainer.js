@@ -1,4 +1,4 @@
-import { View, Text, Touchable, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectBasketItems, selectBasketTotal } from "../../slices/basketSlice";
