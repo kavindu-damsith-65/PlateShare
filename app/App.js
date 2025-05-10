@@ -17,7 +17,7 @@ import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
-import SearchScreen from "./screens/SearchScreen";
+import SearchScreen from "./screens/Buyer/SearchScreen";
 
 const Stack = createNativeStackNavigator();
 

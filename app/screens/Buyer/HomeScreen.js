@@ -16,7 +16,7 @@ import Recommended from "../../components/Buyer/Recommended";
 import Restaurants from "../../components/Buyer/Restaurants";
 import NearbyFoods from "../../components/Buyer/NearbyFoods";
 import SignUpCards from "../../components/Buyer/SignUpCards";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../../components/Buyer/SearchBar";
 
 const HomeScreen = () => {
   const navigation = useNavigation();

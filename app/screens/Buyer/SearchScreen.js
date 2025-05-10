@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon, MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
-import SearchCategoryCircle from '../components/SearchCategoryCircle';
+import SearchCategoryCircle from '../../components/Buyer/SearchCategoryCircle';
 
 const SearchScreen = () => {
   const navigation = useNavigation();
