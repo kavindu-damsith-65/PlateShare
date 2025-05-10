@@ -163,36 +163,40 @@ const Reviews = ({ restaurantId }) => {
     >
       <Text className="font-medium text-white">Add Review</Text>
     </TouchableOpacity>
-    <ScrollView
-      ref={scrollViewRef}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      pagingEnabled
-      onMomentumScrollEnd={handleMomentumScrollEnd}
-      onScrollBeginDrag={() => setIsUserScrolling(true)}
-      onScrollEndDrag={() => setIsUserScrolling(false)}
-      decelerationRate="fast"
-      snapToInterval={SCREEN_WIDTH - 30 + 16}
-      snapToAlignment="center"
-      className="pb-5"
-    >
-      {reviews.map((review, index) => (
-        <View
-          key={index}
-          style={{
-            width: SCREEN_WIDTH - 30,
-            marginRight: 16,
-          }}
-        >
-          <ReviewCard
-            key={review.id}
-            review={review}
-            onEdit={handleEditReview}
-            onDelete={handleDeleteReview}
-          />
-        </View>
-      ))}
-    </ScrollView>
+   {reviews.length > 0 ? (
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        onMomentumScrollEnd={handleMomentumScrollEnd}
+        onScrollBeginDrag={() => setIsUserScrolling(true)}
+        onScrollEndDrag={() => setIsUserScrolling(false)}
+        decelerationRate="fast"
+        snapToInterval={SCREEN_WIDTH - 30 + 16}
+        snapToAlignment="center"
+        className="pb-5"
+      >
+        {reviews.map((review, index) => (
+          <View
+            key={index}
+            style={{
+              width: SCREEN_WIDTH - 30,
+              marginRight: 16,
+            }}
+          >
+            <ReviewCard
+              key={review.id}
+              review={review}
+              onEdit={handleEditReview}
+              onDelete={handleDeleteReview}
+            />
+          </View>
+        ))}
+      </ScrollView>
+    ) : (
+      <Text className="mt-4 text-gray-500">No reviews available.</Text>
+    )}
 
     {/* Modal for Create/Edit Review Form */}
     <Modal
