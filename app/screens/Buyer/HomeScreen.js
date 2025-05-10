@@ -15,10 +15,10 @@ import {
   MagnifyingGlassIcon,
   AdjustmentsVerticalIcon,
 } from "react-native-heroicons/outline";
-import Recommended from "../components/Recommended";
-import Restaurants from "../components/Restaurants";
-import NearbyFoods from "../components/NearbyFoods";
-import SignUpCards from "../components/SignUpCards";
+import Recommended from "../../components/Buyer/Recommended";
+import Restaurants from "../../components/Buyer/Restaurants";
+import NearbyFoods from "../../components/Buyer/NearbyFoods";
+import SignUpCards from "../../components/Buyer/SignUpCards";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
