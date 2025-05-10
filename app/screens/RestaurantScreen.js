@@ -14,7 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Reviews from "../components/Reviews";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
-
+console.log("Backend URL:", BACKEND_URL);
 
 const RestaurantScreen = ({ route, navigation }) => {
   const {
@@ -49,7 +49,7 @@ const RestaurantScreen = ({ route, navigation }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchRestaurantDetails = async () => {
       try {
         const response = await axios.get(
@@ -164,7 +164,6 @@ const RestaurantScreen = ({ route, navigation }) => {
                       <Text className="mr-1 font-medium text-green-600">
                         {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
                       </Text>
-                      <Icon name="chevron-right" size={16} color="#16a34a" />
                     </TouchableOpacity>
                     {expandedDishes[dish.id] && (
                       <ScrollView
@@ -199,9 +198,10 @@ const RestaurantScreen = ({ route, navigation }) => {
           )}
         </View>
 
-         {/* Reviews Section */}
-       <Reviews restaurantId={id} />
-         
+        {/* Reviews Section */}
+        <View className="px-4">
+  <Reviews restaurantId={id} />
+</View>
       </ScrollView>
     </>
   );
