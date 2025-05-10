@@ -1,5 +1,5 @@
 const sequelize = require("../config/db");
-const { Product, Restaurant, SellerDetails, SubProduct, FoodRequest, FoodBucket} = require("../models/AuthModel");
+const { Product, Restaurant, SellerDetails, SubProduct, FoodRequest, FoodBucket, Category, ProductSubProduct } = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByProducts = async (req, res) => {
@@ -111,5 +111,25 @@ exports.getRecommendedProducts = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
+    }
+};
+
+exports.fetchCategories = async (req, res) => {
+    try {
+        const categories = await Category.findAll({
+            attributes: ['id', 'category', 'image']
+        });
+
+        if (!categories || categories.length === 0) {
+            return res.status(404).json({ message: 'No categories found' });
+        }
+
+        return res.status(200).json({
+            message: 'Categories fetched successfully',
+            categories: categories
+        });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
