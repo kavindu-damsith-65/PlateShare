@@ -6,6 +6,25 @@ module.exports = {
     // Helper function to get random picsum image URL
     const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
 
+    // Define categories
+    const categories = [
+      { id: 'cat_1', category: 'Pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591' },
+      { id: 'cat_2', category: 'Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd' },
+      { id: 'cat_3', category: 'Salads', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd' },
+      { id: 'cat_4', category: 'Pasta', image: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8' },
+      { id: 'cat_5', category: 'Rice', image: 'https://images.unsplash.com/photo-1516684732162-798a0062be99' },
+      { id: 'cat_6', category: 'Desserts', image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb' },
+      { id: 'cat_7', category: 'Drinks', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e' },
+      { id: 'cat_8', category: 'Breakfast', image: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666' },
+    ];
+
+    // Insert categories
+    await queryInterface.bulkInsert('categories', categories.map(cat => ({
+      ...cat,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    })));
+
     const users = [
         { id: 'user_1', name:'Ross', role: 'buyer', profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
         { id: 'user_2', name:'Monica', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
@@ -88,6 +107,10 @@ module.exports = {
 
     await queryInterface.bulkInsert("reviews", reviews);
 
+      // Function to get a random category ID
+      const getRandomCategory = () => categories[Math.floor(Math.random() * categories.length)].id;
+
+      // Updated products with categories
       const products = restaurants.flatMap(restaurant => [
           {
               id: `p1_${restaurant.id}`,
@@ -95,11 +118,12 @@ module.exports = {
               type: false,
               available: true,
               quantity: 10,
-              restaurant_id: restaurant.id, // Linking to the current restaurant
+              restaurant_id: restaurant.id,
               has_subs: true,
               image: getRandomPicsumImage(),
               price: 8.99,
               description: 'A traditional rice dish served with a variety of curries.',
+              category: 'cat_5', // Rice category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -114,6 +138,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 10.99,
               description: 'Delicious stir-fried rice with vegetables and protein.',
+              category: 'cat_5', // Rice category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -128,6 +153,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 6.99,
               description: 'A juicy beef or chicken burger served with fresh toppings.',
+              category: 'cat_2', // Burgers category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -142,6 +168,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 12.99,
               description: 'Classic Italian-style pizza with various toppings.',
+              category: 'cat_1', // Pizza category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -156,6 +183,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 9.99,
               description: 'Creamy or tomato-based pasta with cheese and herbs.',
+              category: 'cat_4', // Pasta category
               createdAt: new Date(),
               updatedAt: new Date(),
           },

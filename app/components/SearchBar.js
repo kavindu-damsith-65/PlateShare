@@ -8,12 +8,13 @@ const SearchBar = ({ onSearch, className, editable = true }) => {
   const navigation = useNavigation();
 
   const placeholders = [
-    "Find something delicious...",
-    "Craving pizza?",
-    "Hungry for burgers?",
-    "Looking for healthy options?",
-    "Discover local restaurants"
+    "Find something delicious... 🍽️",
+    "Craving pizza? 🍕",
+    "Hungry for burgers? 🍔",
+    "Looking for healthy options? 🥗",
+    "Discover local restaurants 🏙️🍴"
   ];
+
 
   // Rotate through placeholder texts
   useEffect(() => {
