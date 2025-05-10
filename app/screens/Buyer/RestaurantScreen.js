@@ -5,15 +5,15 @@ import {
   MapPinIcon,
   StarIcon,
 } from "react-native-heroicons/solid";
-import DishRow from "../components/DishRow";
-import BasketContainer from "../components/BasketContainer";
+import DishRow from "../../components/Buyer/DishRow";
+import BasketContainer from "../../components/Buyer/BasketContainer";
 import { useDispatch } from "react-redux";
-import { setRestaurant } from "../slices/restaurantSlice";
+import { setRestaurant } from "../../slices/restaurantSlice";
 import axios from "axios";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Reviews from "../../components/Buyer/Reviews";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
-
+console.log("Backend URL:", BACKEND_URL);
 
 const RestaurantScreen = ({ route, navigation }) => {
   const {
@@ -48,7 +48,7 @@ const RestaurantScreen = ({ route, navigation }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+    useEffect(() => {
     const fetchRestaurantDetails = async () => {
       try {
         const response = await axios.get(
@@ -140,7 +140,7 @@ const RestaurantScreen = ({ route, navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="pb-36">
+        <View className="pb-2">
           <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
 
           {restaurantData?.dishes?.length > 0 ? (
@@ -163,7 +163,6 @@ const RestaurantScreen = ({ route, navigation }) => {
                       <Text className="mr-1 font-medium text-green-600">
                         {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
                       </Text>
-                      <Icon name="chevron-right" size={16} color="#16a34a" />
                     </TouchableOpacity>
                     {expandedDishes[dish.id] && (
                       <ScrollView
@@ -197,6 +196,11 @@ const RestaurantScreen = ({ route, navigation }) => {
             <Text className="px-4 text-gray-500">No dishes available.</Text>
           )}
         </View>
+
+        {/* Reviews Section */}
+        <View className="px-4">
+  <Reviews restaurantId={id} />
+</View>
       </ScrollView>
     </>
   );

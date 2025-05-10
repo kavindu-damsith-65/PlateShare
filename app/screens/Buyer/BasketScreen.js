@@ -1,14 +1,14 @@
 import { View, Text, Image, SafeAreaView } from "react-native";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRestaurant } from "../slices/restaurantSlice";
-import { removeFromBasket, selectBasketItems, selectBasketTotal } from "../slices/basketSlice";
+import { selectRestaurant } from "../../slices/restaurantSlice";
+import { removeFromBasket, selectBasketItems, selectBasketTotal } from "../../slices/basketSlice";
 import { TouchableOpacity } from "react-native";
 import { XCircleIcon } from "react-native-heroicons/solid";
 import { ScrollView } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { urlFor } from "../sanity";
+import { urlFor } from "../../sanity/package.json";
 import Currency from "react-currency-formatter";
 
 const BasketScreen = ({ navigation }) => {

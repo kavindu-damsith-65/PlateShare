@@ -12,10 +12,10 @@ import {
   UserIcon,
   ChevronDownIcon,
 } from "react-native-heroicons/outline";
-import Recommended from "../components/Recommended";
-import Restaurants from "../components/Restaurants";
-import NearbyFoods from "../components/NearbyFoods";
-import SignUpCards from "../components/SignUpCards";
+import Recommended from "../../components/Buyer/Recommended";
+import Restaurants from "../../components/Buyer/Restaurants";
+import NearbyFoods from "../../components/Buyer/NearbyFoods";
+import SignUpCards from "../../components/Buyer/SignUpCards";
 import SearchBar from "../components/SearchBar";
 
 const HomeScreen = () => {
@@ -69,7 +69,7 @@ const HomeScreen = () => {
 
       {/*Search bar section*/}
       <SearchBar
-        key="search" 
+        key="search"
         editable={false}
       />
 

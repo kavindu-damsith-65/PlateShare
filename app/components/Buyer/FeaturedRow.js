@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, LogBox } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ArrowRightIcon } from "react-native-heroicons/outline";
 import RestaurantCard from "./RestaurantCard";
 
-const FeaturedRow = ({ title, description, id }) => {
+const FeaturedRow = ({ title, description }) => {
   const [restaurants, setRestaurants] = useState([]);
   const location = "Buyer Location 1";
 
