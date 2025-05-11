@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   View, 
   Text, 
@@ -6,16 +6,18 @@ import {
   TouchableOpacity, 
   FlatList, 
   Image,
-  ActivityIndicator 
+  ActivityIndicator,
+  TextInput
 } from 'react-native';
-import { ArrowLeftIcon } from 'react-native-heroicons/solid';
-import { useNavigation } from '@react-navigation/native';
+import { ArrowLeftIcon, MagnifyingGlassIcon, XMarkIcon } from 'react-native-heroicons/solid';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const SearchResultsScreen = ({ route }) => {
-  const { searchQuery } = route.params;
+  const { searchQuery: initialQuery } = route.params;
+  const [searchQuery, setSearchQuery] = useState(initialQuery || "");
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,43 +27,56 @@ const SearchResultsScreen = ({ route }) => {
   // TODO: Replace with actual user location
   const location = "Buyer Location 1";
 
-  useEffect(() => {
+  const fetchSearchResults = useCallback(async (query = searchQuery) => {
     // Only search if query is at least 3 characters
-    if (searchQuery.length < 3) {
+    if (!query || query.length < 3) {
       setLoading(false);
       setError("Please enter at least 3 characters to search");
+      setRestaurants([]);
+      setProducts([]);
       return;
     }
 
-    const fetchSearchResults = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${BACKEND_URL}/api/products/search/${searchQuery}/${location}`
-        );
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/products/search/${query}/${location}`
+      );
+      
+      if (response.data) {
+        const fetchedRestaurants = response.data.restaurants || [];
+        const fetchedProducts = response.data.products || [];
         
-        if (response.data) {
-          const fetchedRestaurants = response.data.restaurants || [];
-          const fetchedProducts = response.data.products || [];
-          
-          setRestaurants(fetchedRestaurants);
-          setProducts(fetchedProducts);
-          
-          console.log("Fetched restaurants:", fetchedRestaurants.length);
-          console.log("Fetched products:", fetchedProducts.length);
-        }
+        setRestaurants(fetchedRestaurants);
+        setProducts(fetchedProducts);
         
-        setError(null);
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-        setError('Failed to load search results');
-      } finally {
-        setLoading(false);
+        console.log("Fetched restaurants:", fetchedRestaurants.length);
+        console.log("Fetched products:", fetchedProducts.length);
       }
-    };
+      
+      setError(null);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      setError('Failed to load search results');
+    } finally {
+      setLoading(false);
+    }
+  }, [location]);
 
-    fetchSearchResults();
-  }, [searchQuery, location]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchSearchResults(initialQuery);
+    }, [fetchSearchResults, initialQuery])
+  );
+
+  const handleSearch = () => {
+    fetchSearchResults(searchQuery);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    // Don't fetch results when clearing - wait for user to type or submit
+  };
 
   const renderRestaurantItem = ({ item }) => (
     <TouchableOpacity 
@@ -153,43 +168,6 @@ const SearchResultsScreen = ({ route }) => {
     );
   }
 
-  if (error) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-100 pt-7">
-        <View className="relative py-4 shadow-sm bg-white">
-          <TouchableOpacity
-            className="absolute z-10 p-2 bg-gray-100 rounded-full top-5 left-4"
-            onPress={() => navigation.goBack()}
-          >
-            <ArrowLeftIcon size={20} color="#00CCBB" />
-          </TouchableOpacity>
-          <Text className="text-center text-xl font-bold">Search</Text>
-        </View>
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-red-500">{error}</Text>
-          <TouchableOpacity 
-            className="mt-4 py-2 px-4 bg-green-500 rounded-full"
-            onPress={() => navigation.goBack()}
-          >
-            <Text className="text-white font-bold">Go Back</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  const noResultsMessage = (
-    <View className="flex-1 items-center justify-center py-10">
-      <Text className="text-gray-500">No results found for "{searchQuery}"</Text>
-      <TouchableOpacity 
-        className="mt-4 py-2 px-4 bg-green-500 rounded-full"
-        onPress={() => navigation.goBack()}
-      >
-        <Text className="text-white font-bold">Go Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-7">
       <View className="relative py-4 shadow-sm bg-white">
@@ -199,11 +177,54 @@ const SearchResultsScreen = ({ route }) => {
         >
           <ArrowLeftIcon size={20} color="#00CCBB" />
         </TouchableOpacity>
-        <Text className="text-center text-xl font-bold">Results for "{searchQuery}"</Text>
+        <Text className="text-center text-xl font-bold">Search Results</Text>
       </View>
 
-      {restaurants.length === 0 && products.length === 0 ? (
-        noResultsMessage
+      {/* Custom search bar */}
+      <View className="px-4 py-2 bg-white border-b border-gray-200">
+        <View className="flex-row items-center bg-gray-100 px-3 py-2 rounded-full border border-gray-300">
+          <MagnifyingGlassIcon size={20} color="gray" />
+          <TextInput
+            className="flex-1 ml-2"
+            placeholder="Search for food or restaurants"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={handleClearSearch}>
+              <XMarkIcon size={20} color="gray" />
+            </TouchableOpacity>
+          )}
+        </View>
+        
+        {searchQuery.length > 0 && searchQuery.length < 3 && (
+          <Text className="text-yellow-600 text-center mt-2">
+            Please enter at least 3 characters to search
+          </Text>
+        )}
+      </View>
+
+      {error ? (
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-red-500">{error}</Text>
+          <TouchableOpacity 
+            className="mt-4 py-2 px-4 bg-green-500 rounded-full"
+            onPress={() => navigation.goBack()}
+          >
+            <Text className="text-white font-bold">Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      ) : restaurants.length === 0 && products.length === 0 ? (
+        <View className="flex-1 items-center justify-center py-10">
+          <Text className="text-gray-500">No results found for "{searchQuery}"</Text>
+          <TouchableOpacity 
+            className="mt-4 py-2 px-4 bg-green-500 rounded-full"
+            onPress={() => navigation.goBack()}
+          >
+            <Text className="text-white font-bold">Go Back</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <FlatList
           data={[
@@ -224,7 +245,6 @@ const SearchResultsScreen = ({ route }) => {
             } else {
               return renderProductItem({ item });
             }
-            return null;
           }}
           keyExtractor={(item) => `${item.type}-${item.id}`}
           contentContainerStyle={{

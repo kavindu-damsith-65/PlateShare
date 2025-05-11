@@ -3,20 +3,16 @@ import {
   View, 
   Text, 
   SafeAreaView, 
-  TextInput, 
   TouchableOpacity, 
   FlatList,
   Image,
   ActivityIndicator,
   ScrollView
 } from 'react-native';
-import { 
-  MagnifyingGlassIcon, 
-  XMarkIcon, 
-  ClockIcon 
-} from 'react-native-heroicons/outline';
+import { ClockIcon, ArrowLeftIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import SearchBar from '../../components/Buyer/SearchBar';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -39,6 +35,11 @@ const SearchScreen = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchResults, setSearchResults] = useState({ restaurants: [], products: [] });
+  const [searchLoading, setSearchLoading] = useState(false);
+  
+  // TODO: Replace with actual user location
+  const location = "Buyer Location 1";
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -59,13 +60,43 @@ const SearchScreen = () => {
     fetchCategories();
   }, []);
 
-  const handleSearch = () => {
-    if (searchQuery.trim().length >= 3) {
-      navigation.navigate('SearchResults', { searchQuery: searchQuery.trim() });
-    } else {
-      // Show error or toast message
-      alert('Please enter at least 3 characters to search');
+  useEffect(() => {
+    // Debounce search to avoid too many API calls
+    const delaySearch = setTimeout(() => {
+      if (searchQuery.length >= 3) {
+        performSearch();
+      } else {
+        setSearchResults({ restaurants: [], products: [] });
+      }
+    }, 500);
+
+    return () => clearTimeout(delaySearch);
+  }, [searchQuery]);
+
+  const performSearch = async () => {
+    if (searchQuery.length < 3) return;
+    
+    setSearchLoading(true);
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/products/search/${searchQuery}/${location}`
+      );
+      
+      if (response.data) {
+        setSearchResults({
+          restaurants: response.data.restaurants || [],
+          products: response.data.products || []
+        });
+      }
+    } catch (error) {
+      console.error('Error searching:', error);
+    } finally {
+      setSearchLoading(false);
     }
+  };
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
   };
 
   const handleCategoryPress = (categoryId, categoryName) => {
@@ -77,11 +108,142 @@ const SearchScreen = () => {
 
   const handleRecentSearchPress = (searchTerm) => {
     setSearchQuery(searchTerm);
-    navigation.navigate('SearchResults', { searchQuery: searchTerm });
   };
 
   const handlePopularRestaurantPress = (restaurantName) => {
-    navigation.navigate('SearchResults', { searchQuery: restaurantName });
+    setSearchQuery(restaurantName);
+  };
+
+  const handleResultPress = (item, type) => {
+    if (type === 'restaurant') {
+      navigation.navigate("Restaurant", {
+        id: item.id,
+        imgUrl: item.image,
+        title: item.name,
+        rating: item.averageRating || 4.5,
+        short_description: item.description,
+        long: item.long || 0,
+        lat: item.lat || 0,
+      });
+    } else {
+      navigation.navigate("Restaurant", {
+        id: item.restaurant_id,
+        imgUrl: item.restaurant?.image,
+        title: item.restaurant?.name,
+        rating: 4.5,
+        short_description: "Restaurant with this product",
+        highlightedProductId: item.id
+      });
+    }
+  };
+
+  const renderSearchResults = () => {
+    const { restaurants, products } = searchResults;
+    const hasResults = restaurants.length > 0 || products.length > 0;
+
+    if (searchLoading) {
+      return (
+        <View className="items-center justify-center py-4">
+          <ActivityIndicator size="small" color="#00CCBB" />
+          <Text className="text-gray-500 mt-2">Searching...</Text>
+        </View>
+      );
+    }
+
+    if (searchQuery.length > 0 && searchQuery.length < 3) {
+      return (
+        <View className="items-center justify-center py-4">
+          <Text className="text-yellow-600">Please enter at least 3 characters to search</Text>
+        </View>
+      );
+    }
+
+    if (searchQuery.length >= 3 && !hasResults) {
+      return (
+        <View className="items-center justify-center py-4">
+          <Text className="text-gray-500">No results found for "{searchQuery}"</Text>
+        </View>
+      );
+    }
+
+    if (!hasResults) return null;
+
+    return (
+      <View className="border-t border-gray-200 pt-2">
+        {restaurants.length > 0 && (
+          <View>
+            <Text className="px-4 font-bold text-lg mb-2">Restaurants</Text>
+            {restaurants.slice(0, 3).map((item) => (
+              <TouchableOpacity 
+                key={`restaurant-${item.id}`}
+                className="flex-row mx-4 mb-3 p-2 bg-white rounded-lg shadow-sm"
+                onPress={() => handleResultPress(item, 'restaurant')}
+              >
+                <Image 
+                  source={{ uri: item.image || "https://picsum.photos/100" }} 
+                  className="w-16 h-16 rounded-md"
+                />
+                <View className="ml-2 flex-1">
+                  <Text className="font-bold" numberOfLines={1}>{item.name}</Text>
+                  <Text className="text-xs text-gray-500" numberOfLines={1}>{item.description}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+            {restaurants.length > 3 && (
+              <TouchableOpacity 
+                className="items-center py-2"
+                onPress={() => navigation.navigate('SearchResults', { searchQuery })}
+              >
+                <Text className="text-[#00CCBB] font-bold">See all {restaurants.length} restaurants</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+
+        {products.length > 0 && (
+          <View className="mt-2">
+            <Text className="px-4 font-bold text-lg mb-2">Food Items</Text>
+            {products.slice(0, 3).map((item) => (
+              <TouchableOpacity 
+                key={`product-${item.id}`}
+                className="flex-row mx-4 mb-3 p-2 bg-white rounded-lg shadow-sm"
+                onPress={() => handleResultPress(item, 'product')}
+              >
+                <Image 
+                  source={{ uri: item.image || "https://picsum.photos/100" }} 
+                  className="w-16 h-16 rounded-md"
+                />
+                <View className="ml-2 flex-1">
+                  <Text className="font-bold" numberOfLines={1}>{item.name}</Text>
+                  <Text className="text-xs text-gray-500" numberOfLines={1}>{item.description}</Text>
+                  <View className="flex-row justify-between items-center mt-1">
+                    <Text className="text-[#00CCBB] font-bold">Rs. {item.price}</Text>
+                    <Text className="text-xs">{item.restaurant?.name}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+            {products.length > 3 && (
+              <TouchableOpacity 
+                className="items-center py-2"
+                onPress={() => navigation.navigate('SearchResults', { searchQuery })}
+              >
+                <Text className="text-[#00CCBB] font-bold">See all {products.length} food items</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+
+        {hasResults && (
+          <TouchableOpacity 
+            className="mx-4 mt-2 mb-4 py-3 bg-[#00CCBB] rounded-full items-center"
+            onPress={() => navigation.navigate('SearchResults', { searchQuery })}
+          >
+            <Text className="text-white font-bold">View All Results</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
   };
 
   if (loading) {
@@ -97,29 +259,21 @@ const SearchScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white pt-7">
-      <View className="flex-row items-center space-x-2 px-4 pb-2 border-b border-gray-200">
-        <View className="flex-row flex-1 items-center p-3 rounded-full border border-gray-300">
-          <MagnifyingGlassIcon color="gray" size={20} />
-          <TextInput
-            placeholder="Search for food or restaurants"
-            className="flex-1 ml-2"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onSubmitEditing={handleSearch}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <XMarkIcon color="gray" size={20} />
-            </TouchableOpacity>
-          )}
+      <View className="pb-2 border-b border-gray-200">
+        <View className="flex-row items-center">
+          <TouchableOpacity
+            className="p-2 ml-2 bg-gray-100 rounded-full"
+            onPress={() => navigation.goBack()}
+          >
+            <ArrowLeftIcon size={20} color="#00CCBB" />
+          </TouchableOpacity>
+          <View className="flex-1">
+            <SearchBar onSearch={handleSearch} editable={true} />
+          </View>
         </View>
-        <TouchableOpacity 
-          className="p-3 rounded-full bg-green-500"
-          onPress={handleSearch}
-        >
-          <Text className="text-white font-bold">Search</Text>
-        </TouchableOpacity>
       </View>
+
+      {renderSearchResults()}
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="py-4">
