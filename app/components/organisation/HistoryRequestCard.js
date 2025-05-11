@@ -7,7 +7,6 @@ import { TrashIcon } from 'react-native-heroicons/outline';
 const HistoryRequestCard = ({ request, onDelete }) => {
   const navigation = useNavigation();
 
-  // Format date to YYYY/MM/DD format
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);

@@ -6,7 +6,6 @@ import { TrashIcon, PencilIcon } from 'react-native-heroicons/outline';
 const RequestCard = ({ request, onEdit, onDelete }) => {
   const navigation = useNavigation();
   
-  // Format date to be more readable
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);

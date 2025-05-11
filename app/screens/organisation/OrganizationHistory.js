@@ -4,7 +4,6 @@ import axios from 'axios';
 import HistoryRequestCard from '../../components/organisation/HistoryRequestCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -84,12 +83,6 @@ const OrganizationHistory = () => {
     return (
       <SafeAreaView className="flex-1 bg-gray-100 pt-7">
         <View className="relative py-4 shadow-sm bg-white">
-          <TouchableOpacity
-            className="absolute z-10 p-2 bg-gray-100 rounded-full top-4 left-4"
-            onPress={() => navigation.goBack()}
-          >
-            <ArrowLeftIcon size={20} color="#00CCBB" />
-          </TouchableOpacity>
           <Text className="text-center text-xl font-bold">Request History</Text>
         </View>
         <View className="flex-1 justify-center items-center">
@@ -104,12 +97,6 @@ const OrganizationHistory = () => {
     return (
       <SafeAreaView className="flex-1 bg-gray-100 pt-7">
         <View className="relative py-4 shadow-sm bg-white">
-          <TouchableOpacity
-            className="absolute z-10 p-2 bg-gray-100 rounded-full top-4 left-4"
-            onPress={() => navigation.goBack()}
-          >
-            <ArrowLeftIcon size={20} color="#00CCBB" />
-          </TouchableOpacity>
           <Text className="text-center text-xl font-bold">Request History</Text>
         </View>
         <View className="flex-1 justify-center items-center p-5">
@@ -129,12 +116,6 @@ const OrganizationHistory = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-7">
       <View className="relative py-4 shadow-sm bg-white">
-        <TouchableOpacity
-          className="absolute z-10 p-2 bg-gray-100 rounded-full top-4 left-4"
-          onPress={() => navigation.goBack()}
-        >
-          <ArrowLeftIcon size={20} color="#00CCBB" />
-        </TouchableOpacity>
         <Text className="text-center text-xl font-bold">Request History</Text>
       </View>
       
