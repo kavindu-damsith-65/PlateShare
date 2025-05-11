@@ -237,15 +237,12 @@ exports.searchProductsAndRestaurants = async (req, res) => {
             attributes: ["id", "name", "image", "description", "user_id"]
         });
 
-        const restaurantIds = restaurants.map(restaurant => restaurant.id);
-
         // Find products with names containing the search query
         const products = await Product.findAll({
             where: {
                 [Op.or]: [
                     { name: { [Op.like]: `%${query}%` } },
-                    { description: { [Op.like]: `%${query}%` } },
-                    { restaurant_id: { [Op.in]: restaurantIds } }
+                    { description: { [Op.like]: `%${query}%` } }
                 ],
                 available: true
             },
