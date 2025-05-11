@@ -2,10 +2,18 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TrashIcon } from 'react-native-heroicons/outline';
+import { TrashIcon, StarIcon } from 'react-native-heroicons/outline';
 
 const HistoryRequestCard = ({ request, onDelete }) => {
   const navigation = useNavigation();
+
+  // Update the navigation to include isFromHistory flag
+  const handleCardPress = () => {
+    navigation.navigate('RequestDetails', { 
+      requestId: request.id,
+      isFromHistory: true
+    });
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -56,7 +64,7 @@ const HistoryRequestCard = ({ request, onDelete }) => {
       <TouchableOpacity 
         className="p-4"
         activeOpacity={0.7}
-        onPress={() => navigation.navigate('RequestDetails', { requestId: request.id })}
+        onPress={handleCardPress}
       >
         <View className="flex-row justify-between items-start mb-2">
           <View className="flex-1 mr-2">

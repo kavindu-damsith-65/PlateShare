@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
-import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
+import { EyeIcon, EyeSlashIcon, CheckIcon, StarIcon } from 'react-native-heroicons/outline';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
-const DonationItem = ({ donation }) => (
+const DonationItem = ({ donation, isFromHistory }) => (
   <View className="bg-white p-4 rounded-lg mb-3 shadow-sm">
     <View className="flex-row">
       <Image 
@@ -24,12 +24,24 @@ const DonationItem = ({ donation }) => (
       </View>
     </View>
     <View className="mt-2 pt-2 border-t border-gray-100">
-      <View className="flex-row items-center">
-        <Image 
-          source={{ uri: donation.restaurant.image }} 
-          className="w-6 h-6 rounded-full"
-        />
-        <Text className="ml-2 text-sm text-gray-700">{donation.restaurant.name}</Text>
+      <View className="flex-row justify-between items-center">
+        <View className="flex-row items-center">
+          <Image 
+            source={{ uri: donation.restaurant.image }} 
+            className="w-6 h-6 rounded-full"
+          />
+          <Text className="text-gray-700 ml-2">{donation.restaurant.name}</Text>
+        </View>
+        
+        {isFromHistory && (
+          <TouchableOpacity 
+            className="bg-[#00CCBB]/20 px-3 py-1.5 rounded-md flex-row items-center"
+            onPress={() => handleAddReview(donation)}
+          >
+            <StarIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+            <Text className="text-[#00CCBB] font-semibold ml-1">Add Review</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   </View>
@@ -38,7 +50,7 @@ const DonationItem = ({ donation }) => (
 export default function RequestDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { requestId } = route.params;
+  const { requestId, isFromHistory } = route.params;
   
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -184,6 +196,17 @@ export default function RequestDetails() {
     }
   };
 
+  // Add this function to handle adding a review
+  const handleAddReview = (donation) => {
+    // Navigate to review screen or open review modal
+    navigation.navigate('AddReview', { 
+      restaurantId: donation.restaurant.id,
+      restaurantName: donation.restaurant.name,
+      productId: donation.product.id,
+      productName: donation.product.name
+    });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-5">
       <View className="relative py-4 shadow-sm bg-white">
@@ -271,7 +294,7 @@ export default function RequestDetails() {
           </Text>
           {request.donations && request.donations.length > 0 ? (
             request.donations.map(donation => (
-              <DonationItem key={donation.id} donation={donation} />
+              <DonationItem key={donation.id} donation={donation} isFromHistory={isFromHistory} />
             ))
           ) : (
             <View className="bg-white p-4 rounded-lg items-center">
@@ -280,34 +303,36 @@ export default function RequestDetails() {
           )}
         </View>
         
-        <View className="flex-row justify-between mb-10">
-          <TouchableOpacity 
-            className="bg-[#00CCBB]/20 px-4 py-3 rounded-md flex-1 mr-2 flex-row justify-center items-center"
-            onPress={toggleVisibility}
-          >
-            {request.visibility ? 
-              <EyeSlashIcon size={18} color="#00CCBB" strokeWidth={2.5} /> : 
-              <EyeIcon size={18} color="#00CCBB" strokeWidth={2.5} />
-            }
-            <Text className="text-[#00CCBB] text-center font-semibold ml-2">
-              {request.visibility ? 'Make Private' : 'Make Public'}
-            </Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            className={`px-4 py-3 rounded-md flex-1 ml-2 flex-row justify-center items-center ${
-              progress.isComplete ? 'bg-green-500/20' : 'bg-yellow-500/20'
-            }`}
-            onPress={markRequestComplete}
-          >
-            <CheckIcon size={18} color={progress.isComplete ? '#10b981' : '#f59e0b'} strokeWidth={2.5} />
-            <Text className={`text-center font-semibold ml-2 ${
-              progress.isComplete ? 'text-green-600' : 'text-yellow-600'
-            }`}>
-              Mark as Complete
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {!isFromHistory && (
+          <View className="flex-row justify-between mb-10">
+            <TouchableOpacity 
+              className="bg-[#00CCBB]/20 px-4 py-3 rounded-md flex-1 mr-2 flex-row justify-center items-center"
+              onPress={toggleVisibility}
+            >
+              {request.visibility ? 
+                <EyeSlashIcon size={18} color="#00CCBB" strokeWidth={2.5} /> : 
+                <EyeIcon size={18} color="#00CCBB" strokeWidth={2.5} />
+              }
+              <Text className="text-[#00CCBB] text-center font-semibold ml-2">
+                {request.visibility ? 'Make Private' : 'Make Public'}
+              </Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              className={`px-4 py-3 rounded-md flex-1 ml-2 flex-row justify-center items-center ${
+                progress.isComplete ? 'bg-green-500/20' : 'bg-yellow-500/20'
+              }`}
+              onPress={markRequestComplete}
+            >
+              <CheckIcon size={18} color={progress.isComplete ? '#10b981' : '#f59e0b'} strokeWidth={2.5} />
+              <Text className={`text-center font-semibold ml-2 ${
+                progress.isComplete ? 'text-green-600' : 'text-yellow-600'
+              }`}>
+                Mark as Complete
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
