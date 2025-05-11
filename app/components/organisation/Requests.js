@@ -5,6 +5,7 @@ import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { PlusIcon } from 'react-native-heroicons/outline';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -194,10 +195,11 @@ const Requests = () => {
       <View className="flex-row justify-between items-center px-5 py-4 bg-white border-b border-gray-200">
         <Text className="text-xl font-bold text-gray-800">Donation Requests</Text>
         <TouchableOpacity 
-          className="bg-[#00CCBB] px-3 py-2 rounded-md"
+          className="bg-[#00CCBB]/20 px-3 py-2 rounded-md flex-row items-center"
           onPress={openCreateModal}
         >
-          <Text className="text-white font-medium">New Request</Text>
+          <PlusIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+          <Text className="text-[#00CCBB] font-semibold ml-1">New Request</Text>
         </TouchableOpacity>
       </View>
       

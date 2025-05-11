@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
+import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -281,19 +282,28 @@ export default function RequestDetails() {
         
         <View className="flex-row justify-between mb-10">
           <TouchableOpacity 
-            className="bg-[#00CCBB] px-4 py-3 rounded-md flex-1 mr-2"
+            className="bg-[#00CCBB]/20 px-4 py-3 rounded-md flex-1 mr-2 flex-row justify-center items-center"
             onPress={toggleVisibility}
           >
-            <Text className="text-white text-center font-medium">
+            {request.visibility ? 
+              <EyeSlashIcon size={18} color="#00CCBB" strokeWidth={2.5} /> : 
+              <EyeIcon size={18} color="#00CCBB" strokeWidth={2.5} />
+            }
+            <Text className="text-[#00CCBB] text-center font-semibold ml-2">
               {request.visibility ? 'Make Private' : 'Make Public'}
             </Text>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            className={`px-4 py-3 rounded-md flex-1 ml-2 ${progress.isComplete ? 'bg-green-500' : 'bg-yellow-500'}`}
+            className={`px-4 py-3 rounded-md flex-1 ml-2 flex-row justify-center items-center ${
+              progress.isComplete ? 'bg-green-500/20' : 'bg-yellow-500/20'
+            }`}
             onPress={markRequestComplete}
           >
-            <Text className="text-white text-center font-medium">
+            <CheckIcon size={18} color={progress.isComplete ? '#10b981' : '#f59e0b'} strokeWidth={2.5} />
+            <Text className={`text-center font-semibold ml-2 ${
+              progress.isComplete ? 'text-green-600' : 'text-yellow-600'
+            }`}>
               Mark as Complete
             </Text>
           </TouchableOpacity>

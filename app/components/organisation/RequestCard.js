@@ -69,7 +69,7 @@ const RequestCard = ({ request, onEdit, onDelete }) => {
                 onPress={() => onEdit(request)}
             >
               <PencilIcon size={14} color="#4B5563" />
-              <Text className="text-gray-700 font-medium ml-1">Edit</Text>
+              <Text className="text-gray-600 font-medium ml-1">Edit</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
