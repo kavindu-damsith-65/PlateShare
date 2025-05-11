@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { TrashIcon, StarIcon } from 'react-native-heroicons/outline';
+import { TrashIcon } from 'react-native-heroicons/outline';
 
 const HistoryRequestCard = ({ request, onDelete }) => {
   const navigation = useNavigation();
