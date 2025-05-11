@@ -47,7 +47,7 @@ export default function RequestDetails() {
     const fetchRequestDetails = async () => {
       try {
         // Fetch the specific request by ID using the dedicated endpoint
-        const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+        const response = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
         const foundRequest = response.data.foodRequest;
         
         if (foundRequest) {
@@ -131,10 +131,10 @@ export default function RequestDetails() {
   const toggleVisibility = async () => {
     try {
       setLoading(true);
-      const response = await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/toggle-visibility`);
+      const response = await axios.put(`${BACKEND_URL}/api/orgrequests/requests/${requestId}/toggle-visibility`);
 
       // Get the updated request with all details including donations
-      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
       const updatedRequest = updatedRequestResponse.data.foodRequest;
       
       setRequest(updatedRequest);
@@ -156,10 +156,10 @@ export default function RequestDetails() {
   const markRequestComplete = async () => {
     try {
       setLoading(true);
-      await axios.put(`${BACKEND_URL}/api/organisation/requests/${requestId}/complete`);
+      await axios.put(`${BACKEND_URL}/api/orgrequests/requests/${requestId}/complete`);
 
       // Fetch the updated request to get the latest data
-      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/organisation/requests/${requestId}`);
+      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
       const updatedRequest = updatedRequestResponse.data.foodRequest;
 
       setRequest(updatedRequest);

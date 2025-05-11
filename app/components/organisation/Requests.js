@@ -35,7 +35,7 @@ const Requests = () => {
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/incomplete/${orgUserId}`);
+      const response = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/incomplete/${orgUserId}`);
       setRequests(response.data.foodRequests);
       setError(null);
     } catch (error) {
@@ -82,7 +82,7 @@ const Requests = () => {
           onPress: async () => {
             try {
               // Call the delete API endpoint
-              await axios.delete(`${BACKEND_URL}/api/organisation/requests/${id}`);
+              await axios.delete(`${BACKEND_URL}/api/orgrequests/requests/${id}`);
               
               // Remove the deleted request from the local state
               setRequests(requests.filter(request => request.id !== id));
@@ -124,7 +124,7 @@ const Requests = () => {
       if (editingRequest) {
         // Update existing request
         const response = await axios.put(
-          `${BACKEND_URL}/api/organisation/requests/${editingRequest.id}`, 
+          `${BACKEND_URL}/api/orgrequests/requests/${editingRequest.id}`,
           apiData
         );
         
@@ -137,7 +137,7 @@ const Requests = () => {
       } else {
         // Create new request
         const response = await axios.post(
-          `${BACKEND_URL}/api/organisation/requests`, 
+          `${BACKEND_URL}/api/orgrequests/requests`,
           {
             ...apiData,
             orgUserId
