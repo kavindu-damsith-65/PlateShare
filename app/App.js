@@ -17,6 +17,9 @@ import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
+import SearchScreen from "./screens/Buyer/SearchScreen";
+import CategoryResultsScreen from "./screens/Buyer/CategoryResultsScreen";
+import SearchResultsScreen from "./screens/Buyer/SearchResultsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -114,6 +117,21 @@ function App(){
                         <Stack.Group screenOptions={{ presentation: 'modal' }}>
                             <Stack.Screen name="Profile" component={ProfileScreen} />
                         </Stack.Group>
+                        <Stack.Screen
+                            name="SearchScreen"
+                            component={SearchScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="CategoryResults"
+                            component={CategoryResultsScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="SearchResults"
+                            component={SearchResultsScreen}
+                            options={{ headerShown: false }}
+                        />
                     </Stack.Navigator>
                 </TailwindProvider>
             </Provider>

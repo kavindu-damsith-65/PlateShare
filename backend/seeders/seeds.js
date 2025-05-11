@@ -88,6 +88,26 @@ module.exports = {
 
     await queryInterface.bulkInsert("reviews", reviews);
 
+      // Define categories
+      const categories = [
+          { id: 'cat_1', category: 'Pizza', image: getRandomPicsumImage() },
+          { id: 'cat_2', category: 'Burgers', image: getRandomPicsumImage() },
+          { id: 'cat_3', category: 'Salads', image: getRandomPicsumImage() },
+          { id: 'cat_4', category: 'Pasta', image: getRandomPicsumImage() },
+          { id: 'cat_5', category: 'Rice', image: getRandomPicsumImage() },
+          { id: 'cat_6', category: 'Desserts', image: getRandomPicsumImage() },
+          { id: 'cat_7', category: 'Drinks', image: getRandomPicsumImage() },
+          { id: 'cat_8', category: 'Breakfast', image: getRandomPicsumImage() },
+      ];
+
+      // Insert categories
+      await queryInterface.bulkInsert('categories', categories.map(cat => ({
+          ...cat,
+          createdAt: new Date(),
+          updatedAt: new Date()
+      })));
+
+      // Updated products with categories
       const products = restaurants.flatMap(restaurant => [
           {
               id: `p1_${restaurant.id}`,
@@ -95,11 +115,12 @@ module.exports = {
               type: false,
               available: true,
               quantity: 10,
-              restaurant_id: restaurant.id, // Linking to the current restaurant
+              restaurant_id: restaurant.id,
               has_subs: true,
               image: getRandomPicsumImage(),
               price: 8.99,
               description: 'A traditional rice dish served with a variety of curries.',
+              category_id: 'cat_5', // Rice category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -114,6 +135,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 10.99,
               description: 'Delicious stir-fried rice with vegetables and protein.',
+              category_id: 'cat_5', // Rice category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -128,6 +150,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 6.99,
               description: 'A juicy beef or chicken burger served with fresh toppings.',
+              category_id: 'cat_2', // Burgers category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -142,6 +165,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 12.99,
               description: 'Classic Italian-style pizza with various toppings.',
+              category_id: 'cat_1', // Pizza category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -156,6 +180,7 @@ module.exports = {
               image: getRandomPicsumImage(),
               price: 9.99,
               description: 'Creamy or tomato-based pasta with cheese and herbs.',
+              category_id: 'cat_4', // Pasta category
               createdAt: new Date(),
               updatedAt: new Date(),
           },
@@ -332,5 +357,6 @@ module.exports = {
     await queryInterface.bulkDelete('sub_products', null, {});
     await queryInterface.bulkDelete('products', null, {});
     await queryInterface.bulkDelete('reviews', null, {});
+    await queryInterface.bulkDelete('categories', null, {});
   },
 };

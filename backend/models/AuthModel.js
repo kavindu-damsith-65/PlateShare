@@ -49,6 +49,13 @@ const Restaurant = sequelize.define('restaurant', {
     description: { type: DataTypes.TEXT }, 
 });
 
+// Category Model
+const Category = sequelize.define('category', {
+  id: {type: DataTypes.STRING, primaryKey: true,allowNull: false},
+  category: {type: DataTypes.STRING, allowNull: true},
+  image: {type: DataTypes.STRING, allowNull: true}
+});
+
 // Product Model
 const Product = sequelize.define('product', {
     id: { type: DataTypes.STRING, primaryKey: true },
@@ -60,7 +67,8 @@ const Product = sequelize.define('product', {
     has_subs: { type: DataTypes.BOOLEAN, defaultValue: false },
     image: { type: DataTypes.STRING },
     price: { type: DataTypes.DECIMAL(5, 2) },
-    description: { type: DataTypes.STRING }
+    description: { type: DataTypes.STRING },
+    category_id: {type: DataTypes.STRING, allowNull: true}
 });
 
 // Sub Product Model
@@ -211,7 +219,11 @@ Donation.belongsTo(FoodRequest, { foreignKey: "food_request_id" });
 Product.hasMany(Donation, { foreignKey: "product_id", onDelete: "CASCADE" });
 Donation.belongsTo(Product, { foreignKey: "product_id" });
 
+Category.hasMany(Product, { foreignKey: 'category_id' });
+Product.belongsTo(Category, { foreignKey: 'category_id' });
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation
+    FoodRequest, Admin, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation,
+    Category
 };

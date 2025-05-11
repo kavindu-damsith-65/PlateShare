@@ -19,7 +19,7 @@ const NearbyFoods = () => {
     const fetchNearbyFoods = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/products/${location}`);
+        const response = await axios.get(`${BACKEND_URL}/api/products/nearby/${location}`);
         setDishes(response.data.products || []);
         setError(null);
       } catch (error) {
