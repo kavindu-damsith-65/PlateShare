@@ -28,12 +28,6 @@ const HomeScreen = () => {
     });
   }, []);
 
-  // Handle search input
-  const handleSearch = (text) => {
-    setSearchQuery(text);
-    // You can implement search functionality here
-  };
-
   // Components to render in the FlatList
   const renderSections = () => {
     return [
