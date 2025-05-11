@@ -49,9 +49,7 @@ const SearchResultsScreen = ({ route }) => {
         
         setRestaurants(fetchedRestaurants);
         setProducts(fetchedProducts);
-        
-        console.log("Fetched restaurants:", fetchedRestaurants.length);
-        console.log("Fetched products:", fetchedProducts.length);
+
       }
       
       setError(null);
