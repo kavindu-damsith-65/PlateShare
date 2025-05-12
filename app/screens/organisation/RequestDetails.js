@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, SafeAreaView, Modal } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
