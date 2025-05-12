@@ -1,5 +1,5 @@
-import {Image, Modal, Text, TouchableOpacity, View} from "react-native";
-import {StarIcon} from "react-native-heroicons/outline";
+import {Image, Modal, Text, TouchableOpacity, View, Alert} from "react-native";
+import {StarIcon, PencilIcon, TrashIcon} from "react-native-heroicons/outline";
 import React, {useEffect, useState} from "react";
 import ReviewFormModal from "../Buyer/ReviewFormModal";
 import axios from "axios";
@@ -11,6 +11,7 @@ const DonationItem = ({ donation, isFromHistory }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [editingReview, setEditingReview] = useState(null);
 
     // TODO: Replace with actual user ID
     const userId = "user_3";
@@ -20,7 +21,47 @@ const DonationItem = ({ donation, isFromHistory }) => {
             id: donation.restaurant.id,
             name: donation.restaurant.name
         });
+        setEditingReview(null);
         setModalVisible(true);
+    };
+
+    const handleEditReview = (review) => {
+        setSelectedRestaurant({
+            id: donation.restaurant.id,
+            name: donation.restaurant.name
+        });
+        setEditingReview(review);
+        setModalVisible(true);
+    };
+
+    const handleDeleteReview = (reviewId) => {
+        Alert.alert(
+            "Confirm Delete",
+            "Are you sure you want to delete this review?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Delete",
+                    onPress: async () => {
+                        try {
+                            await axios.delete(`${BACKEND_URL}/api/reviews/${reviewId}`);
+                            setReviews(reviews.filter((review) => review.id !== reviewId));
+                            Alert.alert("Success", "Review deleted successfully");
+                        } catch (error) {
+                            console.error("Error deleting review:", error);
+                            Alert.alert(
+                                "Error",
+                                "Failed to delete review. Please try again."
+                            );
+                        }
+                    },
+                    style: "destructive",
+                },
+            ]
+        );
     };
 
     useEffect(() => {
@@ -97,25 +138,44 @@ const DonationItem = ({ donation, isFromHistory }) => {
           {/* Display reviews section */}
           {isFromHistory && (
               <View className="mt-3">
-                  <Text className="font-medium text-gray-700 mb-1">Your Reviews :</Text>
+                  <Text className="font-medium text-gray-700 mb-1">Your Reviews:</Text>
                   {loading ? (
                       <Text className="text-gray-500 italic">Loading reviews...</Text>
                   ) : reviews && reviews.length > 0 ? (
                       <View>
-                          {reviews.slice(0, 2).map(review => (
+                          {reviews.slice(0, 2).map((review, index) => (
                               <View key={review.id} className="bg-gray-50 p-2 rounded mb-1">
-                                  <View className="flex-row items-center">
-                                      <Text className="text-sm font-medium">Rating :</Text>
-                                      <View className="flex-row ml-2">
-                                          {[...Array(5)].map((_, i) => (
-                                              <StarIcon 
-                                                  key={i} 
-                                                  size={12} 
-                                                  color={i < review.rating ? "#00CCBB" : "#D3D3D3"}
-                                                  opacity={i < review.rating ? 1 : 0.5}
-                                              />
-                                          ))}
+                                  <View className="flex-row justify-between">
+                                      <View className="flex-row items-center">
+                                          <Text className="text-sm font-medium">Rating:</Text>
+                                          <View className="flex-row ml-2">
+                                              {[...Array(5)].map((_, i) => (
+                                                  <StarIcon 
+                                                      key={i} 
+                                                      size={12} 
+                                                      color={i < review.rating ? "#00CCBB" : "#D3D3D3"}
+                                                      opacity={i < review.rating ? 1 : 0.5}
+                                                  />
+                                              ))}
+                                          </View>
                                       </View>
+                                      
+                                      {/* Edit and Delete buttons - only for the first review */}
+                                      {index === 0 && (
+                                          <View className="flex-row">
+                                              <TouchableOpacity 
+                                                  onPress={() => handleEditReview(review)}
+                                                  className="mr-4"
+                                              >
+                                                  <PencilIcon size={16} color="#00CCBB" />
+                                              </TouchableOpacity>
+                                              <TouchableOpacity 
+                                                  onPress={() => handleDeleteReview(review.id)}
+                                              >
+                                                  <TrashIcon size={16} color="#FF4B4B" />
+                                              </TouchableOpacity>
+                                          </View>
+                                      )}
                                   </View>
                                   <Text className="text-sm text-gray-600 mt-1">{review.description}</Text>
                               </View>
@@ -144,7 +204,7 @@ const DonationItem = ({ donation, isFromHistory }) => {
                           visible={modalVisible}
                           onClose={() => setModalVisible(false)}
                           onSubmit={handleReviewSubmit}
-                          editingReview={null}
+                          editingReview={editingReview}
                           restaurantId={selectedRestaurant?.id}
                           customUserId={userId}
                       />
