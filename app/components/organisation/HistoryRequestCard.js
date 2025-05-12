@@ -24,20 +24,20 @@ const HistoryRequestCard = ({ request, onDelete }) => {
     return `${year}/${month}/${day}`;
   };
 
-  // Calculate progress percentage
-  const calculateProgress = () => {
-    if (!request.donations || request.donations.length === 0) return 0;
-    
-    const totalDonated = request.donations.reduce((sum, donation) => sum + donation.quantity, 0);
-    const percentage = Math.min((totalDonated / request.quantity) * 100, 100);
-    
-    return percentage;
-  };
-
   // Get total donated quantity
   const getTotalDonated = () => {
     if (!request.donations || request.donations.length === 0) return 0;
     return request.donations.reduce((sum, donation) => sum + donation.quantity, 0);
+  };
+
+  // Calculate progress percentage
+  const calculateProgress = () => {
+    if (!request.donations || request.donations.length === 0) return 0;
+    
+    const totalDonated = getTotalDonated();
+    const percentage = Math.min((totalDonated / request.quantity) * 100, 100);
+    
+    return percentage;
   };
 
   // Handle delete confirmation
