@@ -3,12 +3,12 @@ import { Image, Text, TouchableOpacity } from "react-native";
 
 const RecommendCard = ({ imgUrl, title }) => {
   return (
-    <TouchableOpacity className="mr-2 relative">
+    <TouchableOpacity className="relative items-center mr-2">
       <Image
         source={{ uri: imgUrl }}
-        className="h-20 w-20 rounded-md"
+        className="w-20 h-20 rounded-full"
       />
-      <Text className="absolute bottom-1 left-1 text-white text-xs font-bold">{title}</Text>
+      <Text className="mt-2 text-xs font-bold text-gray-700 left-1">{title}</Text>
     </TouchableOpacity>
   );
 };

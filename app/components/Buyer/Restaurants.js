@@ -48,9 +48,9 @@ const Restaurants = () => {
   );
 
   return (
-    <View className="pb-4 pt-4">
+    <View className="pt-4 pb-4">
       <View className="flex-row items-center justify-between px-4 pt-2">
-        <Text className="text-lg font-bold">Restaurants Near You</Text>
+        <Text className="text-lg font-bold">Near By Restaurants</Text>
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => navigation.navigate("AllRestaurantsScreen", { restaurants })}
