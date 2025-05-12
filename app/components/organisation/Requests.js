@@ -5,6 +5,7 @@ import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { PlusIcon } from 'react-native-heroicons/outline';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -35,7 +36,7 @@ const Requests = () => {
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/organisation/requests/incomplete/${orgUserId}`);
+      const response = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/incomplete/${orgUserId}`);
       setRequests(response.data.foodRequests);
       setError(null);
     } catch (error) {
@@ -82,7 +83,7 @@ const Requests = () => {
           onPress: async () => {
             try {
               // Call the delete API endpoint
-              await axios.delete(`${BACKEND_URL}/api/organisation/requests/${id}`);
+              await axios.delete(`${BACKEND_URL}/api/orgrequests/requests/${id}`);
               
               // Remove the deleted request from the local state
               setRequests(requests.filter(request => request.id !== id));
@@ -124,7 +125,7 @@ const Requests = () => {
       if (editingRequest) {
         // Update existing request
         const response = await axios.put(
-          `${BACKEND_URL}/api/organisation/requests/${editingRequest.id}`, 
+          `${BACKEND_URL}/api/orgrequests/requests/${editingRequest.id}`,
           apiData
         );
         
@@ -137,7 +138,7 @@ const Requests = () => {
       } else {
         // Create new request
         const response = await axios.post(
-          `${BACKEND_URL}/api/organisation/requests`, 
+          `${BACKEND_URL}/api/orgrequests/requests`,
           {
             ...apiData,
             orgUserId
@@ -194,10 +195,11 @@ const Requests = () => {
       <View className="flex-row justify-between items-center px-5 py-4 bg-white border-b border-gray-200">
         <Text className="text-xl font-bold text-gray-800">Donation Requests</Text>
         <TouchableOpacity 
-          className="bg-[#00CCBB] px-3 py-2 rounded-md"
+          className="bg-[#00CCBB]/20 px-3 py-2 rounded-md flex-row items-center"
           onPress={openCreateModal}
         >
-          <Text className="text-white font-medium">New Request</Text>
+          <PlusIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+          <Text className="text-[#00CCBB] font-semibold ml-1">New Request</Text>
         </TouchableOpacity>
       </View>
       

@@ -111,3 +111,39 @@ exports.updateReview = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+// Get reviews by user ID and restaurant ID
+exports.getUserRestaurantReviews = async (req, res) => {
+    try {
+        const { userId, restaurantId } = req.params;
+
+        // Validate parameters
+        if (!userId || !restaurantId) {
+            return res.status(400).json({ message: "User ID and Restaurant ID are required" });
+        }
+
+        // Find reviews that match both user ID and restaurant ID
+        const reviews = await Review.findAll({
+            where: {
+                user_id: userId,
+                restaurant_id: restaurantId
+            },
+            include: [
+                {
+                    model: Restaurant,
+                    attributes: ['name']
+                },
+                {
+                    model: User,
+                    attributes: ['name']
+                }
+            ],
+            order: [['createdAt', 'DESC']] // Most recent reviews first
+        });
+
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error("Error fetching user restaurant reviews:", error);
+        res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+};

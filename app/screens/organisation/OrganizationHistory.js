@@ -1,62 +1,141 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import Ionicons from "react-native-vector-icons/Ionicons";
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
+import axios from 'axios';
+import HistoryRequestCard from '../../components/organisation/HistoryRequestCard';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-export default function OrganizationHistory() {
-  // Sample data for history
-  const history = [
-    { id: '1', name: 'Food Bank #1', items: 'Bread, Vegetables', status: 'completed', date: 'May 15, 2023' },
-    { id: '2', name: 'Shelter #42', items: 'Canned goods, Fruits', status: 'completed', date: 'May 10, 2023' },
-    { id: '3', name: 'Community Center', items: 'Rice, Pasta', status: 'cancelled', date: 'May 5, 2023' },
-    { id: '4', name: 'Local Charity', items: 'Dairy products', status: 'completed', date: 'April 28, 2023' },
-    { id: '5', name: 'School Program', items: 'Snacks, Juice', status: 'completed', date: 'April 20, 2023' },
-  ];
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity className="bg-white rounded-lg p-4 mb-4 shadow">
-      <View className="flex-row justify-between items-center mb-2">
-        <Text className="text-base font-bold text-gray-800">{item.name}</Text>
-        <View className={`px-2 py-1 rounded-full ${item.status === 'completed' ? 'bg-green-100' : 'bg-red-100'}`}>
-          <Text className={`text-xs font-medium ${item.status === 'completed' ? 'text-green-800' : 'text-red-800'}`}>
-            {item.status === 'completed' ? 'Completed' : 'Cancelled'}
-          </Text>
-        </View>
-      </View>
-      
-      <Text className="text-sm text-gray-600 mb-2">{item.items}</Text>
-      
-      <View className="flex-row justify-between items-center">
-        <Text className="text-xs text-gray-500">{item.date}</Text>
-        
-        <TouchableOpacity className="px-3 py-1.5 rounded bg-gray-100">
-          <Text className="text-xs text-gray-600 font-medium">View Details</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+const OrganizationHistory = () => {
+  const [completedRequests, setCompletedRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigation = useNavigation();
+
+  // TODO: Replace with actual user ID from authentication
+  const orgUserId = "user_3";
+
+  // Fetch completed requests on initial load
+  useEffect(() => {
+    fetchCompletedRequests();
+  }, []);
+
+  // Fetch completed requests whenever the screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchCompletedRequests();
+      return () => {}; // cleanup function
+    }, [])
   );
 
-  return (
-    <SafeAreaView className="flex-1 bg-gray-100 pt-5">
-      <StatusBar style="dark" />
+  const fetchCompletedRequests = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/orghistory/completed/${orgUserId}`);
+      setCompletedRequests(response.data.foodRequests);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching completed requests:", error);
+      if (error.response && error.response.status === 404) {
+        // No completed requests is not an error state
+        setCompletedRequests([]);
+        setError(null);
+      } else {
+        setError("Failed to load completed requests. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (requestId) => {
+    try {
+      // Call the delete API endpoint
+      await axios.delete(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
       
-      <View className="px-5 py-4 bg-white border-b border-gray-200">
-        <Text className="text-xl font-bold text-gray-800">Donation History</Text>
+      // Remove the deleted request from the local state
+      setCompletedRequests(completedRequests.filter(request => request.id !== requestId));
+      Alert.alert("Success", "Request deleted successfully");
+    } catch (error) {
+      console.error("Error deleting request:", error);
+
+      // Check if it's a specific error about donations
+      if (error.response && error.response.status === 400) {
+        Alert.alert(
+          "Cannot Delete",
+          "This request has donations associated with it. Historical records with donations cannot be deleted."
+        );
+      } else {
+        Alert.alert("Error", "Failed to delete request. Please try again.");
+      }
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <HistoryRequestCard 
+      request={item} 
+      onDelete={handleDelete}
+    />
+  );
+
+  if (loading && completedRequests.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-100 pt-7">
+        <View className="relative py-4 shadow-sm bg-white">
+          <Text className="text-center text-xl font-bold">Request History</Text>
+        </View>
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#00CCBB" />
+          <Text className="mt-2 text-gray-500">Loading request history...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (error && completedRequests.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-gray-100 pt-7">
+        <View className="relative py-4 shadow-sm bg-white">
+          <Text className="text-center text-xl font-bold">Request History</Text>
+        </View>
+        <View className="flex-1 justify-center items-center p-5">
+          <Ionicons name="alert-circle-outline" size={50} color="#FF6B6B" />
+          <Text className="mt-2 text-red-500 text-center">{error}</Text>
+          <TouchableOpacity 
+            className="mt-4 bg-[#00CCBB] px-4 py-2 rounded-md"
+            onPress={fetchCompletedRequests}
+          >
+            <Text className="text-white">Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView className="flex-1 bg-gray-100 pt-7">
+      <View className="relative py-4 shadow-sm bg-white">
+        <Text className="text-center text-xl font-bold">Request History</Text>
       </View>
       
-      {history.length > 0 ? (
+      {completedRequests.length > 0 ? (
         <FlatList
-          data={history}
+          data={completedRequests}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
-          contentContainerClassName="p-4"
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={{ padding: 16 }}
+          refreshing={loading}
+          onRefresh={fetchCompletedRequests}
         />
       ) : (
         <View className="flex-1 justify-center items-center p-5">
-          <Ionicons name="time-outline" size={50} color="#DDD" />
-          <Text className="mt-2 text-base text-gray-500">No donation history</Text>
+          <Ionicons name="checkmark-done-outline" size={50} color="#DDD" />
+          <Text className="mt-2 text-base text-gray-500">No completed requests</Text>
         </View>
       )}
     </SafeAreaView>
   );
-}
+};
+
+export default OrganizationHistory;
