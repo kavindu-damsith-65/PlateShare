@@ -117,7 +117,7 @@ exports.getUserRestaurantReviews = async (req, res) => {
     try {
         const { userId, restaurantId } = req.params;
 
-        // Validate input parameters
+        // Validate parameters
         if (!userId || !restaurantId) {
             return res.status(400).json({ message: "User ID and Restaurant ID are required" });
         }
@@ -129,15 +129,21 @@ exports.getUserRestaurantReviews = async (req, res) => {
                 restaurant_id: restaurantId
             },
             include: [
-                { model: Restaurant, attributes: ["name"] },
-                { model: User, attributes: ["name"] }
-            ]
+                {
+                    model: Restaurant,
+                    attributes: ['name']
+                },
+                {
+                    model: User,
+                    attributes: ['name']
+                }
+            ],
+            order: [['createdAt', 'DESC']] // Most recent reviews first
         });
 
-        // Return the reviews (even if empty array)
-        return res.status(200).json(reviews);
+        res.status(200).json(reviews);
     } catch (error) {
         console.error("Error fetching user restaurant reviews:", error);
-        return res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Failed to fetch reviews" });
     }
 };
