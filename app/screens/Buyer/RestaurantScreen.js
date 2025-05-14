@@ -148,22 +148,34 @@ const RestaurantScreen = ({ route, navigation }) => {
           </View>
         </View>
          {/* Tabs */}
-        <View className="flex-row px-4 pt-4 bg-white border-b border-gray-300">
-          {TABS.map((tab) => (
-            <TouchableOpacity
-              key={tab.key}
-              className={`mr-6 pb-2 ${selectedTab === tab.key ? "border-b-2 border-[#00CCBB]" : ""}`}
-              onPress={() => setSelectedTab(tab.key)}
-            >
-              <Text className={`text-base font-medium ${selectedTab === tab.key ? "text-[#00CCBB]" : "text-gray-500"}`}>
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        <View className="bg-white shadow-sm">
+          <View className="flex-row border-b border-gray-100">
+            {TABS.map((tab) => (
+              <TouchableOpacity
+                key={tab.key}
+                className={`flex-1 items-center py-4 ${
+                  selectedTab === tab.key 
+                    ? "border-b-2 border-[#00CCBB]" 
+                    : "border-b-2 border-transparent"
+                }`}
+                onPress={() => setSelectedTab(tab.key)}
+              >
+                <Text 
+                  className={`text-base font-medium ${
+                    selectedTab === tab.key 
+                      ? "text-[#00CCBB] font-semibold" 
+                      : "text-gray-500"
+                  }`}
+                >
+                  {tab.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
 
         {/* Tab Content */}
-        <View>
+        <View className="bg-gray-50">
           {selectedTab === "menu" && (
             <View className="pb-2">
               <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
