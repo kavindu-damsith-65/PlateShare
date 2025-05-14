@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
-import { 
-  ScrollView, 
-  Dimensions, 
+import {
+  ScrollView,
+  Dimensions,
   View,
   Text,
   TouchableOpacity,
@@ -12,10 +12,10 @@ import {
 import axios from "axios";
 import ReviewCard from "./ReviewCard";
 import ReviewFormModal from "./ReviewFormModal";
+import { StarIcon } from "react-native-heroicons/solid";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
-
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const Reviews = ({ restaurantId }) => {
   const scrollViewRef = useRef(null);
   const [reviews, setReviews] = useState([]);
@@ -124,8 +124,10 @@ const Reviews = ({ restaurantId }) => {
   const handleReviewSubmit = async (submittedReview) => {
     try {
       if (editingReview) {
-        // Updated review 
-        const response = await axios.get(`${BACKEND_URL}/api/reviews/one/${submittedReview.id}`);
+        // Updated review
+        const response = await axios.get(
+          `${BACKEND_URL}/api/reviews/one/${submittedReview.id}`
+        );
         const updatedReview = response.data;
 
         setReviews(
@@ -144,7 +146,7 @@ const Reviews = ({ restaurantId }) => {
       setEditingReview(null); // Reset editingReview after submission
     }
   };
-    
+
   if (loading) {
     return (
       <View className="items-center justify-center flex-1">
@@ -154,71 +156,54 @@ const Reviews = ({ restaurantId }) => {
     );
   }
 
- return (
-  <View className="mt-6">
-    <Text className="pb-3 text-xl font-bold">Your Feedback Lights Us Up</Text>
-    <TouchableOpacity
-      className="bg-[#00CCBB] px-3 py-2 rounded-md mr-64"
-      onPress={handleCreateReview}
-    >
-      <Text className="font-medium text-white">Add Review</Text>
-    </TouchableOpacity>
-   {reviews.length > 0 ? (
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        onMomentumScrollEnd={handleMomentumScrollEnd}
-        onScrollBeginDrag={() => setIsUserScrolling(true)}
-        onScrollEndDrag={() => setIsUserScrolling(false)}
-        decelerationRate="fast"
-        snapToInterval={SCREEN_WIDTH - 30 + 16}
-        snapToAlignment="center"
-        className="pb-5"
+  return (
+    <View className="mt-6">
+      <Text className="pb-3 text-xl font-bold">Your Feedback Lights Us Up</Text>
+      <TouchableOpacity
+        className="bg-[#00CCBB]/20  px-3 py-2 rounded-md mr-64"
+        onPress={handleCreateReview}
       >
-        {reviews.map((review, index) => (
-          <View
-            key={index}
-            style={{
-              width: SCREEN_WIDTH - 30,
-              marginRight: 16,
-            }}
-          >
-            <ReviewCard
-              key={review.id}
-              review={review}
-              onEdit={handleEditReview}
-              onDelete={handleDeleteReview}
+        <StarIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+        <Text className="text-[#00CCBB] font-semibold ml-1">Add Review</Text>
+      </TouchableOpacity>
+      {reviews.length > 0 ? (
+        <ScrollView className="pb-5">
+          {reviews.map((review) => (
+            <View key={review.id} className="mb-4">
+              <ReviewCard
+                key={review.id}
+                review={review}
+                 onEdit={handleEditReview}
+                 onDelete={handleDeleteReview}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      ) : (
+        <Text className="mt-4 text-gray-500">No reviews available.</Text>
+      )}
+
+      {/* Modal for Create/Edit Review Form */}
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View className="items-center justify-center flex-1 bg-black/50">
+          <View className="w-11/12 p-4 bg-white rounded-lg">
+            <ReviewFormModal
+              visible={modalVisible}
+              onClose={() => setModalVisible(false)}
+              onSubmit={handleReviewSubmit}
+              editingReview={editingReview}
+              restaurantId={restaurantId}
             />
           </View>
-        ))}
-      </ScrollView>
-    ) : (
-      <Text className="mt-4 text-gray-500">No reviews available.</Text>
-    )}
-
-    {/* Modal for Create/Edit Review Form */}
-    <Modal
-      visible={modalVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <View className="items-center justify-center flex-1 bg-black/50">
-        <View className="w-11/12 p-4 bg-white rounded-lg">
-          <ReviewFormModal
-            visible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            onSubmit={handleReviewSubmit}
-            editingReview={editingReview}
-            restaurantId={restaurantId}
-          />
         </View>
-      </View>
-    </Modal>
-  </View>
-);
+      </Modal>
+    </View>
+  );
 };
 
 export default Reviews;

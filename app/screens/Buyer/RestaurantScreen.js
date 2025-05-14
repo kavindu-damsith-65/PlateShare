@@ -11,9 +11,15 @@ import { useDispatch } from "react-redux";
 import { setRestaurant } from "../../slices/restaurantSlice";
 import axios from "axios";
 import Reviews from "../../components/Buyer/Reviews";
+import { Dimensions } from "react-native";
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
-console.log("Backend URL:", BACKEND_URL);
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
+const TABS = [
+  { key: "menu", label: "Menu" },
+  { key: "reviews", label: "Reviews" },
+  { key: "info", label: "Info" },
+];
 
 const RestaurantScreen = ({ route, navigation }) => {
   const {
@@ -39,6 +45,7 @@ const RestaurantScreen = ({ route, navigation }) => {
   });
 
   const [expandedDishes, setExpandedDishes] = useState({});
+  const [selectedTab, setSelectedTab] = useState("menu");
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -140,70 +147,98 @@ const RestaurantScreen = ({ route, navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="pb-2">
-          <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
-
-          {restaurantData?.dishes?.length > 0 ? (
-              restaurantData.dishes.map((dish) => (
-              <View key={dish.id}>
-                <DishRow
-                  id={dish.id}
-                  name={dish.name}
-                  description={dish.description}
-                  price={dish.price}
-                  image={dish.image}
-                />
-                {/* Render sub-products */}
-                {dish.has_subs && dish.sub_products?.length > 0 && (
-                  <View className="pb-5 pl-6">
-                    <TouchableOpacity
-                      className="flex-row items-center"
-                      onPress={() => toggleSubProducts(dish.id)}
-                    >
-                      <Text className="mr-1 font-medium text-green-600">
-                        {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
-                      </Text>
-                    </TouchableOpacity>
-                    {expandedDishes[dish.id] && (
-                      <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        className="mt-2"
-                      >
-                        {dish.sub_products.map((subProduct) => (
-                          <View
-                            key={subProduct.id}
-                            style={{ width: 300, marginRight: 10 }}
-                          >
-                            <DishRow
-                              id={subProduct.id}
-                              name={subProduct.name}
-                              description={subProduct.description}
-                              price={subProduct.price}
-                              image={
-                                subProduct.image
-                              }
-                            />
-                          </View>
-                        ))}
-                      </ScrollView>
-                    )}
-                  </View>
-                )}
-              </View>
-            ))
-          ) : (
-            <Text className="px-4 text-gray-500">No dishes available.</Text>
-          )}
+         {/* Tabs */}
+        <View className="flex-row px-4 pt-4 bg-white border-b border-gray-300">
+          {TABS.map((tab) => (
+            <TouchableOpacity
+              key={tab.key}
+              className={`mr-6 pb-2 ${selectedTab === tab.key ? "border-b-2 border-[#00CCBB]" : ""}`}
+              onPress={() => setSelectedTab(tab.key)}
+            >
+              <Text className={`text-base font-medium ${selectedTab === tab.key ? "text-[#00CCBB]" : "text-gray-500"}`}>
+                {tab.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Reviews Section */}
-        <View className="px-4">
-  <Reviews restaurantId={id} />
-</View>
+        {/* Tab Content */}
+        <View>
+          {selectedTab === "menu" && (
+            <View className="pb-2">
+              <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
+              {restaurantData?.dishes?.length > 0 ? (
+                restaurantData.dishes.map((dish) => (
+                  <View key={dish.id}>
+                    <DishRow
+                      id={dish.id}
+                      name={dish.name}
+                      description={dish.description}
+                      price={dish.price}
+                      image={dish.image}
+                    />
+                    {/* Render sub-products */}
+                    {dish.has_subs && dish.sub_products?.length > 0 && (
+                      <View className="pb-5 pl-6">
+                        <TouchableOpacity
+                          className="flex-row items-center"
+                          onPress={() => toggleSubProducts(dish.id)}
+                        >
+                          <Text className="mr-1 font-medium text-green-600">
+                            {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
+                          </Text>
+                        </TouchableOpacity>
+                        {expandedDishes[dish.id] && (
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            className="mt-2"
+                          >
+                            {dish.sub_products.map((subProduct) => (
+                              <View
+                                key={subProduct.id}
+                                style={{ width: 300, marginRight: 10 }}
+                              >
+                                <DishRow
+                                  id={subProduct.id}
+                                  name={subProduct.name}
+                                  description={subProduct.description}
+                                  price={subProduct.price}
+                                  image={subProduct.image}
+                                />
+                              </View>
+                            ))}
+                          </ScrollView>
+                        )}
+                      </View>
+                    )}
+                  </View>
+                ))
+              ) : (
+                <Text className="px-4 text-gray-500">No dishes available.</Text>
+              )}
+            </View>
+          )}
+
+          {selectedTab === "reviews" && (
+            <View className="px-4 pt-6">
+              <Reviews restaurantId={id} />
+            </View>
+          )}
+
+          {selectedTab === "info" && (
+            <View className="px-4 pt-6">
+              <Text className="mb-2 text-lg font-bold">About</Text>
+              <Text className="mb-2 text-gray-700">{restaurantData.short_description}</Text>
+              <Text className="text-gray-500">Address: {restaurantData.address}</Text>
+              {/* Add more info fields as needed */}
+            </View>
+          )}
+        </View>
       </ScrollView>
     </>
   );
 };
+
 
 export default RestaurantScreen;
