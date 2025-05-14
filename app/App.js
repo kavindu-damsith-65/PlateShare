@@ -16,6 +16,7 @@ import AllNearbyFoodsScreen from "./screens/Buyer/AllNearbyFoodsScreen";
 import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
+import SellerTabs from "./screens/Seller/SellerTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
 import SearchScreen from "./screens/Buyer/SearchScreen";
 import CategoryResultsScreen from "./screens/Buyer/CategoryResultsScreen";
@@ -58,7 +59,7 @@ function App(){
         <NavigationContainer>
             <Provider store={store}>
                 <TailwindProvider platform={Platform.OS}>
-                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'Main' : 'OrganizationDashboard') : 'Login'}>
+                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'Main' : userRole === 'seller' ? 'SellerDashboard' : 'OrganizationDashboard') : 'Login'}>
                         <Stack.Screen
                             name="Login"
                             component={LoginScreen}
@@ -73,6 +74,11 @@ function App(){
                         <Stack.Screen
                             name="OrganizationDashboard"
                             component={OrganizationTabs}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="SellerDashboard"
+                            component={SellerTabs}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
