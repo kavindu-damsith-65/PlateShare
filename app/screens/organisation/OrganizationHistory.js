@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 import HistoryRequestCard from '../../components/organisation/HistoryRequestCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const OrganizationHistory = () => {
+  const axios = useAxios();
   const [completedRequests, setCompletedRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -32,7 +33,7 @@ const OrganizationHistory = () => {
   const fetchCompletedRequests = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/orghistory/completed/${orgUserId}`);
+      const response = await axios.get(`/api/orghistory/completed/${orgUserId}`);
       setCompletedRequests(response.data.foodRequests);
       setError(null);
     } catch (error) {
@@ -52,7 +53,7 @@ const OrganizationHistory = () => {
   const handleDelete = async (requestId) => {
     try {
       // Call the delete API endpoint
-      await axios.delete(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
+      await axios.delete(`/api/orgrequests/requests/${requestId}`);
       
       // Remove the deleted request from the local state
       setCompletedRequests(completedRequests.filter(request => request.id !== requestId));

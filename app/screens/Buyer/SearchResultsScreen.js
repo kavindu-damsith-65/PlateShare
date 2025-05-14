@@ -11,11 +11,12 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon, MagnifyingGlassIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const SearchResultsScreen = ({ route }) => {
+  const axios = useAxios();
   const { searchQuery: initialQuery } = route.params;
   const [searchQuery, setSearchQuery] = useState(initialQuery || "");
   const navigation = useNavigation();
@@ -40,7 +41,7 @@ const SearchResultsScreen = ({ route }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/api/products/search/${query}/${location}`
+        `/api/products/search/${query}/${location}`
       );
       
       if (response.data) {

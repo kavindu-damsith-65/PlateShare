@@ -1,12 +1,13 @@
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const NearbyFoods = () => {
+  const axios = useAxios();
   const navigation = useNavigation();
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,7 @@ const NearbyFoods = () => {
     const fetchNearbyFoods = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/products/nearby/${location}`);
+        const response = await axios.get(`/api/products/nearby/${location}`);
         setDishes(response.data.products || []);
         setError(null);
       } catch (error) {

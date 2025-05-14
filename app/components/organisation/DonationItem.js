@@ -2,11 +2,12 @@ import {Image, Modal, Text, TouchableOpacity, View, Alert} from "react-native";
 import {StarIcon, PencilIcon, TrashIcon} from "react-native-heroicons/outline";
 import React, {useEffect, useState} from "react";
 import ReviewFormModal from "../Buyer/ReviewFormModal";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const DonationItem = ({ donation, isFromHistory }) => {
+    const axios = useAxios();
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [reviews, setReviews] = useState([]);
@@ -47,7 +48,7 @@ const DonationItem = ({ donation, isFromHistory }) => {
                     text: "Delete",
                     onPress: async () => {
                         try {
-                            await axios.delete(`${BACKEND_URL}/api/reviews/${reviewId}`);
+                            await axios.delete(`/api/reviews/${reviewId}`);
                             setReviews(reviews.filter((review) => review.id !== reviewId));
                             Alert.alert("Success", "Review deleted successfully");
                         } catch (error) {
@@ -75,7 +76,7 @@ const DonationItem = ({ donation, isFromHistory }) => {
         try {
             setLoading(true);
             const response = await axios.get(
-                `${BACKEND_URL}/api/reviews/user/${userId}/restaurant/${donation.restaurant.id}`
+                `/api/reviews/user/${userId}/restaurant/${donation.restaurant.id}`
             );
 
             if (response.data && Array.isArray(response.data)) {

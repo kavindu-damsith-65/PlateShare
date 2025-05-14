@@ -3,12 +3,13 @@ import { View, Text, ScrollView, TouchableOpacity, Alert, SafeAreaView } from 'r
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 import DonationItem from '../../components/organisation/DonationItem';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function RequestDetails() {
+  const axios = useAxios();
   const navigation = useNavigation();
   const route = useRoute();
   const { requestId, isFromHistory } = route.params;
@@ -22,7 +23,7 @@ export default function RequestDetails() {
     const fetchRequestDetails = async () => {
       try {
         // Fetch the specific request by ID using the dedicated endpoint
-        const response = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
+        const response = await axios.get(`/api/orgrequests/requests/${requestId}`);
         const foundRequest = response.data.foodRequest;
         
         if (foundRequest) {
@@ -106,10 +107,10 @@ export default function RequestDetails() {
   const toggleVisibility = async () => {
     try {
       setLoading(true);
-      const response = await axios.put(`${BACKEND_URL}/api/orgrequests/requests/${requestId}/toggle-visibility`);
+      const response = await axios.put(`/api/orgrequests/requests/${requestId}/toggle-visibility`);
 
       // Get the updated request with all details including donations
-      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
+      const updatedRequestResponse = await axios.get(`/api/orgrequests/requests/${requestId}`);
       const updatedRequest = updatedRequestResponse.data.foodRequest;
       
       setRequest(updatedRequest);
@@ -131,10 +132,10 @@ export default function RequestDetails() {
   const markRequestComplete = async () => {
     try {
       setLoading(true);
-      await axios.put(`${BACKEND_URL}/api/orgrequests/requests/${requestId}/complete`);
+      await axios.put(`/api/orgrequests/requests/${requestId}/complete`);
 
       // Fetch the updated request to get the latest data
-      const updatedRequestResponse = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/${requestId}`);
+      const updatedRequestResponse = await axios.get(`/api/orgrequests/requests/${requestId}`);
       const updatedRequest = updatedRequestResponse.data.foodRequest;
 
       setRequest(updatedRequest);
