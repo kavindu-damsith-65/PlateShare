@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Modal,
 } from "react-native";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 import ReviewCard from "./ReviewCard";
 import ReviewFormModal from "./ReviewFormModal";
 import { StarIcon } from "react-native-heroicons/solid";
@@ -17,6 +17,7 @@ import { StarIcon } from "react-native-heroicons/solid";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const Reviews = ({ restaurantId }) => {
+  const axios = useAxios();
   const scrollViewRef = useRef(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ const Reviews = ({ restaurantId }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/api/reviews/all/${restaurantId}`
+        `/api/reviews/all/${restaurantId}`
       );
       setReviews(response.data);
     } catch (error) {
@@ -104,7 +105,7 @@ const Reviews = ({ restaurantId }) => {
           text: "Delete",
           onPress: async () => {
             try {
-              await axios.delete(`${BACKEND_URL}/api/reviews/${reviewId}`);
+              await axios.delete(`/api/reviews/${reviewId}`);
               setReviews(reviews.filter((review) => review.id !== reviewId));
               Alert.alert("Success", "Review deleted successfully");
             } catch (error) {
@@ -124,10 +125,8 @@ const Reviews = ({ restaurantId }) => {
   const handleReviewSubmit = async (submittedReview) => {
     try {
       if (editingReview) {
-        // Updated review
-        const response = await axios.get(
-          `${BACKEND_URL}/api/reviews/one/${submittedReview.id}`
-        );
+        // Updated review 
+        const response = await axios.get(`/api/reviews/one/${submittedReview.id}`);
         const updatedReview = response.data;
 
         setReviews(

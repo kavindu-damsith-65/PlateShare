@@ -1,7 +1,7 @@
 import {View, Text, TouchableOpacity, FlatList} from "react-native";
 import React, { useEffect, useState } from "react";
 import RestaurantCard from "./RestaurantCard";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,9 +15,10 @@ const Restaurants = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
+    const axios = useAxios();
     const fetchRestaurants = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/restaurants/${location}`);
+        const response = await axios.get(`/api/restaurants/${location}`);
         const data = response.data.restaurants;
         setRestaurants(data);
       } catch (error) {

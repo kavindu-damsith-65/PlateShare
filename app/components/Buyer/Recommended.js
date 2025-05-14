@@ -1,11 +1,11 @@
 import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import RecommendCard from "./RecommendCard";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const Recommended = () => {
+    const axios = useAxios();
     const [recommendations, setRecommendations] = useState([]);
 
     // TODO: Replace with actual user ID 
@@ -15,7 +15,7 @@ const Recommended = () => {
         const fetchRecommendations = async () => {
             try {
                 const response = await axios.get(
-                    `${BACKEND_URL}/api/products/recommendations/${userId}`
+                    `/api/products/recommendations/${userId}`
                 );
                 setRecommendations(response.data.products);
             } catch (error) {

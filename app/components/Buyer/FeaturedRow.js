@@ -11,7 +11,7 @@ const FeaturedRow = ({ title, description }) => {
     const fetchRestaurants = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/api/restaurants/${location}`
+          `/api/restaurants/${location}`
         );
         const data = response.data.restaurants;
         setRestaurants(data);

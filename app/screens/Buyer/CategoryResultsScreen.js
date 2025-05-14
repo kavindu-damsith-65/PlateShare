@@ -10,11 +10,12 @@ import {
 } from 'react-native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const CategoryResultsScreen = ({ route }) => {
+  const axios = useAxios();
   const { categoryId, categoryName } = route.params;
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
@@ -30,7 +31,7 @@ const CategoryResultsScreen = ({ route }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/api/products/category/${categoryId}/${location}`
+          `/api/products/category/${categoryId}/${location}`
         );
         
         if (response.data) {

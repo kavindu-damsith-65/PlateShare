@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { ClockIcon, ArrowLeftIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 import SearchBar from '../../components/Buyer/SearchBar';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -30,6 +30,7 @@ const SearchCategoryCircle = ({ name, imageUrl, onPress }) => (
 );
 
 const SearchScreen = () => {
+  const axios = useAxios();
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState([]);
@@ -44,7 +45,7 @@ const SearchScreen = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/products/categories`);
+        const response = await axios.get(`/api/products/categories`);
         if (response.data && response.data.categories) {
           setCategories(response.data.categories);
         }
@@ -79,7 +80,7 @@ const SearchScreen = () => {
     setSearchLoading(true);
     try {
       const response = await axios.get(
-        `${BACKEND_URL}/api/products/search/${searchQuery}/${location}`
+        `/api/products/search/${searchQuery}/${location}`
       );
       
       if (response.data) {
