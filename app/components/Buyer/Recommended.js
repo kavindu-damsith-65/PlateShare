@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import RecommendCard from "./RecommendCard";
 import axios from "axios";
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const Recommended = () => {
     const [recommendations, setRecommendations] = useState([]);

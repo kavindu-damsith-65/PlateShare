@@ -60,7 +60,7 @@ const NearbyFoods = () => {
     {/* Image */}
     <Image
       source={{ uri: dish.image }}
-      className="w-20 h-20 rounded-full"
+      className="w-20 h-20 rounded-lg"
       resizeMode="cover"
     />
   </TouchableOpacity>

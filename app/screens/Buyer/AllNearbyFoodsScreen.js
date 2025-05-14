@@ -41,7 +41,7 @@ const AllNearbyFoodsScreen = ({ route, navigation }) => {
       {/* Image */}
       <Image
         source={{ uri: dish.image }}
-        className="w-20 h-20 rounded-full"
+        className="w-20 h-20 "
         resizeMode="cover"
       />
     </TouchableOpacity>
