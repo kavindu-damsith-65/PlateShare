@@ -11,6 +11,7 @@ const ReviewFormModal = ({
   onSubmit,
   editingReview,
   restaurantId,
+  customUserId, // Add this prop
 }) => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
@@ -42,7 +43,7 @@ const ReviewFormModal = ({
         rating,
         description,
         restaurant_id: restaurantId,
-        user_id: "user_1", // TODO: Replace with actual user ID
+        user_id: customUserId || "user_1", // Use customUserId if provided, otherwise default to user_1
       };
 
       if (editingReview) {

@@ -7,7 +7,7 @@ const {
     createRequest,
     updateRequest,
     deleteRequest
-} = require("../controllers/organisationController");
+} = require("../controllers/organisationRequestsController");
 
 const router = express.Router();
 
