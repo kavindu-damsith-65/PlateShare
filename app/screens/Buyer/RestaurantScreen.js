@@ -9,7 +9,7 @@ import DishRow from "../../components/Buyer/DishRow";
 import BasketContainer from "../../components/Buyer/BasketContainer";
 import { useDispatch } from "react-redux";
 import { setRestaurant } from "../../slices/restaurantSlice";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 import Reviews from "../../components/Buyer/Reviews";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
@@ -25,7 +25,7 @@ const RestaurantScreen = ({ route, navigation }) => {
     long,
     lat,
   } = route.params;
-
+  const axios = useAxios();
   const [restaurantData, setRestaurantData] = useState({
     id,
     imgUrl,
@@ -52,7 +52,7 @@ const RestaurantScreen = ({ route, navigation }) => {
     const fetchRestaurantDetails = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/api/restaurants/unique/${id}`
+          `/api/restaurants/unique/${id}`
         );
         const data = response.data.restaurant;
 

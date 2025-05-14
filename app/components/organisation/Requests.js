@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import axios from 'axios';
+import useAxios from '../../hooks/useAxios';
 import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,6 +10,7 @@ import { PlusIcon } from 'react-native-heroicons/outline';
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
 
 const Requests = () => {
+  const axios = useAxios();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,7 +37,7 @@ const Requests = () => {
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/orgrequests/requests/incomplete/${orgUserId}`);
+      const response = await axios.get(`/api/orgrequests/requests/incomplete/${orgUserId}`);
       setRequests(response.data.foodRequests);
       setError(null);
     } catch (error) {
@@ -83,7 +84,7 @@ const Requests = () => {
           onPress: async () => {
             try {
               // Call the delete API endpoint
-              await axios.delete(`${BACKEND_URL}/api/orgrequests/requests/${id}`);
+              await axios.delete(`/api/orgrequests/requests/${id}`);
               
               // Remove the deleted request from the local state
               setRequests(requests.filter(request => request.id !== id));
@@ -125,7 +126,7 @@ const Requests = () => {
       if (editingRequest) {
         // Update existing request
         const response = await axios.put(
-          `${BACKEND_URL}/api/orgrequests/requests/${editingRequest.id}`,
+          `/api/orgrequests/requests/${editingRequest.id}`,
           apiData
         );
         
@@ -138,7 +139,7 @@ const Requests = () => {
       } else {
         // Create new request
         const response = await axios.post(
-          `${BACKEND_URL}/api/orgrequests/requests`,
+          `/api/orgrequests/requests`,
           {
             ...apiData,
             orgUserId

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { StarIcon } from "react-native-heroicons/solid";
-import axios from "axios";
+import useAxios from '../../hooks/useAxios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -13,6 +13,7 @@ const ReviewFormModal = ({
   restaurantId,
   customUserId, // Add this prop
 }) => {
+  const axios = useAxios();
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,7 @@ const ReviewFormModal = ({
       if (editingReview) {
         // Update existing review
         await axios.patch(
-          `${BACKEND_URL}/api/reviews/${editingReview.id}`,
+          `/api/reviews/${editingReview.id}`,
           reviewData
         );
         Alert.alert("Success", "Review updated successfully!");
@@ -57,13 +58,13 @@ const ReviewFormModal = ({
       } else {
         // Create new review
         const createResponse = await axios.post(
-          `${BACKEND_URL}/api/reviews`,
+          `/api/reviews`,
           reviewData
         );
         const newReviewId = createResponse.data.id;
 
         const fetchResponse = await axios.get(
-          `${BACKEND_URL}/api/reviews/one/${newReviewId}`
+          `/api/reviews/one/${newReviewId}`
         );
         const fullReviewData = fetchResponse.data;
 
