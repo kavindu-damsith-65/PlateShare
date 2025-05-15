@@ -135,6 +135,8 @@ exports.fetchCategories = async (req, res) => {
     }
 };
 
+
+
 exports.getProductsByCategory = async (req, res) => {
     try {
         const { categoryId, location } = req.params;
@@ -269,3 +271,53 @@ exports.searchProductsAndRestaurants = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+// for seller
+
+exports.getProductsByRestaurant = async (req, res) => {
+    console.log("Fetching products for restaurant...");
+    try {
+        const { restaurantId } = req.params;
+        console.log("Restaurant ID:", restaurantId);
+        if (!restaurantId) {
+            return res.status(400).json({ message: "Restaurant ID is required" });
+        }
+
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
+
+        const products = await Product.findAll({
+            where: {
+                restaurant_id: restaurantId,
+                available: true
+            },
+            include: [
+                {
+                    model: SubProduct,
+                    through: { attributes: [] }
+                },
+                {
+                    model: Category,
+                    attributes: ["category"]
+                }
+            ]
+        });
+
+        if (!products || !products.length) {
+            return res.status(404).json({ message: "No products found for this restaurant" });
+        }
+
+        return res.status(200).json({
+            products,
+            message: "Products fetched successfully"
+        });
+
+    } catch (error) {
+        console.error("Error fetching restaurant products:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
