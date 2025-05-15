@@ -104,7 +104,7 @@ exports.getRecommendedProducts = async (req, res) => {
         const randomProducts = await Product.findAll({
             where: { available: true },
             order: sequelize.random(),
-            limit: 6
+            limit: 12
         });
 
         return res.status(200).json({ products: randomProducts });

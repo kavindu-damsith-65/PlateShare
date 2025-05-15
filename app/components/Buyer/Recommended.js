@@ -26,29 +26,66 @@ const Recommended = () => {
         fetchRecommendations();
     }, [userId]);
 
+  // Organize recommendations into a grid layout (2 rows)
+  const organizeRecommendationsIntoGrid = (items) => {
+    if (!items || items.length === 0) return [];
+    
+    // Calculate how many items per row (half of total, rounded up)
+    const itemsPerRow = Math.ceil(items.length / 2);
+    
+    // Create two rows
+    const row1 = items.slice(0, itemsPerRow);
+    const row2 = items.slice(itemsPerRow);
+    
+    return [row1, row2];
+  };
 
-    return (
-        <View>
-            <Text className="px-4 pt-2 text-lg font-bold">Recommended For You</Text>
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{
-                    paddingHorizontal: 15,
-                    paddingTop: 10,
-                }}
-            >
-                {/* Recommendation Card */}
-                {recommendations.map((recommendation) => (
-                    <RecommendCard
-                        imgUrl={recommendation.image}
-                        key={recommendation.id}
-                        title={recommendation.name}
-                    />
-                ))}
-            </ScrollView>
+  const gridRows = organizeRecommendationsIntoGrid(recommendations);
+
+  return (
+    <View>
+      <Text className="px-4 pt-2 text-lg font-bold">Popular Categories</Text>
+      
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 15,
+          paddingTop: 10,
+          paddingBottom: 10,
+        }}
+      >
+        {/* Grid container */}
+        <View style={{ flexDirection: 'column' }}>
+          {/* First row */}
+          {gridRows.length > 0 && (
+            <View style={{ flexDirection: 'row', marginBottom: 10 }}>
+              {gridRows[0].map((recommendation) => (
+                <RecommendCard
+                  imgUrl={recommendation.image}
+                  key={recommendation.id}
+                  title={recommendation.name}
+                />
+              ))}
+            </View>
+          )}
+          
+          {/* Second row */}
+          {gridRows.length > 1 && (
+            <View style={{ flexDirection: 'row' }}>
+              {gridRows[1].map((recommendation) => (
+                <RecommendCard
+                  imgUrl={recommendation.image}
+                  key={recommendation.id}
+                  title={recommendation.name}
+                />
+              ))}
+            </View>
+          )}
         </View>
-    );
+      </ScrollView>
+    </View>
+  );
 };
 
 export default Recommended;

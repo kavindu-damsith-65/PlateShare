@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Image, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import useAxios from '../../hooks/useAxios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const NearbyFoods = () => {
   const axios = useAxios();
@@ -36,28 +37,56 @@ const NearbyFoods = () => {
 
   // Render horizontal item
   const renderHorizontalItem = ({ item: dish }) => (
-    <TouchableOpacity 
-      className="w-64 mr-4 overflow-hidden bg-white rounded-lg shadow"
+    <TouchableOpacity
+      className="mb-4 bg-white rounded-lg"
+      style={{
+        width: SCREEN_WIDTH - 30,
+        marginHorizontal: 5,
+        borderWidth: 1,
+        borderColor: "#e0e0e0",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 1,
+        elevation: 1,
+        padding: 6,
+        backgroundColor: "white",
+      }}
       activeOpacity={0.7}
+      onPress={() => {
+        navigation.navigate("Restaurant", {
+          id: dish.restaurant_id,
+          imgUrl: dish.restaurant?.image,
+          title: dish.restaurant?.name,
+          rating: 4.5,
+          short_description: "Restaurant with this product",
+          highlightedProductId: dish.id
+        });
+      }}
     >
-      <Image 
-        source={{ uri: dish.image }} 
-        className="w-full h-36"
-        resizeMode="cover"
-      />
-      <View className="p-3">
-        <Text className="text-lg font-bold" numberOfLines={1}>{dish.name}</Text>
-        <Text className="text-sm text-gray-500" numberOfLines={2}>{dish.description || dish.short_description}</Text>
-        <View className="flex-row items-center justify-between mt-2">
-          <Text className="font-bold text-green-600">{dish.price === 0 ? "Free" : `Rs. ${dish.price}`}</Text>
-          <View className="px-2 py-1 bg-green-100 rounded-full">
-            <Text className="text-xs text-green-700">1.2 km away</Text>
+      <View className="overflow-hidden rounded-lg">
+        <View className="flex-row items-center px-3 py-2">
+          {/* Food Details */}
+          <View className="flex-1 pr-4">
+            <Text className="text-lg font-bold" numberOfLines={1}>{dish.name}</Text>
+            <Text className="mt-1 text-sm text-gray-500" numberOfLines={2}>
+              {dish.description || dish.short_description}
+            </Text>
+            <Text className="mt-2 font-bold text-green-600">
+              {dish.price === 0 ? "Free" : `Rs. ${dish.price}`}
+            </Text>
           </View>
+
+          {/* Image */}
+          <Image
+            source={{ uri: dish.image }}
+            className="w-28 h-28 rounded-lg"
+            resizeMode="cover"
+          />
         </View>
       </View>
     </TouchableOpacity>
   );
-
 
   if (loading) {
     return (
@@ -88,9 +117,9 @@ const NearbyFoods = () => {
   return (
     <View className="pb-4">
       <View className="flex-row items-center justify-between px-4 pt-2">
-        <Text className="text-lg font-bold">Foods Near You</Text>
-        <TouchableOpacity 
-          className="flex-row items-center" 
+        <Text className="text-lg font-bold">Near By Foods</Text>
+        <TouchableOpacity
+          className="flex-row items-center"
           onPress={handleSeeAllPress}
         >
           <Text className="mr-1 font-medium text-green-600">See All</Text>

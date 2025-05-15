@@ -10,7 +10,7 @@ const ReviewCard = ({ review, onEdit, onDelete }) => {
       <View className="flex-row items-center justify-between mt-2">
         <View className="flex-row">
           {Array.from({ length: review.rating }, (_, index) => (
-             <StarIcon key={index} size={20} color="green" opacity={0.5} />
+            <StarIcon key={index} size={20} color="#00CCBB" opacity={0.5} />
           ))}
         </View>
         <View className="flex-row justify-end space-x-2">
