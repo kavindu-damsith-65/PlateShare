@@ -1,5 +1,5 @@
 const express = require("express");
-const {showNearByProducts, getRecommendedProducts, fetchCategories, getProductsByCategory, searchProductsAndRestaurants,getProductsByRestaurant} = require("../controllers/productController");
+const {showNearByProducts, getRecommendedProducts, fetchCategories, getProductsByCategory, searchProductsAndRestaurants,getProductsByRestaurant, removeProductOfRestaurant} = require("../controllers/productController");
 
 const router = express.Router();
 router.get("/nearby/:location", showNearByProducts);
@@ -8,5 +8,6 @@ router.get("/categories", fetchCategories);
 router.get('/category/:categoryId/:location', getProductsByCategory);
 router.get('/search/:query/:location', searchProductsAndRestaurants);
 router.get('/seller/:restaurantId', getProductsByRestaurant);
+router.delete('/seller/remove/:productId/:restaurantId', removeProductOfRestaurant);
 
 module.exports = router;
