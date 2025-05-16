@@ -24,6 +24,11 @@ const Reviews = ({ restaurantId }) => {
   const [isUserScrolling, setIsUserScrolling] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
+  const [ratingStats, setRatingStats] = useState({
+    average: 0,
+    total: 0,
+    distribution: [0, 0, 0, 0, 0] // Count of 1-star, 2-star, 3-star, 4-star, 5-star
+  });
 
   useEffect(() => {
     fetchReviews();
@@ -36,11 +41,41 @@ const Reviews = ({ restaurantId }) => {
         `/api/reviews/all/${restaurantId}`
       );
       setReviews(response.data);
+      calculateRatingStats(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateRatingStats = (reviewsData) => {
+    if (!reviewsData || reviewsData.length === 0) {
+      setRatingStats({
+        average: 0,
+        total: 0,
+        distribution: [0, 0, 0, 0, 0]
+      });
+      return;
+    }
+
+    const total = reviewsData.length;
+    const sum = reviewsData.reduce((acc, review) => acc + review.rating, 0);
+    const average = sum / total;
+    
+    // Calculate distribution
+    const distribution = [0, 0, 0, 0, 0];
+    reviewsData.forEach(review => {
+      if (review.rating >= 1 && review.rating <= 5) {
+        distribution[review.rating - 1]++;
+      }
+    });
+
+    setRatingStats({
+      average: parseFloat(average.toFixed(1)),
+      total,
+      distribution
+    });
   };
 
   useEffect(() => {
@@ -155,31 +190,129 @@ const Reviews = ({ restaurantId }) => {
     );
   }
 
+  // Custom progress bar component that works on both platforms
+  const RatingBar = ({ percentage, color }) => (
+    <View className="h-2 flex-1 bg-gray-200 rounded-full overflow-hidden">
+      <View 
+        className="h-full rounded-full" 
+        style={{ 
+          width: `${percentage}%`, 
+          backgroundColor: color || "#00CCBB" 
+        }} 
+      />
+    </View>
+  );
+
   return (
-    <View className="mt-6">
+    <View >
       <Text className="pb-3 text-xl font-bold">Your Feedback Lights Us Up</Text>
-      <TouchableOpacity
-        className="bg-[#00CCBB]/20  px-3 py-2 rounded-md mr-64"
-        onPress={handleCreateReview}
-      >
-        <StarIcon size={16} color="#00CCBB" strokeWidth={2.5} />
-        <Text className="text-[#00CCBB] font-semibold ml-1">Add Review</Text>
-      </TouchableOpacity>
+      
+      {/* Rating Summary Section */}
+      {reviews.length > 0 && (
+        <View className="p-4 mb-4 bg-white rounded-lg shadow-sm">
+          <View className="flex-row items-center justify-between mb-4">
+            <View className="items-center">
+              <Text className="text-3xl font-bold">{ratingStats.average}</Text>
+              <View className="flex-row my-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <StarIcon 
+                    key={star} 
+                    size={16} 
+                    color={star <= Math.round(ratingStats.average) ? "#00CCBB" : "#D3D3D3"} 
+                  />
+                ))}
+              </View>
+              <Text className="text-xs text-gray-500">{ratingStats.total} reviews</Text>
+            </View>
+            
+            <View className="flex-1 ml-6">
+              {[5, 4, 3, 2, 1].map((star) => {
+                const count = ratingStats.distribution[star - 1];
+                const percentage = ratingStats.total > 0 
+                  ? (count / ratingStats.total) * 100 
+                  : 0;
+                
+                return (
+                  <View key={star} className="flex-row items-center mb-1">
+                    <Text className="w-6 mr-2 text-xs text-gray-500">{star}</Text>
+                    <RatingBar percentage={percentage} />
+                    <Text className="w-8 ml-2 text-xs text-right text-gray-500">
+                      {count}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+          
+          <TouchableOpacity
+            className="bg-[#00CCBB]/20 px-3 py-2 rounded-md self-start"
+            onPress={handleCreateReview}
+          >
+            <View className="flex-row items-center">
+              <StarIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+              <Text className="text-[#00CCBB] font-semibold ml-1">Add Review</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+      
+      {/* Add Review Button (when no reviews) */}
+      {reviews.length === 0 && (
+        <TouchableOpacity
+          className="bg-[#00CCBB]/20 px-3 py-2 rounded-md self-start mb-4"
+          onPress={handleCreateReview}
+        >
+          <View className="flex-row items-center">
+            <StarIcon size={16} color="#00CCBB" strokeWidth={2.5} />
+            <Text className="text-[#00CCBB] font-semibold ml-1">Add Review</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+      
+      {/* Reviews List */}
       {reviews.length > 0 ? (
-        <ScrollView className="pb-5">
+        <View className="pb-5">
+          <Text className="text-base font-semibold text-gray-700 mb-2">
+            Customer Reviews ({reviews.length})
+          </Text>
+          
+          {/* Filter options */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            className="mb-4"
+          >
+            {["All", "5 ★", "4 ★", "3 ★", "2 ★", "1 ★", "With Photos"].map((filter, index) => (
+              <TouchableOpacity 
+                key={index}
+                className="mr-2 px-4 py-2 bg-gray-100 rounded-full"
+                // Add filter functionality if needed
+              >
+                <Text className="text-sm text-gray-700">{filter}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          
+          {/* Reviews */}
           {reviews.map((review) => (
             <View key={review.id} className="mb-4">
               <ReviewCard
-                key={review.id}
                 review={review}
-                 onEdit={handleEditReview}
-                 onDelete={handleDeleteReview}
+                onEdit={handleEditReview}
+                onDelete={handleDeleteReview}
               />
             </View>
           ))}
-        </ScrollView>
+        </View>
       ) : (
-        <Text className="mt-4 text-gray-500">No reviews available.</Text>
+        <View className="items-center py-8 bg-white rounded-lg">
+          <StarIcon size={40} color="#00CCBB" opacity={0.3} />
+          <Text className="mt-2 text-lg font-medium text-gray-500">No reviews yet</Text>
+          <Text className="text-sm text-gray-400 text-center px-6 mt-1">
+            Be the first to share your experience with this restaurant
+          </Text>
+        </View>
       )}
 
       {/* Modal for Create/Edit Review Form */}
