@@ -4,8 +4,6 @@ import {
   ArrowLeftIcon,
   MapPinIcon,
   StarIcon,
-  ChevronDownIcon,
-  PlusIcon,
 } from "react-native-heroicons/solid";
 import DishRow from "../../components/Buyer/DishRow";
 import BasketContainer from "../../components/Buyer/BasketContainer";
@@ -13,9 +11,6 @@ import { useDispatch } from "react-redux";
 import { setRestaurant, addToBasket } from "../../slices/restaurantSlice";
 import useAxios from '../../hooks/useAxios';
 import Reviews from "../../components/Buyer/Reviews";
-import { Dimensions } from "react-native";
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const TABS = [
   { key: "menu", label: "Menu" },
@@ -46,7 +41,6 @@ const RestaurantScreen = ({ route, navigation }) => {
     address: "Loading address...",
   });
 
-  const [expandedDishes, setExpandedDishes] = useState({});
   const [selectedTab, setSelectedTab] = useState("menu");
 
   useLayoutEffect(() => {
@@ -94,12 +88,6 @@ const RestaurantScreen = ({ route, navigation }) => {
     fetchRestaurantDetails();
   }, [dispatch, id]);
 
-  const toggleSubProducts = (dishId) => {
-    setExpandedDishes((prevState) => ({
-      ...prevState,
-      [dishId]: !prevState[dishId], // Toggle the state for the specific dish
-    }));
-  };
 
   if (!restaurantData) {
     return (
