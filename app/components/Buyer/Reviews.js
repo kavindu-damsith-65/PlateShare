@@ -49,7 +49,6 @@ const Reviews = ({ restaurantId }) => {
         `/api/reviews/all/${restaurantId}`
       );
       setReviews(response.data);
-      console.log(response.data);
       calculateRatingStats(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
