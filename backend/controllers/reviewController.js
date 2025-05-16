@@ -9,7 +9,7 @@ exports.getAllReviews = async (req, res) => {
 
         const reviews = await Review.findAll({
             where: { restaurant_id: restaurantId },
-            attributes: ["id", "rating", "description"], 
+            attributes: ["id", "rating", "description","createdAt"],
             include: [
                 { model: Restaurant, attributes: ["name"] },
                 { model: User, attributes: ["name"] }
