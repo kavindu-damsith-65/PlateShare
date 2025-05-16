@@ -129,7 +129,7 @@ const FoodBucket = sequelize.define('food_bucket', {
     id: { type: DataTypes.STRING, primaryKey: true },
     product_id: { type: DataTypes.STRING },
     user_id: { type: DataTypes.STRING },
-    sub_products_ids: { type: DataTypes.STRING }
+    amount: { type: DataTypes.INTEGER }
 });
 
 // Payment Model
