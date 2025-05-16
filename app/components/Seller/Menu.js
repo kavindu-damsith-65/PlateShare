@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 import MenuItem from './MenuItem';
 
-const Menu = ({ restaurantId, onEditItem, onDeleteItem }) => {
+const Menu = ({ restaurantId}) => {
     const axios = useAxios();
     const [products, setProducts] = useState([]);
     const [expandedId, setExpandedId] = useState(null);
@@ -32,7 +32,6 @@ const Menu = ({ restaurantId, onEditItem, onDeleteItem }) => {
             const response = await axios.delete(`/api/products/seller/remove/${productId}/${restaurantId}`);
             if (response.status === 200) {
                 setProducts(products.filter(product => product.id !== productId));
-                if (onDeleteItem) onDeleteItem(productId);
             }
         } catch (error) {
             console.error('Error deleting product:', error);
@@ -44,7 +43,7 @@ const Menu = ({ restaurantId, onEditItem, onDeleteItem }) => {
             item={item}
             isExpanded={expandedId === item.id}
             onPress={() => setExpandedId(expandedId === item.id ? null : item.id)}
-            onEditItem={onEditItem}
+            onEditItem={()=> console.log('Edit item:', item.id)}
             onDeleteItem={() => handleDelete(item.id)}
         />
     );
