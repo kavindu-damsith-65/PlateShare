@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {Text} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import * as ImagePicker from 'expo-image-picker';
 import useAxios from '../../hooks/useAxios';
 
 const AddMenuItemForm = ({ restaurantId, onClose }) => {
@@ -24,8 +26,19 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
         fetchCategories();
     }, []);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleImagePick = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+            setImage(result.assets[0]);
+        }
+    };
+
+    const handleSubmit = async () => {
         try {
             const formData = new FormData();
             formData.append('name', name);
@@ -34,109 +47,114 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
             formData.append('quantity', quantity);
             formData.append('categoryId', selectedCategory);
             formData.append('restaurantId', restaurantId);
-            if (image) formData.append('image', image);
+            if (image) {
+                formData.append('image', {
+                    uri: image.uri,
+                    name: 'menu-item.jpg',
+                    type: 'image/jpeg',
+                });
+            }
 
-            const response = await axios.post('/api/products', formData);
+            const response = await axios.post(`/api/products/seller/${restaurantId}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
             if (response.status === 201) {
                 console.log('Menu item added successfully:', response.data);
+                onClose();
             } else {
                 console.error('Failed to add menu item:', response.data);
             }
-            onClose();
         } catch (error) {
             console.error('Error adding menu item:', error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 p-4">
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Name</Text>
-                <input
-                    type="text"
+        <ScrollView className="flex-1 bg-white p-4">
+            <Text className="text-xl font-bold mb-4">Add Menu Item</Text>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Name</Text>
+                <TextInput
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    onChangeText={setName}
+                    placeholder="Item name"
+                    className="border rounded-md px-3 py-2"
                 />
-            </div>
-
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Description</Text>
-                <textarea
+            </View>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Description</Text>
+                <TextInput
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    onChangeText={setDescription}
+                    placeholder="Description"
+                    multiline
+                    className="border rounded-md px-3 py-2 min-h-[60px]"
                 />
-            </div>
-
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Price</Text>
-                <input
-                    type="number"
-                    step="0.01"
+            </View>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Price</Text>
+                <TextInput
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    onChangeText={setPrice}
+                    placeholder="Price"
+                    keyboardType="decimal-pad"
+                    className="border rounded-md px-3 py-2"
                 />
-            </div>
-
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Quantity</Text>
-                <input
-                    type="number"
+            </View>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Quantity</Text>
+                <TextInput
                     value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                    onChangeText={setQuantity}
+                    placeholder="Quantity"
+                    keyboardType="number-pad"
+                    className="border rounded-md px-3 py-2"
                 />
-            </div>
-
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Category</Text>
-                <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            </View>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Category</Text>
+                <View className="border rounded-md">
+                    <Picker
+                        selectedValue={selectedCategory}
+                        onValueChange={setSelectedCategory}
+                    >
+                        <Picker.Item label="Select a category" value="" />
+                        {categories.map((category) => (
+                            <Picker.Item key={category.id} label={category.name} value={category.id} />
+                        ))}
+                    </Picker>
+                </View>
+            </View>
+            <View className="mb-4">
+                <Text className="mb-1 text-gray-700">Image</Text>
+                <TouchableOpacity
+                    onPress={handleImagePick}
+                    className="border rounded-md px-3 py-2 items-center bg-gray-50"
                 >
-                    <Text component="option" value="">Select a category</Text>
-                    {categories.map((category) => (
-                        <Text component="option" key={category.id} value={category.id}>
-                            {category.name}
-                        </Text>
-                    ))}
-                </select>
-            </div>
-
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Image</Text>
-                <input
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    accept="image/*"
-                    className="mt-1 block w-full"
-                />
-            </div>
-
-            <div className="flex justify-end space-x-3">
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    <Text>{image ? 'Change Image' : 'Pick Image'}</Text>
+                </TouchableOpacity>
+                {image && (
+                    <Image
+                        source={{ uri: image.uri }}
+                        className="w-32 h-32 mt-2 rounded-md"
+                    />
+                )}
+            </View>
+            <View className="flex-row justify-end space-x-3 mt-4">
+                <TouchableOpacity
+                    onPress={onClose}
+                    className="border border-gray-300 bg-white px-4 py-2 rounded-md mr-2"
                 >
-                    <Text>Cancel</Text>
-                </button>
-                <button
-                    type="submit"
-                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                    <Text className="text-gray-700">Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    className="bg-indigo-600 px-4 py-2 rounded-md"
                 >
-                    Add Item
-                </button>
-            </div>
-        </form>
+                    <Text className="text-white font-medium">Add Item</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     );
 };
 
