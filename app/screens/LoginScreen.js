@@ -9,7 +9,13 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async (role) => {
     try {
       await AsyncStorage.setItem('userRole', role);
-      navigation.replace(role === 'buyer' ? 'Main' : 'OrganizationDashboard');
+      if (role === 'buyer') {
+        navigation.replace('Main');
+      } else if (role === 'seller') {
+        navigation.replace('SellerDashboard');
+      } else {
+        navigation.replace('OrganizationDashboard');
+      }
     } catch (error) {
       console.error('Error saving user role:', error);
     }
@@ -38,6 +44,12 @@ export default function LoginScreen({ navigation }) {
           onPress={() => handleLogin('org')}
         >
           <Text className="text-white text-lg font-bold">Continue as Organization</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          className="py-4 rounded-lg bg-[#542de4] items-center mb-4"
+          onPress={() => handleLogin('seller')}
+        >
+          <Text className="text-white text-lg font-bold">Continue as Seller</Text>
         </TouchableOpacity>
       </Animatable.View>
     </View>

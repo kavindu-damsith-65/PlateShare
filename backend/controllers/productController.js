@@ -135,6 +135,8 @@ exports.fetchCategories = async (req, res) => {
     }
 };
 
+
+
 exports.getProductsByCategory = async (req, res) => {
     try {
         const { categoryId, location } = req.params;
@@ -269,3 +271,143 @@ exports.searchProductsAndRestaurants = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+// for seller
+
+exports.getProductsByRestaurant = async (req, res) => {
+    console.log("Fetching products for restaurant...");
+    try {
+        const { restaurantId } = req.params;
+        console.log("Restaurant ID:", restaurantId);
+        if (!restaurantId) {
+            return res.status(400).json({ message: "Restaurant ID is required" });
+        }
+
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
+
+        const products = await Product.findAll({
+            where: {
+                restaurant_id: restaurantId,
+                available: true
+            },
+            include: [
+                {
+                    model: SubProduct,
+                    through: { attributes: [] }
+                },
+                {
+                    model: Category,
+                    attributes: ["category"]
+                }
+            ]
+        });
+
+        if (!products || !products.length) {
+            return res.status(404).json({ message: "No products found for this restaurant" });
+        }
+
+        return res.status(200).json({
+            products,
+            message: "Products fetched successfully"
+        });
+
+    } catch (error) {
+        console.error("Error fetching restaurant products:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+
+exports.removeProductOfRestaurant = async (req, res) => {
+    try {
+        const { productId, restaurantId } = req.params;
+
+        if (!productId || !restaurantId) {
+            return res.status(400).json({ message: "Product ID and Restaurant ID are required" });
+        }
+
+        const product = await Product.findOne({
+            where: {
+                id: productId,
+                restaurant_id: restaurantId
+            }
+        });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found for this restaurant" });
+        }
+
+        await product.destroy();
+
+        return res.status(200).json({ message: "Product removed successfully" });
+
+    } catch (error) {
+        console.error("Error removing product:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+exports.updateProductOfRestaurant = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const { name, description, price, quantity, available } = req.body;
+
+        if (!productId) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        product.name = name || product.name;
+        product.description = description || product.description;
+        product.price = price || product.price;
+        product.quantity = quantity || product.quantity;
+        product.available = available !== undefined ? available : product.available;
+
+        await product.save();
+
+        return res.status(200).json({ message: "Product updated successfully", product });
+
+    } catch (error) {
+        console.error("Error updating product:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.CreateProductOfRestaurant = async (req, res) => {
+    try {
+        const { restaurantId } = req.params;
+        const { name, description, price, quantity, available, categoryId, image } = req.body;
+
+        if (!restaurantId) {
+            return res.status(400).json({ message: "Restaurant ID is required" });
+        }
+
+        const restaurant = await Restaurant.findByPk(restaurantId);
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
+
+        const product = await Product.create({
+            name,
+            description,
+            price,
+            quantity,
+            available: true,
+            category_id: categoryId,
+            restaurant_id: restaurantId,
+            image: image || 'https://picsum.photos/300/300?random'
+        });
+
+        return res.status(201).json({ message: "Product created successfully", product });
+
+    } catch (error) {
+        console.error("Error creating product:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
