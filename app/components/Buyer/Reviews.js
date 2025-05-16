@@ -29,6 +29,15 @@ const Reviews = ({ restaurantId }) => {
     total: 0,
     distribution: [0, 0, 0, 0, 0] // Count of 1-star, 2-star, 3-star, 4-star, 5-star
   });
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const getFilteredReviews = () => {
+    if (activeFilter === 'All') return reviews;
+    if (activeFilter === 'With Photos') return reviews.filter(review => review.images && review.images.length > 0);
+    // Extract the star number from filter text (e.g. "5 ★" -> 5)
+    const rating = parseInt(activeFilter);
+    return reviews.filter(review => review.rating === rating);
+  };
 
   useEffect(() => {
     fetchReviews();
@@ -41,6 +50,7 @@ const Reviews = ({ restaurantId }) => {
         `/api/reviews/all/${restaurantId}`
       );
       setReviews(response.data);
+      console.log(response.data);
       calculateRatingStats(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
@@ -120,41 +130,6 @@ const Reviews = ({ restaurantId }) => {
   const handleCreateReview = () => {
     setEditingReview(null);
     setModalVisible(true);
-  };
-
-  const handleEditReview = (review) => {
-    setEditingReview(review);
-    setModalVisible(true);
-  };
-
-  const handleDeleteReview = (reviewId) => {
-    Alert.alert(
-      "Confirm Delete",
-      "Are you sure you want to delete this review?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: async () => {
-            try {
-              await axios.delete(`/api/reviews/${reviewId}`);
-              setReviews(reviews.filter((review) => review.id !== reviewId));
-              Alert.alert("Success", "Review deleted successfully");
-            } catch (error) {
-              console.error("Error deleting review:", error);
-              Alert.alert(
-                "Error",
-                "Failed to delete review. Please try again."
-              );
-            }
-          },
-          style: "destructive",
-        },
-      ]
-    );
   };
 
   const handleReviewSubmit = async (submittedReview) => {
@@ -283,25 +258,23 @@ const Reviews = ({ restaurantId }) => {
             showsHorizontalScrollIndicator={false}
             className="mb-4"
           >
-            {["All", "5 ★", "4 ★", "3 ★", "2 ★", "1 ★", "With Photos"].map((filter, index) => (
+            {["All", "5 ★", "4 ★", "3 ★", "2 ★", "1 ★"].map((filter, index) => (
               <TouchableOpacity 
                 key={index}
-                className="mr-2 px-4 py-2 bg-gray-100 rounded-full"
-                // Add filter functionality if needed
+                className={`mr-2 px-4 py-2 rounded-full ${activeFilter === filter ? 'bg-[#00CCBB]' : 'bg-gray-100'}`}
+                onPress={() => setActiveFilter(filter)}
               >
-                <Text className="text-sm text-gray-700">{filter}</Text>
+                <Text className={`text-sm ${activeFilter === filter ? 'text-white' : 'text-gray-700'}`}>
+                  {filter}
+                </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
           
           {/* Reviews */}
-          {reviews.map((review) => (
-            <View key={review.id} className="mb-4">
-              <ReviewCard
-                review={review}
-                onEdit={handleEditReview}
-                onDelete={handleDeleteReview}
-              />
+          {getFilteredReviews().map((review) => (
+            <View key={review.id} className="mb-2">
+              <ReviewCard review={review} />
             </View>
           ))}
         </View>

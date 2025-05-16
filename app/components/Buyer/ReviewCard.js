@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import { StarIcon, PencilIcon, TrashIcon } from "react-native-heroicons/solid";
+import { StarIcon } from "react-native-heroicons/solid";
 
-const ReviewCard = ({ review, onEdit, onDelete }) => {
+const ReviewCard = ({ review }) => {
   // Custom function to format date as "time ago"
   const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
@@ -41,43 +41,26 @@ const ReviewCard = ({ review, onEdit, onDelete }) => {
   };
 
   // Format the date if available
-  const formattedDate = review.created_at 
-    ? formatTimeAgo(review.created_at)
+  const formattedDate = review.createdAt
+    ? formatTimeAgo(review.createdAt)
     : '';
 
   return (
     <View className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
-      {/* Header with user info and actions */}
-      <View className="flex-row items-center justify-between mb-2">
-        <View className="flex-row items-center">
-          <Image 
-            source={{ 
-              uri: review.user?.avatar || 
-                  `https://ui-avatars.com/api/?name=${review.user?.name}&background=00CCBB&color=fff` 
-            }} 
-            className="w-10 h-10 rounded-full mr-3"
-          />
-          <View>
-            <Text className="text-base font-bold text-gray-800">{review.user.name}</Text>
-            {formattedDate && (
-              <Text className="text-xs text-gray-500">{formattedDate}</Text>
-            )}
-          </View>
-        </View>
-        
-        <View className="flex-row space-x-2">
-          <TouchableOpacity
-            className="p-2 rounded-full bg-gray-100"
-            onPress={() => onEdit(review)}
-          >
-            <PencilIcon size={16} color="#404040" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="p-2 rounded-full bg-red-100"
-            onPress={() => onDelete(review.id)}
-          >
-            <TrashIcon size={16} color="#FF6B6B" />
-          </TouchableOpacity>
+      {/* Header with user info */}
+      <View className="flex-row items-center mb-2">
+        <Image 
+          source={{ 
+            uri: review.user?.avatar || 
+                `https://ui-avatars.com/api/?name=${review.user?.name}&background=00CCBB&color=fff` 
+          }} 
+          className="w-10 h-10 rounded-full mr-3"
+        />
+        <View>
+          <Text className="text-base font-bold text-gray-800">{review.user.name}</Text>
+          {formattedDate && (
+            <Text className="text-xs text-gray-500">{formattedDate}</Text>
+          )}
         </View>
       </View>
       
