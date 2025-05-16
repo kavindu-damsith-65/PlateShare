@@ -15,7 +15,7 @@ import ReviewFormModal from "./ReviewFormModal";
 import { StarIcon } from "react-native-heroicons/solid";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 const Reviews = ({ restaurantId }) => {
   const axios = useAxios();
   const scrollViewRef = useRef(null);
@@ -34,7 +34,6 @@ const Reviews = ({ restaurantId }) => {
   const getFilteredReviews = () => {
     if (activeFilter === 'All') return reviews;
     if (activeFilter === 'With Photos') return reviews.filter(review => review.images && review.images.length > 0);
-    // Extract the star number from filter text (e.g. "5 ★" -> 5)
     const rating = parseInt(activeFilter);
     return reviews.filter(review => review.rating === rating);
   };
@@ -107,17 +106,6 @@ const Reviews = ({ restaurantId }) => {
 
     return () => clearInterval(intervalId);
   }, [isUserScrolling, reviews]);
-
-  const handleMomentumScrollEnd = (event) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const cardWidth = SCREEN_WIDTH - 30 + 16;
-    const currentIndex = Math.round(offsetX / cardWidth);
-    const newOffset = currentIndex * cardWidth;
-
-    if (offsetX !== newOffset) {
-      scrollViewRef.current?.scrollTo({ x: newOffset, animated: true });
-    }
-  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#00ccbb" />;

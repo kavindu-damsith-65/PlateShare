@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import { StarIcon } from "react-native-heroicons/solid";
 
 const ReviewCard = ({ review }) => {
@@ -40,7 +40,7 @@ const ReviewCard = ({ review }) => {
     return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'} ago`;
   };
 
-  // Format the date if available
+  // Format the date
   const formattedDate = review.createdAt
     ? formatTimeAgo(review.createdAt)
     : '';
