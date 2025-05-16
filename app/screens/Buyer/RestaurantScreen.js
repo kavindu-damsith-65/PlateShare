@@ -179,61 +179,18 @@ const RestaurantScreen = ({ route, navigation }) => {
         {/* Tab Content */}
         <View className="bg-gray-50">
           {selectedTab === "menu" && (
-            <View className="pb-2">
-              <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
+            <View className="pb-2 mt-3">
               {restaurantData?.dishes?.length > 0 ? (
                 restaurantData.dishes.map((dish) => (
-                  <View key={dish.id} className="mb-4">
+                  <View key={dish.id} className="mb-2">
                     <DishRow
                       id={dish.id}
                       name={dish.name}
                       description={dish.description}
                       price={dish.price}
                       image={dish.image}
+                      sub_products={dish.sub_products}
                     />
-                    {/* Render sub-products */}
-                    {dish.has_subs && dish.sub_products?.length > 0 && (
-                      <View className="pb-2 px-4 mx-2">
-                        <TouchableOpacity
-                          className="flex-row items-center justify-center py-2 px-3 bg-gray-50 rounded-full border border-gray-200 self-start ml-2"
-                          onPress={() => toggleSubProducts(dish.id)}
-                        >
-                          <Text className="mr-1 font-medium text-[#00CCBB] text-sm">
-                            {expandedDishes[dish.id] ? "Hide Options" : "View Options"}
-                          </Text>
-                          <ChevronDownIcon 
-                            size={14} 
-                            color="#00CCBB" 
-                            style={{ transform: [{ rotate: expandedDishes[dish.id] ? '180deg' : '0deg' }] }} 
-                          />
-                        </TouchableOpacity>
-                        
-                        {expandedDishes[dish.id] && (
-                          <View className="mt-3 ml-2 pl-3 border-l-2 border-[#00CCBB] bg-white rounded-r-lg shadow-sm">
-                            {dish.sub_products.map((subProduct, index) => (
-                              <View 
-                                key={subProduct.id} 
-                                className={`flex-row justify-between py-1 px-3 ${
-                                  index !== dish.sub_products.length - 1 ? "border-b border-gray-100" : ""
-                                }`}
-                              >
-                                <View className="flex-1 pr-4">
-                                  <Text className="text-gray-800 font-medium">{subProduct.name}</Text>
-                                  {subProduct.description && (
-                                    <Text className="text-xs text-gray-500 mt-1" numberOfLines={1}>
-                                      {subProduct.description}
-                                    </Text>
-                                  )}
-                                </View>
-                                <Text className="text-[#00CCBB] font-semibold">
-                                  ${subProduct.price}
-                                </Text>
-                              </View>
-                            ))}
-                          </View>
-                        )}
-                      </View>
-                    )}
                   </View>
                 ))
               ) : (
