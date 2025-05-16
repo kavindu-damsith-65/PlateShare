@@ -1,14 +1,19 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, SafeAreaView, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
 
+const uid = "user_2";
+
 export default function SellerProfile() {
     const axios = useAxios();
     const navigation = useNavigation();
+    const [seller, setSeller] = useState(null);
+    const [loading, setLoading] = useState(true);
     
     const handleLogout = async () => {
         try {
@@ -19,19 +24,37 @@ export default function SellerProfile() {
         }
     };
 
-    // Sample seller data
-    const seller = {
-        name: 'John Smith',
-        email: 'john.smith@email.com',
-        phone: '+1 (555) 123-4567',
-        location: 'San Francisco, CA',
-        image: 'https://www.mealpro.net/wp-content/uploads/2022/11/5-Fine-Dining-Steak-Cuts.jpg',
-        bio: 'Passionate home chef specializing in authentic Italian cuisine. Committed to sharing quality homemade meals.',
-        joinedDate: 'March 2023',
-        rating: '4.8',
-        totalSales: '156',
-        specialties: ['Italian Cuisine', 'Homemade Pasta', 'Vegetarian Options']
-    };
+    useEffect(() => {
+        const fetchSeller = async () => {
+            try {
+                const response = await axios.get(`/api/user/seller/${uid}`);
+                setSeller(response.data.seller);
+            } catch (error) {
+                console.error('Failed to fetch seller profile:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSeller();
+    }, []);
+
+    if (loading) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
+                <ActivityIndicator size="large" color="#00CCBB" />
+                <Text className="text-gray-500 mt-2">Loading seller profile...</Text>
+            </SafeAreaView>
+        );
+    }
+
+    if (!seller) {
+        return (
+            <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
+                <Text className="text-red-500">Failed to load seller data.</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-100 pt-5">
@@ -44,23 +67,23 @@ export default function SellerProfile() {
             <ScrollView className="flex-1 p-4">
                 <View className="items-center mb-5">
                     <Image 
-                        source={{ uri: seller.image }} 
+                        source={{ uri: seller.user.profile_picture }} 
                         className="w-24 h-24 rounded-full mb-2"
                     />
-                    <Text className="text-2xl font-bold text-gray-800 mb-1">{seller.name}</Text>
-                    <Text className="text-sm text-gray-500">Member since {seller.joinedDate}</Text>
-                    <View className="flex-row items-center mt-2">
+                    <Text className="text-2xl font-bold text-gray-800 mb-1">{seller.user.name}</Text>
+                    <Text className="text-sm text-gray-500">Member since {new Date(seller.createdAt).toISOString().split('T')[0]}</Text>
+                    {/* <View className="flex-row items-center mt-2">
                         <Ionicons name="star" size={16} color="#FFD700" />
                         <Text className="text-sm ml-1">{seller.rating} • {seller.totalSales} Sales</Text>
-                    </View>
+                    </View> */}
                 </View>
                 
-                <View className="bg-white rounded-lg p-4 mb-5 shadow">
+                {/* <View className="bg-white rounded-lg p-4 mb-5 shadow">
                     <Text className="text-lg font-bold mb-3 text-gray-800">About Me</Text>
                     <Text className="text-sm text-gray-600 leading-5">{seller.bio}</Text>
-                </View>
+                </View> */}
 
-                <View className="bg-white rounded-lg p-4 mb-5 shadow">
+                {/* <View className="bg-white rounded-lg p-4 mb-5 shadow">
                     <Text className="text-lg font-bold mb-3 text-gray-800">Specialties</Text>
                     <View className="flex-row flex-wrap">
                         {seller.specialties.map((specialty, index) => (
@@ -69,7 +92,37 @@ export default function SellerProfile() {
                             </View>
                         ))}
                     </View>
+                </View> */}
+
+                <View className="bg-white rounded-lg p-4 mb-5 shadow">
+                    <Text className="text-lg font-bold mb-3 text-gray-800"> Restaurant Information </Text>
+
+                    <View className="flex-row items-start px-4">
+                        <View className="flex-1 pr-4">
+                        <Text className="text-lg font-bold text-gray-800 mb-1">
+                            {seller.restaurant.name}
+                        </Text>
+                        <Text className="text-sm text-gray-600 mb-2">
+                            {seller.restaurant.description || "No description available."}
+                        </Text>
+                        </View>
+
+                        {/* Image */}
+                        {seller.restaurant.image ? (
+                        <Image
+                            source={{ uri: seller.restaurant.image }}
+                            className="w-24 h-24 rounded-lg"
+                            resizeMode="cover"
+                        />
+                        ) : (
+                        <View className="w-24 h-24 bg-gray-200 rounded-lg justify-center items-center">
+                            <Text className="text-xs text-gray-500">No Image</Text>
+                        </View>
+                        )}
+                    </View>
                 </View>
+
+
                 
                 <View className="bg-white rounded-lg p-4 mb-5 shadow">
                     <Text className="text-lg font-bold mb-3 text-gray-800">Contact Information</Text>
@@ -86,7 +139,7 @@ export default function SellerProfile() {
                     
                     <View className="flex-row items-center">
                         <Ionicons name="location-outline" size={20} color="#666" />
-                        <Text className="text-sm text-gray-600 ml-2">{seller.location}</Text>
+                        <Text className="text-sm text-gray-600 ml-2">{seller.address}</Text>
                     </View>
                 </View>
                 

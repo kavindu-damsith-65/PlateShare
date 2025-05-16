@@ -27,6 +27,7 @@ const SellerDetails = sequelize.define('seller_details', {
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
+    createdAt: { type: DataTypes.DATE },
 });
 
 // Organization Details Model
