@@ -8,12 +8,9 @@ import {
 import DishRow from "../../components/Buyer/DishRow";
 import BasketContainer from "../../components/Buyer/BasketContainer";
 import { useDispatch } from "react-redux";
-import { setRestaurant } from "../../slices/restaurantSlice";
+import { setRestaurant, addToBasket } from "../../slices/restaurantSlice";
 import useAxios from '../../hooks/useAxios';
 import Reviews from "../../components/Buyer/Reviews";
-import { Dimensions } from "react-native";
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const TABS = [
   { key: "menu", label: "Menu" },
@@ -44,7 +41,6 @@ const RestaurantScreen = ({ route, navigation }) => {
     address: "Loading address...",
   });
 
-  const [expandedDishes, setExpandedDishes] = useState({});
   const [selectedTab, setSelectedTab] = useState("menu");
 
   useLayoutEffect(() => {
@@ -92,12 +88,6 @@ const RestaurantScreen = ({ route, navigation }) => {
     fetchRestaurantDetails();
   }, [dispatch, id]);
 
-  const toggleSubProducts = (dishId) => {
-    setExpandedDishes((prevState) => ({
-      ...prevState,
-      [dishId]: !prevState[dishId], // Toggle the state for the specific dish
-    }));
-  };
 
   if (!restaurantData) {
     return (
@@ -177,57 +167,24 @@ const RestaurantScreen = ({ route, navigation }) => {
         {/* Tab Content */}
         <View className="bg-gray-50">
           {selectedTab === "menu" && (
-            <View className="pb-2">
-              <Text className="px-4 pt-6 mb-3 text-xl font-bold">Menu</Text>
+            <View className="pb-2 mt-3">
               {restaurantData?.dishes?.length > 0 ? (
                 restaurantData.dishes.map((dish) => (
-                  <View key={dish.id}>
+                  <View key={dish.id} className="mb-2">
                     <DishRow
                       id={dish.id}
                       name={dish.name}
                       description={dish.description}
                       price={dish.price}
                       image={dish.image}
+                      sub_products={dish.sub_products}
                     />
-                    {/* Render sub-products */}
-                    {dish.has_subs && dish.sub_products?.length > 0 && (
-                      <View className="pb-5 pl-6">
-                        <TouchableOpacity
-                          className="flex-row items-center"
-                          onPress={() => toggleSubProducts(dish.id)}
-                        >
-                          <Text className="mr-1 font-medium text-green-600">
-                            {expandedDishes[dish.id] ? "Show Less" : "See Menu"}
-                          </Text>
-                        </TouchableOpacity>
-                        {expandedDishes[dish.id] && (
-                          <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            className="mt-2"
-                          >
-                            {dish.sub_products.map((subProduct) => (
-                              <View
-                                key={subProduct.id}
-                                style={{ width: 300, marginRight: 10 }}
-                              >
-                                <DishRow
-                                  id={subProduct.id}
-                                  name={subProduct.name}
-                                  description={subProduct.description}
-                                  price={subProduct.price}
-                                  image={subProduct.image}
-                                />
-                              </View>
-                            ))}
-                          </ScrollView>
-                        )}
-                      </View>
-                    )}
                   </View>
                 ))
               ) : (
-                <Text className="px-4 text-gray-500">No dishes available.</Text>
+                <View className="px-4 py-8 items-center">
+                  <Text className="text-gray-500 text-center">No dishes available.</Text>
+                </View>
               )}
             </View>
           )}
