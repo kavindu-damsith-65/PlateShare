@@ -5,7 +5,8 @@ const {
     createReview, 
     updateReview, 
     deleteReview,
-    getUserRestaurantReviews
+    getUserRestaurantReviews,
+    getAverageRating
 } = require("../controllers/reviewController");
 
 const router = express.Router();
@@ -27,5 +28,8 @@ router.delete("/:id", deleteReview);
 
 // Add new endpoint to get reviews by user ID and restaurant ID
 router.get("/user/:userId/restaurant/:restaurantId", getUserRestaurantReviews);
+
+//Get average rating for a restaurant
+router.get("/restaurants/average-rating/:restaurantId", getAverageRating);
 
 module.exports = router;

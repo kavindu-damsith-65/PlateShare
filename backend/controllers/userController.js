@@ -19,7 +19,7 @@ exports.getSellerDetails = async(req, res) => {
                 },
                 {
                     model: Restaurant,
-                    attributes: ["name", "image", "description"],
+                    attributes: ["name", "image", "description", "id"],
                     as: "restaurant"
                 }
             ]
