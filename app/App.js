@@ -10,7 +10,6 @@ import RestaurantScreen from "./screens/Buyer/RestaurantScreen";
 import { store } from "./store";
 import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
-import ProfileScreen from "./screens/Buyer/ProfileScreen";
 import AllRestaurantsScreen from "./screens/Buyer/AllRestaurantsScreen";
 import AllNearbyFoodsScreen from "./screens/Buyer/AllNearbyFoodsScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -59,18 +58,17 @@ function App(){
         <NavigationContainer>
             <Provider store={store}>
                 <TailwindProvider platform={Platform.OS}>
-                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'Main' : userRole === 'seller' ? 'SellerDashboard' : 'OrganizationDashboard') : 'Login'}>
+                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'BuyerDashboard' : userRole === 'seller' ? 'SellerDashboard' : 'OrganizationDashboard') : 'Login'}>
                         <Stack.Screen
                             name="Login"
                             component={LoginScreen}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                            name="Main"
+                            name="BuyerDashboard"
+                            component={BuyerTabs}
                             options={{ headerShown: false }}
-                        >
-                            {() => <BuyerTabs setProfileVisible={setProfileVisible} />}
-                        </Stack.Screen>
+                        />
                         <Stack.Screen
                             name="OrganizationDashboard"
                             component={OrganizationTabs}
@@ -120,9 +118,6 @@ function App(){
                                 headerShown: false,
                             }}
                         />
-                        <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                            <Stack.Screen name="Profile" component={ProfileScreen} />
-                        </Stack.Group>
                         <Stack.Screen
                             name="SearchScreen"
                             component={SearchScreen}
