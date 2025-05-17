@@ -14,6 +14,7 @@ export default function SellerDashboard() {
     const [seller, setSeller] = useState(null);
     const [loading, setLoading] = useState(true);
     const [rating, setRating] = useState("?");
+    const [mealCount, setMealCount] = useState("?");
 
     useEffect(() => {
         const fetchSeller = async () => {
@@ -37,12 +38,26 @@ export default function SellerDashboard() {
                 const response = await axios.get(`/api/reviews/restaurants/average-rating/${seller.restaurant.id}`);
                 setRating(response.data.averageRating);
             } catch (error) {
-                console.error('Failed to fetch average rating:', error);
+                //console.error('Failed to fetch average rating:', error);
                 setRating("?");
             }
         };
 
         fetchRating();
+    }, [seller]);
+
+    useEffect(() => {
+        const fetchMealCount = async () => {
+            try {
+                const response = await axios.get(`/api/products/count/${seller.restaurant.id}`);
+                setMealCount(response.data.availableProductCount);
+            } catch (error) {
+                // console.error('Failed to fetch average rating:', error);
+                setMealCount("?");
+            }
+        };
+
+        fetchMealCount();
     }, [seller]);
 
 
@@ -68,7 +83,15 @@ export default function SellerDashboard() {
     };
 
     const handleViewRestaurant = () => {
-        navigation.navigate('Restaurant');
+        navigation.navigate('Restaurant',{
+            id: seller.restaurant.id,
+            imgUrl: seller.restaurant.image,
+            title: seller.restaurant.name,
+            rating: rating,
+            short_description: seller.restaurant.description,
+            long: "loading long....",
+            lat: "loading lat....",
+        });
     };
 
     const handleViewOrders = () => {
@@ -85,8 +108,8 @@ export default function SellerDashboard() {
                 {/*statical cards */}
                 <View className="flex-row justify-between mb-5">
                     <View className="flex-1 bg-white rounded-lg p-4 mx-1 items-center shadow">
-                        <Text className="text-2xl font-bold text-[#00CCBB]">0</Text>
-                        <Text className="text-xs text-gray-600 mt-1">Active Meals</Text>
+                        <Text className="text-2xl font-bold text-[#00CCBB]">{mealCount}</Text>
+                        <Text className="text-xs text-gray-600 mt-1">Products</Text>
                     </View>
                     
                     <View className="flex-1 bg-white rounded-lg p-4 mx-1 items-center shadow">
