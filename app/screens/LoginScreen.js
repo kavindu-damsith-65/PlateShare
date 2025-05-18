@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Animatable from 'react-native-animatable';
 import { StatusBar } from 'expo-status-bar';
@@ -10,7 +10,7 @@ export default function LoginScreen({ navigation }) {
     try {
       await AsyncStorage.setItem('userRole', role);
       if (role === 'buyer') {
-        navigation.replace('Main');
+        navigation.replace('BuyerDashboard');
       } else if (role === 'seller') {
         navigation.replace('SellerDashboard');
       } else {

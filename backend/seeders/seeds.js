@@ -286,7 +286,12 @@ module.exports = {
           address: `Organization Address ${index + 1}`,
           location: `Organization Location ${index + 1}`,
           description: `A non-profit organization dedicated to helping the community.`,
-          additional_images: getRandomPicsumImage(),
+          additional_images: JSON.stringify([
+            getRandomPicsumImage(),
+            getRandomPicsumImage(),
+            getRandomPicsumImage(),
+            getRandomPicsumImage()
+          ]),
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
