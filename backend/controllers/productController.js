@@ -85,21 +85,21 @@ exports.getRecommendedProducts = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        // Only check food bucket
-        const foodBucketProducts = await FoodBucket.findAll({
-            where: { user_id: userId },
-            attributes: ["product_id"]
-        });
-
-        const productIds = foodBucketProducts.map(item => item.product_id);
-
-        if (productIds.length > 0) {
-            const products = await Product.findAll({
-                where: { id: { [Op.in]: productIds } }
-            });
-
-            return res.status(200).json({ products });
-        }
+        // // Only check food bucket
+        // const foodBucketProducts = await FoodBucket.findAll({
+        //     where: { user_id: userId },
+        //     attributes: ["product_id"]
+        // });
+        //
+        // const productIds = foodBucketProducts.map(item => item.product_id);
+        //
+        // if (productIds.length > 0) {
+        //     const products = await Product.findAll({
+        //         where: { id: { [Op.in]: productIds } }
+        //     });
+        //
+        //     return res.status(200).json({ products });
+        // }
 
         const randomProducts = await Product.findAll({
             where: { available: true },
@@ -411,3 +411,21 @@ exports.CreateProductOfRestaurant = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 }
+
+exports.getProductCountByRestaurant = async (req, res) => {
+    const { restaurantId } = req.params;
+
+    try {
+        const count = await Product.count({
+            where: {
+                restaurant_id: restaurantId,
+                available: true
+            }
+        });
+
+        res.status(200).json({ availableProductCount: count });
+    } catch (error) {
+        console.error('Error fetching product count:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
