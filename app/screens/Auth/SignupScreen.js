@@ -28,6 +28,7 @@ const SignupScreen = ({ navigation }) => {
 
           {step === 2 && (
               <SignupBasicInfo
+                  role={role}
                   formData={formData}
                   setFormData={setFormData}
                   prevStep={() => setStep(1)}
