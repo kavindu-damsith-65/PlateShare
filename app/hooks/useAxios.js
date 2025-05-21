@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const useAxios = () => {
     const instance = axios.create({
-        baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
+        // baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
+         baseURL: 'http://10.151.78.119:3001',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -12,6 +13,7 @@ const useAxios = () => {
             return config;
         },
         (error) => {
+
             return Promise.reject(error);
         }
     );
