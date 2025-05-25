@@ -23,9 +23,11 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
         });
     };
 
+
+
     return (
         <View className="space-y-4">
-            <Text className="text-2xl font-bold text-gray-800 mb-4">Basic Information</Text>
+            <Text className="text-2xl font-bold text-center text-gray-800 mb-4">Basic Information</Text>
 
             <View>
                 <Text className="text-gray-600 mb-1">Full Name <Text className="text-red-500">*</Text></Text>
@@ -37,16 +39,7 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
                 />
             </View>
 
-            <View>
-                <Text className="text-gray-600 mb-1">Email <Text className="text-red-500">*</Text></Text>
-                <TextInput
-                    className="border border-gray-300 bg-white rounded-lg p-3"
-                    placeholder="john@example.com"
-                    value={formData.email}
-                    onChangeText={(text) => setFormData({ ...formData, email: text })}
-                    keyboardType="email-address"
-                />
-            </View>
+
 
             <View>
                 <Text className="text-gray-600 mb-1">Phone Number <Text className="text-red-500">*</Text></Text>
@@ -78,44 +71,26 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
                 </View>
             </View>
 
-            {/* Organization-specific Field */}
-            {role && role === 'org' && (
+
+            {role === 'org' ? (
+                <View>
+                    <Text className="text-gray-600 mb-1">Description <Text className="text-red-500">*</Text></Text>
+                    <TextInput
+                        className="border border-gray-300 bg-white rounded-lg p-3 h-24"
+                        placeholder="Organization mission and activities"
+                        value={formData?.description || ''}
+                        onChangeText={(text) => setFormData({ ...formData, description: text })}
+                        multiline
+                    />
+                </View>
+            ):(
                 <>
                 </>
-                // <View>
-                //     <Text className="text-gray-600 mb-1">Description <Text className="text-red-500">*</Text></Text>
-                //     {/*<TextInput*/}
-                //     {/*    className="border border-gray-300 bg-white rounded-lg p-3 h-24"*/}
-                //     {/*    placeholder="Organization mission and activities"*/}
-                //     {/*    value={formData.description}*/}
-                //     {/*    onChangeText={(text) => setFormData({ ...formData, description: text })}*/}
-                //     {/*    multiline*/}
-                //     {/*/>*/}
-                // </View>
-            )}
+            )
 
-            {/* Password Fields */}
-            {/*<View>*/}
-            {/*    <Text className="text-gray-600 mb-1">Password <Text className="text-red-500">*</Text></Text>*/}
-            {/*    <TextInput*/}
-            {/*        className="border border-gray-300 bg-white rounded-lg p-3"*/}
-            {/*        placeholder="••••••••"*/}
-            {/*        value={formData.password}*/}
-            {/*        onChangeText={(text) => setFormData({ ...formData, password: text })}*/}
-            {/*        secureTextEntry*/}
-            {/*    />*/}
-            {/*</View>*/}
+            }
 
-            {/*<View>*/}
-            {/*    <Text className="text-gray-600 mb-1">Confirm Password <Text className="text-red-500">*</Text></Text>*/}
-            {/*    <TextInput*/}
-            {/*        className="border border-gray-300 bg-white rounded-lg p-3"*/}
-            {/*        placeholder="••••••••"*/}
-            {/*        value={formData.confirmPassword}*/}
-            {/*        onChangeText={(text) => setFormData({ ...formData, confirmPassword: text })}*/}
-            {/*        secureTextEntry*/}
-            {/*    />*/}
-            {/*</View>*/}
+
 
             {/* Navigation Buttons */}
             <View className="flex-row justify-between mt-6">
