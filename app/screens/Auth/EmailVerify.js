@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
+import useAxiosModified from "../../hooks/useAxiosModified";
 
 const EmailVerify = ({ formData, setFormData, prevStep, nextStep }) => {
+    const request=useAxiosModified()
     const [email, setEmail] = useState(formData.email || '');
     const [verificationCode, setVerificationCode] = useState('');
     const [isCodeSent, setIsCodeSent] = useState(false);
@@ -24,20 +26,19 @@ const EmailVerify = ({ formData, setFormData, prevStep, nextStep }) => {
                 return;
             }
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // In a real app, you would call your backend here:
-            // const response = await api.sendVerificationCode(email);
-
-            setIsCodeSent(true);
-            setCountdown(120);
-            setFormData({ ...formData, email });
+            const response= await  request('post', '/auth/send-code',  { email })
+                .then(data => {
+                    setIsCodeSent(true);
+                    setCountdown(120); // 2 minutes countdown
+                    setFormData(prev => ({ ...prev, email }));
+                })
+                .catch(err => setError(err));
         } catch (err) {
             setError('Failed to send verification code. Please try again.');
-            console.error(err);
         }
     };
+
+
 
     // Mock function to verify code
     const verifyCode = async () => {
@@ -50,13 +51,12 @@ const EmailVerify = ({ formData, setFormData, prevStep, nextStep }) => {
             setIsVerifying(true);
             setError('');
 
-            // Simulate API verification
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response= await  request('post', '/auth/verify-code',  { email: email,code:verificationCode })
+                .then(data => {
+                    nextStep();
+                })
+                .catch(err => setError(err));
 
-            // In a real app:
-            // const response = await api.verifyCode(email, verificationCode);
-            // if (!response.valid) throw new Error('Invalid code');
-            nextStep();
         } catch (err) {
             setError('Invalid verification code. Please try again.');
         } finally {
