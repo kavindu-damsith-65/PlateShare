@@ -4,6 +4,7 @@ const sequelize = require("../config/db");
 // User Model
 const User = sequelize.define('user', {
     id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
     name: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'user' },
     profile_picture: { type: DataTypes.STRING, allowNull: true },
@@ -14,7 +15,6 @@ const User = sequelize.define('user', {
 // Buyer Details Model
 const BuyerDetails = sequelize.define('buyer_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -23,7 +23,6 @@ const BuyerDetails = sequelize.define('buyer_details', {
 // Seller Details Model
 const SellerDetails = sequelize.define('seller_details', {
     user_id: { type: DataTypes.STRING ,primaryKey: true},
-    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -33,7 +32,6 @@ const SellerDetails = sequelize.define('seller_details', {
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
-    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
