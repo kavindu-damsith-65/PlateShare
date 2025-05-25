@@ -3,20 +3,22 @@ import React, { useState } from 'react';
 import { Text, View, SafeAreaView, ScrollView } from 'react-native';import { StatusBar } from 'expo-status-bar';
 import SignupRoleSelect from './SignupRoleSelect';
 import SignupBasicInfo from './SignupBasicInfo';
-// import SignupDetails from './SignupDetails';
+// import SignupUploads from './SignupUploads';
 import useAxios from '../../hooks/useAxios';
 import EmailVerify from "./EmailVerify";
 import PasswordSet from "./PasswordSet";
-import SignupDetails from "./SignupDetails";
+import SignupUploads from "./SignupUploads";
 
 const SignupScreen = ({ navigation }) => {
   const [step, setStep] = useState(1);
   const [role, setRole] = useState('buyer');
   const [formData, setFormData] = useState({ /* ... */ });
 
+
   const  handleSubmit = async ()  => {
 
   }
+
 
   return (
       <SafeAreaView className="flex-1 bg-white px-6">
@@ -30,7 +32,7 @@ const SignupScreen = ({ navigation }) => {
               <SignupRoleSelect
                   role={role}
                   setRole={setRole}
-                  nextStep={() => setStep(5)}
+                  nextStep={() => setStep(3)}
               />
           )}
 
@@ -66,7 +68,7 @@ const SignupScreen = ({ navigation }) => {
             )}
 
           {step === 5 && (
-              <SignupDetails
+              <SignupUploads
                   role={role}
                   formData={formData}
                   setFormData={setFormData}

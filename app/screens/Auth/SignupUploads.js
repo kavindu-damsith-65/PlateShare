@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 
-const SignupDetails = ({ role, formData, setFormData, prevStep, handleSubmit }) => {
+const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) => {
     const [uploading, setUploading] = useState(false);
 
     const handleImagePick = async (fieldName) => {
@@ -125,7 +125,7 @@ const SignupDetails = ({ role, formData, setFormData, prevStep, handleSubmit }) 
     );
 };
 
-export default SignupDetails;
+export default SignupUploads;
 
 
 
