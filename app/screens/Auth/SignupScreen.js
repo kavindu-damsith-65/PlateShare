@@ -32,7 +32,7 @@ const SignupScreen = ({ navigation }) => {
               <SignupRoleSelect
                   role={role}
                   setRole={setRole}
-                  nextStep={() => setStep(3)}
+                  nextStep={() => setStep(4)}
               />
           )}
 
