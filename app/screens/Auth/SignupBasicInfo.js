@@ -90,7 +90,7 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
                 <Text className="text-gray-600 mb-1">Full Name <Text className="text-red-500">*</Text></Text>
                 <TextInput
                     className={`border ${errors.name ? 'border-red-500' : 'border-gray-300'} bg-white rounded-lg p-3`}
-                    placeholder="John Doe"
+                    placeholder="User Name"
                     value={formData?.name || ''}
                     onChangeText={(text) => {
                         setFormData({ ...formData, name: text });
