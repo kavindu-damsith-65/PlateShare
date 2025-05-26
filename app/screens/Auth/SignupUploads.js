@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [showProgressModal, setShowProgressModal] = useState(false);
+
+
 
     const handleImagePick = async (fieldName) => {
         try {
@@ -104,16 +106,14 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
                 profileImage: profileImageUrl,
                 ...orgImageUrls
             };
+            setShowProgressModal(false);
             await handleSubmit(registrationData);
 
         } catch (error) {
             Alert.alert('Error', 'Failed to upload images. Please try again.');
             setShowProgressModal(false);
         } finally {
-
-            setTimeout(() => {
-                setShowProgressModal(false);
-            }, 2000);
+            setShowProgressModal(false);
         }
     };
 

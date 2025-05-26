@@ -10,13 +10,12 @@ const useAxios = () => {
 
     return async (method, url, data = null, config = {}) => {
         try {
-            const response = await instance({
+            return await instance({
                 method,
                 url,
                 data,
                 ...config,
             });
-            return response.data;
         } catch (error) {
             // console.error('API Error:', error?.response?.data || error.message);
 
