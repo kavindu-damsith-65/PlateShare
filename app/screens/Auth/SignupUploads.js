@@ -66,7 +66,7 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
             );
             return JSON.parse(response.body).filePath; // Adjust based on your API response
         } catch (error) {
-            console.error('Upload error:', error);
+            Alert.alert('Upload error', error);
             throw error;
         }
     };
@@ -104,16 +104,16 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
                 profileImage: profileImageUrl,
                 ...orgImageUrls
             };
-
-
-            // Call the final registration endpoint
             await handleSubmit(registrationData);
 
         } catch (error) {
             Alert.alert('Error', 'Failed to upload images. Please try again.');
-            console.error('Registration error:', error);
-        } finally {
             setShowProgressModal(false);
+        } finally {
+
+            setTimeout(() => {
+                setShowProgressModal(false);
+            }, 2000);
         }
     };
 

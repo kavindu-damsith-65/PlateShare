@@ -14,11 +14,11 @@ const SignupRoleSelect = ({ role, setRole, nextStep }) => (
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 2}}>
             <RoleCard
-                title="Buyer"
+                title="User"
                 description="Purchase surplus meals"
                 icon="person-outline"
-                selected={role === 'buyer'}
-                onPress={() => setRole('buyer')}
+                selected={role === 'user'}
+                onPress={() => setRole('user')}
                 style={{ flex: 1, marginRight: 2 }}
             />
 

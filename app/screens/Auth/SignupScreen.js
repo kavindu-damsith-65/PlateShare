@@ -11,12 +11,12 @@ import SignupUploads from "./SignupUploads";
 
 const SignupScreen = ({ navigation }) => {
   const [step, setStep] = useState(1);
-  const [role, setRole] = useState('buyer');
+  const [role, setRole] = useState('user');
   const [formData, setFormData] = useState({ /* ... */ });
 
 
   const  handleSubmit = async (registrationData)  => {
-
+        console.log(registrationData)
   }
 
 
@@ -32,7 +32,7 @@ const SignupScreen = ({ navigation }) => {
               <SignupRoleSelect
                   role={role}
                   setRole={setRole}
-                  nextStep={() => setStep(5)}
+                  nextStep={() => setStep(2)}
               />
           )}
 

@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } fro
 import OTPTextInput from 'react-native-otp-textinput';
 import useAxiosModified from "../../hooks/useAxiosModified";
 
-const EmailVerify = ({ formData, setFormData, prevStep, nextStep }) => {
+const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
     const request=useAxiosModified()
     const [email, setEmail] = useState(formData.email || '');
     const [verificationCode, setVerificationCode] = useState('');
@@ -30,7 +30,7 @@ const EmailVerify = ({ formData, setFormData, prevStep, nextStep }) => {
                 .then(data => {
                     setIsCodeSent(true);
                     setCountdown(120); // 2 minutes countdown
-                    setFormData(prev => ({ ...prev, email }));
+                    setFormData(prev => ({ ...prev, email ,role}));
                 })
                 .catch(err => setError(err));
         } catch (err) {
