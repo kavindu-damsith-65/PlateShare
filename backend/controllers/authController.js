@@ -5,6 +5,8 @@ require("dotenv").config();
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const {sendVerificationEmail} = require("../middleware/mail");
+const sequelize = require("../config/db");
+
 
 
 
@@ -144,6 +146,7 @@ const signUp = async (req, res) => {
 
         try {
             // Create user
+
             const user = await User.create({
                 id: userId,
                 email: data.email,
@@ -183,13 +186,7 @@ const signUp = async (req, res) => {
 
             res.status(201).json({
                 success: true,
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                    role: user.role,
-                    profile_picture: user.profile_picture
-                }
+                message: 'User registered successfully',
             });
 
         } catch (error) {
