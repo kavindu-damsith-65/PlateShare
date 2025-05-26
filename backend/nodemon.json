@@ -1,0 +1,18 @@
+{
+  "watch": [
+    "src",
+    "config",
+    "routes",
+    "models",
+    "middleware"
+  ],
+  "ext": "js,json",
+  "ignore": [
+    "src/client/",
+    "node_modules/",
+    ".git/"
+  ],
+  "exec": "node",
+  "delay": "1000",
+  "verbose": true
+}
