@@ -7,30 +7,38 @@ const SignupRoleSelect = ({ role, setRole, nextStep }) => (
     <View className="space-y-8">
         <View className="items-center">
             <Text className="text-2xl font-bold text-gray-800 mb-2">Join PlateShare</Text>
-            <Text className="text-gray-600 text-center">
-                Help reduce food waste by joining as either an individual or organization
-            </Text>
+
         </View>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 2}}>
+        <View className="space-y-4">
             <RoleCard
-                title="User"
-                description="Purchase surplus meals"
+                title="Individual"
+                description="Buy surplus meals"
                 icon="person-outline"
                 selected={role === 'user'}
                 onPress={() => setRole('user')}
-                style={{ flex: 1, marginRight: 2 }}
+            />
+
+            <RoleCard
+                title="Restaurant"
+                description="Sell extra meals"
+                icon="restaurant-outline"
+                selected={role === 'restaurant'}
+                onPress={() => setRole('restaurant')}
             />
 
             <RoleCard
                 title="Organization"
-                description="Distribute food donations to those in need"
+                description="Distribute food donations"
                 icon="people-outline"
                 selected={role === 'org'}
                 onPress={() => setRole('org')}
-                style={{ flex: 1, marginLeft: 2 }}
             />
+
+
         </View>
+
+
 
         <TouchableOpacity
             className="bg-[#00CCBB] p-4 rounded-lg  items-center mt-8"
@@ -41,24 +49,48 @@ const SignupRoleSelect = ({ role, setRole, nextStep }) => (
     </View>
 );
 
-const RoleCard = ({ title, description, icon, selected, onPress }) => (
-    <TouchableOpacity
-        className={`w-[45%] p-6 rounded-xl border-2 ${
-            selected ? 'border-[#00CCBB] bg-[#00CCBB10]' : 'border-gray-200'
-        } items-center`}
-        onPress={onPress}
-    >
-        <Ionicons
-            name={icon}
-            size={40}
-            color={selected ? '#00CCBB' : '#6B7280'}
-            className="mb-4"
-        />
-        <Text className={`text-lg font-semibold mb-2 ${selected ? 'text-[#00CCBB]' : 'text-gray-800'}`}>
-            {title}
-        </Text>
-        <Text className="text-sm text-gray-600 text-center">{description}</Text>
-    </TouchableOpacity>
-);
 
 export default SignupRoleSelect;
+
+
+
+const RoleCard = ({ title, description, icon, selected, onPress }) => (
+    <TouchableOpacity
+        className={`flex-row items-center p-4 my-2 border-2 rounded-xl ${selected ? 'border-[#00CCBB] bg-[#00CCBB]/5' : 'border-gray-200 bg-white'} shadow-sm ${selected ? 'shadow-[#00CCBB]/20' : 'shadow-gray-200/50'}`}
+        onPress={onPress}
+        activeOpacity={0.7}
+    >
+        <View className={`p-3 rounded-full ${selected ? 'bg-[#00CCBB]/10' : 'bg-gray-100'} mr-3 shadow-xs`}>
+            <Ionicons
+                name={icon}
+                size={22}
+                color={selected ? '#00CCBB' : '#6B7280'}
+            />
+        </View>
+
+        <View className="flex-1">
+            <View className="flex-row items-center">
+                <Text className={`font-semibold text-base ${selected ? 'text-[#00CCBB]' : 'text-gray-900'}`}>
+                    {title}
+                </Text>
+
+            </View>
+            <Text className="text-gray-500 text-sm mt-0.5">
+                {description}
+            </Text>
+        </View>
+        {selected && (
+            <Ionicons
+                name="checkmark-circle"
+                size={30}
+                color="#00CCBB"
+                className="ml-2"
+            />
+        )}
+        <Ionicons
+            name="chevron-forward-outline"
+            size={18}
+            color={selected ? '#00CCBB' : '#D1D5DB'}
+        />
+    </TouchableOpacity>
+);
