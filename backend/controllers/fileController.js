@@ -3,6 +3,22 @@ const jwt = require("jsonwebtoken");
 const {BuyerDetails,OrgDetails} = require("../models/AuthModel");
 require("dotenv").config();
 
+const handleUpload = (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    const filePath = `/uploads/${req.file.filename}`;
+
+    res.status(200).json({
+        success: true,
+        filePath,
+        message: 'File uploaded successfully'
+    });
+};
+
+
+
 exports.profilePictureUpload = async (req, res) => {
     try {
         const filePath = req.file.path;
@@ -28,3 +44,5 @@ exports.imageUpload = async (req, res) => {
 
 };
 
+
+module.exports={handleUpload}

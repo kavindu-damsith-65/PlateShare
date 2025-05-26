@@ -15,7 +15,7 @@ const SignupScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({ /* ... */ });
 
 
-  const  handleSubmit = async ()  => {
+  const  handleSubmit = async (registrationData)  => {
 
   }
 
@@ -32,7 +32,7 @@ const SignupScreen = ({ navigation }) => {
               <SignupRoleSelect
                   role={role}
                   setRole={setRole}
-                  nextStep={() => setStep(4)}
+                  nextStep={() => setStep(5)}
               />
           )}
 
