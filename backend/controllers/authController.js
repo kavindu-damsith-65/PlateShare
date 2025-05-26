@@ -147,42 +147,42 @@ const signUp = async (req, res) => {
         try {
             // Create user
 
-            const user = await User.create({
-                id: userId,
-                email: data.email,
-                name: data.name,
-                role: data.role,
-                profile_picture: data.profileImage,
-                password: hashedPassword
-            }, { transaction });
-
-            // Create role-specific details
-            const detailsData = {
-                user_id: userId,
-                phone: data.phone,
-                address: data.address,
-                location: JSON.stringify(data.location)
-            };
-
-            switch (data.role.toLowerCase()) {
-                case 'buyer':
-                    await BuyerDetails.create(detailsData, { transaction });
-                    break;
-                case 'seller':
-                    await SellerDetails.create({ ...detailsData, createdAt: new Date() }, { transaction });
-                    break;
-                case 'org':
-                    await OrgDetails.create({
-                        ...detailsData,
-                        description: data.description,
-                        additional_images: JSON.stringify([data.orgImage1, data.orgImage2, data.orgImage3])
-                    }, { transaction });
-                    break;
-                default:
-                    throw new Error('Invalid user role');
-            }
-
-            await transaction.commit();
+            // const user = await User.create({
+            //     id: userId,
+            //     email: data.email,
+            //     name: data.name,
+            //     role: data.role,
+            //     profile_picture: data.profileImage,
+            //     password: hashedPassword
+            // }, { transaction });
+            //
+            // // Create role-specific details
+            // const detailsData = {
+            //     user_id: userId,
+            //     phone: data.phone,
+            //     address: data.address,
+            //     location: JSON.stringify(data.location)
+            // };
+            //
+            // switch (data.role.toLowerCase()) {
+            //     case 'buyer':
+            //         await BuyerDetails.create(detailsData, { transaction });
+            //         break;
+            //     case 'seller':
+            //         await SellerDetails.create({ ...detailsData, createdAt: new Date() }, { transaction });
+            //         break;
+            //     case 'org':
+            //         await OrgDetails.create({
+            //             ...detailsData,
+            //             description: data.description,
+            //             additional_images: JSON.stringify([data.orgImage1, data.orgImage2, data.orgImage3])
+            //         }, { transaction });
+            //         break;
+            //     default:
+            //         throw new Error('Invalid user role');
+            // }
+            //
+            // await transaction.commit();
 
             res.status(201).json({
                 success: true,

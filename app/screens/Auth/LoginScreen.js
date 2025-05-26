@@ -84,7 +84,7 @@ export default function LoginScreen() {
               {loading ? (
                   <ActivityIndicator color="white" />
               ) : (
-                  <Text className="text-white font-bold text-lg">Login</Text>
+                  <Text className="text-white font-bold text-lg">Sign In</Text>
               )}
             </TouchableOpacity>
           </View>

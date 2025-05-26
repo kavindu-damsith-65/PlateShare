@@ -12,6 +12,7 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
     const [isResending, setIsResending] = useState(false);
     const [countdown, setCountdown] = useState(0);
     const [error, setError] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     // Mock function to simulate API call to send verification code
     const sendVerificationCode = async () => {
@@ -25,16 +26,18 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
                 setError('Please enter a valid email address');
                 return;
             }
-
+            setIsSending(true);
             const response= await  request('post', '/auth/send-code',  { email })
-                .then(data => {
+                .then(response => {
                     setIsCodeSent(true);
                     setCountdown(120); // 2 minutes countdown
-                    setFormData(prev => ({ ...prev, email ,role}));
+                    setFormData(prev => ({ ...prev, email,role}));
                 })
                 .catch(err => setError(err));
         } catch (err) {
             setError('Failed to send verification code. Please try again.');
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -112,7 +115,7 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
                     <TouchableOpacity
                         className="bg-[#00CCBB] px-6 py-3 rounded-lg mt-6"
                         onPress={sendVerificationCode}
-                        // disabled={!email}
+                        disabled={isSending}
                     >
                         <Text className="text-center text-white font-bold">
                             Send Verification Code
@@ -178,6 +181,7 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
 
 
             <TouchableOpacity
+                disabled={isSending}
                 className="bg-gray-100 px-6 py-3 rounded-lg mt-4"
                 onPress={prevStep}
             >
