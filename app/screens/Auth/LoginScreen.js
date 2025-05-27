@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import useAxios from '../../hooks/useAxios';
+import useAxios from '../../hooks/useAxiosModified';
 import { useNavigation } from '@react-navigation/native';
 
 export default function LoginScreen() {
@@ -11,27 +11,23 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigation = useNavigation();
-  const axios = useAxios();
+  const request = useAxios();
 
   const handleLogin = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post('/api/auth/login', {
-        email,
-        password
-      });
+      setLoading(true);
 
-      await AsyncStorage.setItem('authToken', response.data.token);
-      await AsyncStorage.setItem('userRole', response.data.role);
+      const response= await  request('post', '/auth/signin',  { email ,password})
+          .then(async  response => {
+            const role =response.data.user.role
+            await AsyncStorage.setItem('accessToken', response.data.tokens.accessToken);
+            await AsyncStorage.setItem('refreshToken', response.data.tokens.refreshToken);
+            await AsyncStorage.setItem('userRole', role);
+            navigation.navigate(role=== 'seller' ? 'SellerDashboard' : role === 'org' ? 'OrganizationDashboard' : 'BuyerDashboard');
 
-      navigation.replace(response.data.role === 'seller' ? 'SellerTabs' :
-          response.data.role === 'org' ? 'OrgDashboard' : 'BuyerDashboard');
-    } catch (error) {
-      setError('Invalid email or password');
-    } finally {
+          })
+          .catch(err => setError(err));
       setLoading(false);
-    }
-  };
+  }
 
   return (
       <SafeAreaView className="flex-1 bg-white px-6">

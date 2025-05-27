@@ -15,6 +15,7 @@ const User = sequelize.define('user', {
 // Buyer Details Model
 const BuyerDetails = sequelize.define('buyer_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
@@ -23,20 +24,25 @@ const BuyerDetails = sequelize.define('buyer_details', {
 // Seller Details Model
 const SellerDetails = sequelize.define('seller_details', {
     user_id: { type: DataTypes.STRING ,primaryKey: true},
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
     createdAt: { type: DataTypes.DATE },
+    description: { type: DataTypes.STRING },
+    additional_images: { type: DataTypes.STRING },
 });
 
 // Organization Details Model
 const OrgDetails = sequelize.define('org_details', {
     user_id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
+    createdAt: { type: DataTypes.DATE }
 });
 
 // Restaurant Model
