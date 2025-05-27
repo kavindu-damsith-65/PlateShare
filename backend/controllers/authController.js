@@ -282,6 +282,7 @@ const signIn = async (req, res) => {
             success: true,
             user: {
                 role: user.role,
+                id : user.id
             },
             tokens: {
                 accessToken,
