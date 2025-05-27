@@ -6,6 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useAxiosModified from "../../hooks/useAxiosModified";
 import {useNavigation} from "@react-navigation/native";
 
+
+
 const NewPasswordSet = ({ formData, setFormData, prevStep }) => {
     const [errors, setErrors] = useState({
         password: '',
@@ -64,6 +66,7 @@ const NewPasswordSet = ({ formData, setFormData, prevStep }) => {
                 .catch(err => Alert.alert("Failed", "Error Occurred, Please Try Again!"+err));
         }
     };
+
 
     return (
         <View className="space-y-4 p-4">

@@ -18,18 +18,6 @@ const ForgotPassScreen = () => {
 
     const request = useAxios();
 
-    const handleSubmit = async (registrationData) => {
-        const response= await request('post', '/auth/signup', registrationData)
-            .then(response => {
-                setTimeout(() => {
-                    Alert.alert("Success", response?.data?.message || "Success");
-                    navigation.navigate('Login');
-                }, 2000);
-            })
-            .catch(err =>  Alert.alert("Error", err));
-
-
-    };
 
 
     return (
