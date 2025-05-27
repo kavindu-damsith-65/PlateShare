@@ -2,8 +2,7 @@ import axios from 'axios';
 
 const useAxios = () => {
     const instance = axios.create({
-        // baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
-         baseURL: 'http://10.151.78.119:3001',
+        baseURL: process.env.EXPO_PUBLIC_BACKEND_URL,
         headers: {
             'Content-Type': 'application/json',
         },

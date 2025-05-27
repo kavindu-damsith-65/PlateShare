@@ -23,8 +23,8 @@ const SignupRoleSelect = ({ role, setRole, nextStep }) => (
                 title="Restaurant"
                 description="Sell extra meals"
                 icon="restaurant-outline"
-                selected={role === 'restaurant'}
-                onPress={() => setRole('restaurant')}
+                selected={role === 'seller'}
+                onPress={() => setRole('seller')}
             />
 
             <RoleCard
