@@ -79,7 +79,7 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
             return;
         }
 
-        if (role === 'org' && (!formData.orgImage1 || !formData.orgImage2 || !formData.orgImage3)) {
+        if ((role === 'org' || role ==='seller') && (!formData.orgImage1 || !formData.orgImage2 || !formData.orgImage3)) {
             Alert.alert('Required', 'Please upload all organization images');
             return;
         }
@@ -93,7 +93,7 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
 
             // Upload org images if applicable
             let orgImageUrls = {};
-            if (role === 'org') {
+            if (role === 'org' || role === 'seller' )  {
                 for (let i = 1; i <= 3; i++) {
                     const fieldName = `orgImage${i}`;
                     orgImageUrls[fieldName] = await uploadFile(formData[fieldName], 'file');
@@ -120,7 +120,7 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
     return (
         <View className="space-y-4 p-4">
             <Text className="text-2xl font-bold text-center text-gray-800 mb-4">
-                {role === 'org' ? 'Organization Details' : 'Complete Your Profile'}
+                {role === 'org' ? 'Organization Details' : role === 'seller'?'Restaurant Details':'Complete Your Profile'}
             </Text>
 
             {/* Profile Image Upload */}
@@ -142,16 +142,15 @@ const SignupUploads = ({ role, formData, setFormData, prevStep, handleSubmit }) 
                 </View>
                 {uploading ? <ActivityIndicator size="small" color="#00CCBB" className="mt-2" />:<></>}
                 <Text className="text-gray-600 mb-2 text-center">
-                    {role === 'org'
-                        ? 'This will be your Organization Logo. You can change it later'
+                    {(role === 'org' || role === 'seller' )
+                        ? 'This will be your  Logo. You can change it later'
                         : 'This will be your Profile Photo. You can change it later.'}
                 </Text>
             </View>
 
-            {/* Additional Images for Organizations */}
-            {role === 'org' ? (
+            {(role === 'org' || role === 'seller' ) ? (
                 <View>
-                    <Text className="text-gray-600 mb-2">Organization Gallery (3 required images)</Text>
+                    <Text className="text-gray-600 mb-2">Gallery (3 required images)</Text>
                     <View className="flex-row justify-between">
                         {[1, 2, 3].map((num) => (
                             <View key={num} className="w-[30%] aspect-square">

@@ -40,8 +40,7 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
             isValid = false;
         }
 
-        // Organization description validation
-        if (role === 'org' && (!formData.description || formData.description.trim().length < 20)) {
+        if ((role === 'org' || role === 'seller' ) && (!formData.description || formData.description.trim().length < 20)) {
             newErrors.description = 'Description must be at least 20 characters';
             isValid = false;
         }
@@ -140,12 +139,12 @@ const SignupBasicInfo = ({ role = '', formData, setFormData, prevStep, nextStep 
             </View>
 
             {/* Organization Description (only for org role) */}
-            {role === 'org' ? (
+            {(role === 'org' || role === 'seller' ) ? (
                 <View>
                     <Text className="text-gray-600 mb-1">Description <Text className="text-red-500">*</Text></Text>
                     <TextInput
                         className={`border ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-lg p-3 h-24`}
-                        placeholder="Organization mission and activities"
+                        placeholder="Mission and activities"
                         value={formData?.description || ''}
                         onChangeText={(text) => {
                             setFormData({ ...formData, description: text });
