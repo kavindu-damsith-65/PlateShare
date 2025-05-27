@@ -9,10 +9,10 @@ import PasswordSet from "./PasswordSet";
 import SignupUploads from "./SignupUploads";
 import useAxios from "../../hooks/useAxiosModified";
 import {useNavigation} from "@react-navigation/native";
+import NewPasswordSet from "./NewPasswordSet";
 
 const ForgotPassScreen = () => {
     const [step, setStep] = useState(1);
-    const [role, setRole] = useState('user');
     const [formData, setFormData] = useState({});
     const navigation = useNavigation();
 
@@ -41,54 +41,27 @@ const ForgotPassScreen = () => {
                 {/* Progress Bar */}
                 <ProgressBar step={step} />
 
-                {step === 1 ? (
-                    <SignupRoleSelect
-                        role={role}
-                        setRole={setRole}
+
+                {step === 1? (
+                    <EmailVerify
+                        title="Reset Your Password"
+                        type= 'reset'
+                        setFormData={setFormData}
+                        formData={formData}
                         nextStep={() => setStep(2)}
                     />
                 ):<></>}
 
+
                 {step === 2 ? (
-                    <EmailVerify
-                        role={role}
-                        setRole={setRole}
-                        setFormData={setFormData}
+                    <NewPasswordSet
                         formData={formData}
+                        setFormData={setFormData}
                         prevStep={() => setStep(1)}
-                        nextStep={() => setStep(3)}
                     />
                 ):<></>}
 
-                {step === 3 ? (
-                    <SignupBasicInfo
-                        role={role}
-                        formData={formData}
-                        setFormData={setFormData}
-                        prevStep={() => setStep(2)}
-                        nextStep={() => setStep(4)}
-                    />
-                ):<></>}
 
-                {step === 4 ? (
-                    <PasswordSet
-                        role={role}
-                        formData={formData}
-                        setFormData={setFormData}
-                        prevStep={() => setStep(3)}
-                        nextStep={() => setStep(5)}
-                    />
-                ):<></>}
-
-                {step === 5 ? (
-                    <SignupUploads
-                        role={role}
-                        formData={formData}
-                        setFormData={setFormData}
-                        prevStep={() => setStep(4)}
-                        handleSubmit={handleSubmit}
-                    />
-                ):<></>}
 
                 {step===1?(
                     <View className="flex-row justify-center mt-6">
@@ -118,3 +91,7 @@ const ProgressBar = ({ step }) => (
 );
 
 export default ForgotPassScreen;
+
+
+
+

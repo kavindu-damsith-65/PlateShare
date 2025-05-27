@@ -24,7 +24,7 @@ const generateTokens = (userId, role) => {
 
     const refreshToken = jwt.sign(
         { id: userId },
-        process.env.JWT_REFRESH_SECRET,
+        process.env.JWT_SECRET,
         { expiresIn: '7d' }
     );
 
@@ -36,7 +36,7 @@ const generateTokens = (userId, role) => {
 const verificationCodes = new Map();
 
 const sendCode = async (req, res) => {
-    const { email } = req.body;
+    const { email,type } = req.body;
     // Validate email format
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return res.status(400).json({ error: 'Please provide a valid email address' });
@@ -45,7 +45,7 @@ const sendCode = async (req, res) => {
     try {
         // Check if user already exists (consistent with your signIn structure)
         const user = await User.findOne({ where: { email } });
-        if (user) {
+        if (user && type === 'verify') {
             return res.status(400).json({ error: 'Email already in use' });
         }
 
@@ -104,6 +104,48 @@ async function verifyCode(req, res) {
     }
 }
 
+async function passresetVerifyCode(req, res) {
+    const { email, code } = req.body;
+
+    try {
+
+        const verification = verificationCodes.get(email);
+
+        if (!verification) {
+            return res.status(400).json({ error: 'No verification code found for this email' });
+        }
+
+        // Check if code matches
+        if (verification.code !== code) {
+            return res.status(400).json({ error: 'Invalid verification code' });
+        }
+
+        // Check if code is expired
+        if (new Date() > new Date(verification.expiresAt)) {
+            return res.status(400).json({ error: 'Verification code has expired' });
+        }
+
+
+        verificationCodes.delete(email);
+
+        const user = await User.findOne({ where: { email } });
+
+
+            if (!user) {
+                throw new Error('Email not found!');
+            }
+
+        const { accessToken, refreshToken } = generateTokens(user.id, user.role);
+        res.json({ message: 'Email verified successfully' ,
+            tokens: {
+                verifyToken:accessToken,
+            }
+        });
+    } catch (error) {
+        console.error('Error verifying code:');
+        res.status(500).json({ error: 'Failed to verify code' });
+    }
+}
 
 
 
@@ -257,9 +299,71 @@ const signIn = async (req, res) => {
 
 
 
+
+
+const resetPassword = async (req, res) => {
+    const transaction = await sequelize.transaction();
+
+    try {
+        const { password, confirmPassword } = req.body;
+
+
+        if (!password || !confirmPassword) throw new Error('All fields are required');
+        if (password !== confirmPassword) throw new Error('Passwords do not match');
+        if (password.length < 8) throw new Error('Password must be at least 8 characters');
+
+
+
+        // Find user
+        const user = await User.findByPk(req.user.id, { transaction });
+        if (!user) throw new Error('User not found');
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+
+        await user.update({ password: hashedPassword }, { transaction });
+
+        await transaction.commit();
+
+        res.json({
+            success: true,
+            message: 'Password reset successfully'
+        });
+
+    } catch (error) {
+        await transaction.rollback();
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                success: false,
+                message: 'Reset link has expired'
+            });
+        }
+
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid reset link'
+            });
+        }
+
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+
+};
+
+
+
+
+
+
 module.exports = {
     sendCode,
     verifyCode,
+    passresetVerifyCode,
+    resetPassword,
     signUp,
     signIn
 };

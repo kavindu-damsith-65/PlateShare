@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import useAxiosModified from "../../hooks/useAxiosModified";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
+const EmailVerify = ({ role='user',formData, setFormData, prevStep, nextStep ,title='Verify It Is You',type='verify'}) => {
     const request=useAxiosModified()
     const [email, setEmail] = useState(formData.email || '');
     const [verificationCode, setVerificationCode] = useState('');
@@ -27,7 +28,7 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
                 return;
             }
             setIsSending(true);
-            const response= await  request('post', '/auth/send-code',  { email })
+            const response= await  request('post', '/auth/send-code',  { email ,type})
                 .then(response => {
                     setIsCodeSent(true);
                     setCountdown(120); // 2 minutes countdown
@@ -54,11 +55,22 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
             setIsVerifying(true);
             setError('');
 
-            const response= await  request('post', '/auth/verify-code',  { email: email,code:verificationCode })
-                .then(data => {
-                    nextStep();
-                })
-                .catch(err => setError(err));
+            if(type==='verify'){
+                const response= await  request('post', '/auth/verify-code',  { email: email,code:verificationCode })
+                    .then(data => {
+                        nextStep();
+                    })
+                    .catch(err => setError(err));
+            }else {
+                const response= await  request('post', '/auth/passreset-verify-code',  { email: email,code:verificationCode })
+                    .then(async  data => {
+                        const token =data.data.tokens.verifyToken
+                        await AsyncStorage.setItem('verifyToken', token);
+                        nextStep();
+                    })
+                    .catch(err => setError(err));
+            }
+
 
         } catch (err) {
             setError('Invalid verification code. Please try again.');
@@ -91,7 +103,7 @@ const EmailVerify = ({ role,formData, setFormData, prevStep, nextStep }) => {
     return (
         <View className="space-y-4 p-4">
             <View className="items-center pb-5">
-                <Text className="text-2xl font-bold text-gray-800 mb-2">Verify It Is You</Text>
+                <Text className="text-2xl font-bold text-gray-800 mb-2">{title}</Text>
 
             </View>
 

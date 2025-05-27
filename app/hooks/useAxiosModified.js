@@ -8,21 +8,29 @@ const useAxios = () => {
         },
     });
 
-    return async (method, url, data = null, config = {}) => {
+    return async (method, url, data = null, token='',config = {},) => {
         try {
+
+            // Merge headers with existing config headers
+            const headers = {
+                ...config.headers,
+                Authorization: `Bearer ${token}`
+            };
+
             return await instance({
                 method,
                 url,
                 data,
                 ...config,
+                headers
             });
         } catch (error) {
             // console.error('API Error:', error?.response?.data || error.message);
 
-            throw error?.response?.data?.error || // Custom backend error
-            error?.response?.data?.message || // Common field
-            error?.message || // Axios or network error
-            'An unexpected error occurred'; // ✅ always throws a string
+            throw error?.response?.data?.error ||
+            error?.response?.data?.message ||
+            error.message ||
+            'An unexpected error occurred';
         }
     };
 };
