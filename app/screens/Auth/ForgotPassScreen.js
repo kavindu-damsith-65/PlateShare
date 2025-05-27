@@ -37,6 +37,7 @@ const ForgotPassScreen = () => {
                         setFormData={setFormData}
                         formData={formData}
                         nextStep={() => setStep(2)}
+                        prevStep={() => {navigation.navigate('Login')}}
                     />
                 ):<></>}
 
