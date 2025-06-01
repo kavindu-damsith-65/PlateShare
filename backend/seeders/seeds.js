@@ -7,16 +7,16 @@ module.exports = {
     const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
 
     const users = [
-        { id: 'user_1', name:'Ross', role: 'buyer', profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword1', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_2', name:'Monica', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword2', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_3', name:'Rachel', role: 'organization',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword3', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_4', name:'Pheobe', role: 'admin',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword4', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_5', name:'Chandler', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword5', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_6', name:'Joey', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword6', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_7', name:'Ben', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword7', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_8', name:'Paul', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword8', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_9', name:'Riana', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword9', createdAt: new Date(), updatedAt: new Date() },
-        { id: 'user_10', name:'Ashka', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: 'hashedpassword10', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_1', email:'buyer1@example.com',name:'Ross', role: 'buyer', profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_2', email:'seller1@example.com',name:'Monica', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_3', email:'org1@example.com',name:'Rachel', role: 'org',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_4', email:'admin@example.com',name:'Pheobe', role: 'admin',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_5', email:'seller2@example.com',name:'Chandler', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_6', email:'buyer2@example.com',name:'Joey', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_7', email:'seller3@example.com',name:'Ben', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_8', email:'buyer3@example.com',name:'Paul', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_9', email:'seller4@example.com',name:'Riana', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
+        { id: 'user_10', email:'buyer4@example.com',name:'Ashka', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
       ];  
 
     await queryInterface.bulkInsert('users', users);
@@ -26,7 +26,8 @@ module.exports = {
         .map((buyer, index) => ({
           user_id: buyer.id,
           // name: `Buyer ${index + 1}`,
-          email: `buyer${index + 1}@example.com`,
+          // email: `buyer${index + 1}@example.com`,
+            email: buyer.email,
           phone: `123456789${index + 1}`,
           address: `Buyer Address ${index + 1}`,
           location: `Buyer Location ${index + 1}`,
@@ -42,7 +43,8 @@ module.exports = {
         .map((seller, index) => ({
           user_id: seller.id,
           // name: `Seller ${index + 1}`,
-          email: `seller${index + 1}@example.com`,
+          // email: `seller${index + 1}@example.com`,
+            email: seller.email,
           phone: `987654321${index + 1}`,
           address: `Seller Address ${index + 1}`,
           location: 'Buyer Location 1',
@@ -278,7 +280,7 @@ module.exports = {
 
     // Create organization details for the organization user
     const organizations = users
-        .filter(user => user.role === 'organization')
+        .filter(user => user.role === 'org')
         .map((org, index) => ({
           user_id: org.id,
           email: `org${index + 1}@example.com`,
