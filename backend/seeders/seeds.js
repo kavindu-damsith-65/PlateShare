@@ -5,7 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     // Helper function to get random picsum image URL
     const getRandomPicsumImage = () => `https://picsum.photos/400/300?random=${Math.floor(Math.random() * 1000)}`;
-
+    // pass =1234
     const users = [
         { id: 'user_1', email:'buyer1@example.com',name:'Ross', role: 'buyer', profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
         { id: 'user_2', email:'seller1@example.com',name:'Monica', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
@@ -17,7 +17,7 @@ module.exports = {
         { id: 'user_8', email:'buyer3@example.com',name:'Paul', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
         { id: 'user_9', email:'seller4@example.com',name:'Riana', role: 'seller',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
         { id: 'user_10', email:'buyer4@example.com',name:'Ashka', role: 'buyer',profile_picture: getRandomPicsumImage(), verified: 1, password: '$2b$12$K3j3nRkfJW2JMxxxuPNkFO/TN0.XFLzWl5WbrW.vKZKtWBmlqoYLm', createdAt: new Date(), updatedAt: new Date() },
-      ];  
+      ];
 
     await queryInterface.bulkInsert('users', users);
 
@@ -31,7 +31,6 @@ module.exports = {
           phone: `123456789${index + 1}`,
           address: `Buyer Address ${index + 1}`,
           location: `Buyer Location ${index + 1}`,
-          // profile_picture: getRandomPicsumImage(),
           createdAt: new Date(),
           updatedAt: new Date(),
         }));
@@ -45,11 +44,17 @@ module.exports = {
           // name: `Seller ${index + 1}`,
           // email: `seller${index + 1}@example.com`,
             email: seller.email,
-          phone: `987654321${index + 1}`,
-          address: `Seller Address ${index + 1}`,
-          location: 'Buyer Location 1',
-          createdAt: new Date(),
-          updatedAt: new Date(),
+            phone: `987654321${index + 1}`,
+            address: `Seller Address ${index + 1}`,
+            additional_images: JSON.stringify([
+                getRandomPicsumImage(),
+                getRandomPicsumImage(),
+                getRandomPicsumImage(),
+                getRandomPicsumImage()
+            ]),
+            location: 'Buyer Location 1',
+            createdAt: new Date(),
+            updatedAt: new Date(),
         }));
 
     await queryInterface.bulkInsert('seller_details', sellers);
@@ -75,7 +80,7 @@ module.exports = {
           restaurant_id: restaurant.id,
           createdAt: new Date(),
           updatedAt: new Date(),
-          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`,
         },
         {
           id: ReviewId++,
@@ -84,7 +89,7 @@ module.exports = {
           restaurant_id: restaurant.id,
           createdAt: new Date(),
           updatedAt: new Date(),
-          user_id: `user_${Math.floor(Math.random() * 10) + 1}`, 
+          user_id: `user_${Math.floor(Math.random() * 10) + 1}`,
         },
       ]);
 
@@ -283,7 +288,7 @@ module.exports = {
         .filter(user => user.role === 'org')
         .map((org, index) => ({
           user_id: org.id,
-          email: `org${index + 1}@example.com`,
+          email:org.email,
           phone: `555123456${index + 1}`,
           address: `Organization Address ${index + 1}`,
           location: `Organization Location ${index + 1}`,
@@ -303,7 +308,7 @@ module.exports = {
     // Create food requests
     const foodRequests = [];
     let requestId = 1;
-    
+
     organizations.forEach(org => {
       // Create 3 food requests for each organization
       for (let i = 1; i <= 3; i++) {
@@ -330,13 +335,13 @@ module.exports = {
     // Create donations linked to food requests and products
     const donations = [];
     let donationId = 1;
-    
+
     foodRequests.forEach(request => {
       // Get random products to donate to this request
       const randomProducts = products
         .sort(() => 0.5 - Math.random()) // Shuffle array
         .slice(0, 3); // Take first 3 items
-      
+
       randomProducts.forEach(product => {
         donations.push({
           id: donationId++,
