@@ -1866,25 +1866,25 @@
 					"fk": true
 				},
 				{
-					"id": "58273b21-14e3-46f2-96da-b546225ed46a",
-					"name": "sub_products_ids",
-					"datatype": "VARCHAR",
-					"param": "150",
+					"id": "fcc76e5b-1695-47f4-84f9-9a9bf08b538f",
+					"name": "amount",
+					"datatype": "INT",
+					"param": "",
 					"pk": false,
 					"nn": true,
+					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
 					"after": "",
 					"autoinc": false,
-					"collation": null,
-					"charset": null,
+					"collation": "",
+					"charset": "",
 					"binary": false,
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": "",
-					"fk": false
+					"estimatedSize": ""
 				}
 			],
 			"relations": [
@@ -2981,7 +2981,7 @@
 			"quotationExistance": "if_needed"
 		},
 		"connectionVersion": "",
-		"lastSaved": 1746420757071,
+		"lastSaved": 1746886707436,
 		"synchronizationSettings": {
 			"preserveData": "use_temporary_tables",
 			"ignoreSystemDefaults": "yes",
@@ -3138,7 +3138,7 @@
 					"x": 1145,
 					"y": 448,
 					"gHeight": 99,
-					"gWidth": 273,
+					"gWidth": 236,
 					"color": "#ffffff",
 					"background": "#4caf50",
 					"resized": false,

@@ -13,14 +13,14 @@ const BasketContainer = () => {
 if(items.length === 0)
 return null
   return (
-    <View className="absolute bottom-14 w-full z-50">
+    <View className="absolute z-50 w-full bottom-14">
       <TouchableOpacity  onPress={() => navigation.navigate("Basket")}  className="flex-row bg-[#00ccbb] p-4 rounded-lg shadow-lg items-center space-x-1 mx-5 ">
         <Text className="text-white font-extrabold text-xl rounded-md bg-[#01a296] py-1 px-2">
           {items.length}
         </Text>
-        <Text className="flex-1 text-white font-extrabold text-center">View basket</Text>
-        <Text className="text-lg text-white font-extrabold">
-          <Currency quantity={basketTotalPrice} currency="INR" />
+        <Text className="flex-1 font-extrabold text-center text-white">View basket</Text>
+        <Text className="text-lg font-extrabold text-white">
+          <Currency quantity={basketTotalPrice} currency="LKR" />
         
         </Text>
       </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert } from "react-native";
 import React, { useState } from "react";
 import Currency from "react-currency-formatter";
 import { MinusCircleIcon, PlusCircleIcon, ChevronDownIcon } from "react-native-heroicons/solid";
@@ -12,31 +12,32 @@ import {
 const DishRow = ({ id, name, description, price, image, sub_products }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [showSubProducts, setShowSubProducts] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  // this wll cause some massive re-renders
-  // const items = useSelector((state) => selectBasketItemsWithId(state, id));
-
+  // Get items in basket for this dish
+  const items = useSelector((state) => selectBasketItemsWithId(state, id));
+  
   const getImageUrl = (imageSource) => {
     if (!imageSource) return null;
     return imageSource;
   };
 
   const addItemToBasket = () => {
-    dispatch(addToBasket({
-      id,
-      name,
-      description,
-      price,
-      image: getImageUrl(image),
-      sub_products
-    }));
-  };
+  dispatch(addToBasket({
+    id,
+    name,
+    description,
+    price: parseFloat(price),
+    image: getImageUrl(image),
+    sub_products,
+  }));
+};
 
-  const removeItemFromBasketHandler = () => {
-    if (!items.length > 0) return;
-    dispatch(removeFromBasket({ id }));
-  };
+const removeItemFromBasketHandler = () => {
+  if (!items.length) return;
+  dispatch(removeFromBasket({ id }));
+};
 
   const toggleSubProducts = (e) => {
     e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
@@ -54,11 +55,11 @@ const DishRow = ({ id, name, description, price, image, sub_products }) => {
         }`}
         activeOpacity={0.7}
       >
-        <View className="flex-row justify-between items-center">
+        <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-4">
             <Text className="text-lg font-bold text-left text-gray-800">{name}</Text>
             <Text
-              className="text-gray-500 text-xs mt-1 text-left"
+              className="mt-1 text-xs text-left text-gray-500"
               numberOfLines={2}
             >
               {description}
@@ -88,14 +89,14 @@ const DishRow = ({ id, name, description, price, image, sub_products }) => {
             <Image
               style={{ borderWidth: 1, borderColor: "#f3f3f4" }}
               source={{ uri: getImageUrl(image) }}
-              className="h-24 w-24 rounded-lg"
+              className="w-24 h-24 rounded-lg"
             />
           )}
         </View>
       </TouchableOpacity>
 
       {showSubProducts && hasSubProducts && (
-        <View className="bg-white px-4 py-3 border-t border-gray-100">
+        <View className="px-4 py-3 bg-white border-t border-gray-100">
           <View className="pl-3 border-l-2 border-[#00CCBB]">
             {sub_products.map((subProduct, index) => (
               <View 
@@ -104,7 +105,7 @@ const DishRow = ({ id, name, description, price, image, sub_products }) => {
                   index !== sub_products.length - 1 ? "border-b border-gray-100" : ""
                 }`}
               >
-                <Text className="text-gray-700 flex-1">{subProduct.name}</Text>
+                <Text className="flex-1 text-gray-700">{subProduct.name}</Text>
                 <Text className="text-[#00CCBB] font-medium ml-2">
                   Rs.{subProduct.price}
                 </Text>
@@ -118,19 +119,27 @@ const DishRow = ({ id, name, description, price, image, sub_products }) => {
         <View className={`bg-white px-4 pt-3 pb-4 rounded-b-2xl shadow-sm ${
           showSubProducts ? "" : "border-t border-gray-100"
         }`}>
-          <View className="flex-row items-center space-x-4 justify-center">
+          <View className="flex-row items-center justify-center space-x-4">
             <TouchableOpacity
               onPress={removeItemFromBasketHandler}
-              disabled={!items?.length}
-              className={`${!items?.length ? "opacity-30" : ""}`}
+              disabled={items.length === 0 || loading}
+              style={{ opacity: items.length === 0 || loading ? 0.5 : 1 }}
             >
               <MinusCircleIcon
                 color={items?.length > 0 ? "#00ccbb" : "gray"}
                 size={40}
               />
-            </TouchableOpacity>
-            <Text className="font-bold text-xl text-gray-700">{items?.length || 0}</Text>
-            <TouchableOpacity onPress={addItemToBasket}>
+           </TouchableOpacity>
+            {loading ? (
+              <ActivityIndicator size="small" color="#00ccbb" />
+            ) : (
+              <Text className="font-bold">{items.length}</Text>
+            )}
+            <TouchableOpacity
+              onPress={addItemToBasket}
+              disabled={loading}
+              style={{ opacity: loading ? 0.5 : 1 }}
+            >
               <PlusCircleIcon size={40} color="#00ccbb" />
             </TouchableOpacity>
           </View>

@@ -1,33 +1,67 @@
-import { View, Text, Image, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../../slices/restaurantSlice";
-import { removeFromBasket, selectBasketItems, selectBasketTotal } from "../../slices/basketSlice";
-import { TouchableOpacity } from "react-native";
+import {
+  removeFromBasket,
+  selectBasketItems,
+  selectBasketTotal,
+} from "../../slices/basketSlice";
 import { XCircleIcon } from "react-native-heroicons/solid";
-import { ScrollView } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { urlFor } from "../../sanity/package.json";
 import Currency from "react-currency-formatter";
+import useAxios from "../../hooks/useAxios";
+import { Alert } from "react-native";
 
 const BasketScreen = ({ navigation }) => {
   const restaurant = useSelector(selectRestaurant);
   const items = useSelector(selectBasketItems);
-  const [groupItemsBasket, setGroupItemsBasket] = useState([]);
+  const [groupItemsBasket, setGroupItemsBasket] = useState({});
   const basketTotal = useSelector(selectBasketTotal);
   const dispatch = useDispatch();
+
+  const axios = useAxios();
+
+  const handlePlaceOrder = async () => {
+    try {
+      const user_id = "user_1";
+      const itemMap = {};
+      items.forEach((item) => {
+        if (!itemMap[item.id]) {
+          itemMap[item.id] = 1;
+        } else {
+          itemMap[item.id]++;
+        }
+      });
+
+      for (const [product_id, amount] of Object.entries(itemMap)) {
+        await axios.post("/api/foodbucket/add", {
+          user_id,
+          product_id,
+          amount,
+        });
+      }
+      navigation.navigate("Prepare");
+    } catch (error) {
+      Alert.alert("Error", "Could not place order.");
+    }
+  };
 
   useMemo(() => {
     const groupedItems = items.reduce((results, item) => {
       (results[item.id] = results[item.id] || []).push(item);
       return results;
     }, {});
-
     setGroupItemsBasket(groupedItems);
   }, [items]);
-
-  console.log(groupItemsBasket);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -35,26 +69,21 @@ const BasketScreen = ({ navigation }) => {
         <View className="p-5 border-b border-[#00ccbb] bg-white shadow-sm">
           <View>
             <Text className="text-lg font-bold text-center">Basket</Text>
-            <Text className="text-center text-gray-400">{restaurant.title}</Text>
+            <Text className="text-center text-gray-400">
+              {restaurant?.title}
+            </Text>
           </View>
 
           <TouchableOpacity
             onPress={() => navigation.goBack(null)}
-            className="rounded-full bg-gray-100 absolute   top-3  right-2 "
+            className="absolute bg-gray-100 rounded-full top-3 right-2"
           >
             <XCircleIcon color="#00ccbb" height={50} width={50} />
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row items-center space-x-4 px-4 py-3 bg-white my-5">
-          {/* <Image
-            source={{
-              uri: "https://plus.unsplash.com/premium_photo-1661766131927-5026561fd0cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
-            }}
-            className="w-7 h-7 bg-gray-300 p-4 rounded-full" */}
-          {/* /> */}
+        <View className="flex-row items-center px-4 py-3 my-5 space-x-4 bg-white">
           <Ionicons name="fast-food" color="#2c9935" size={30} />
-
           <Text className="flex-1"> Deliver in 10-15 mins</Text>
           <TouchableOpacity>
             <Text className="text-[#00ccbb]">Change</Text>
@@ -63,58 +92,60 @@ const BasketScreen = ({ navigation }) => {
 
         <ScrollView className="divide-y divide-gray-200">
           {Object.entries(groupItemsBasket).map(([key, items]) => (
-            <View key={key} className="flex-row items-center space-x-3 bg-white py-2 px-5">
-              <Text className="text-green-600 text-md font-bold">{items.length} x</Text>
-
+            <View
+              key={key}
+              className="flex-row items-center px-5 py-2 space-x-3 bg-white"
+            >
+              <Text className="font-bold text-green-600 text-md">
+                {items.length} x
+              </Text>
               <Image
                 source={{
-                  uri: urlFor(items[0]?.image).url(),
+                  uri: items[0]?.image,
                 }}
-                className="h-12 w-12 rounded-full"
+                className="w-12 h-12 rounded-full"
               />
               <Text className="flex-1">{items[0]?.name}</Text>
-
-              <Text className="text-gray-600 text-xs">
-                <Currency quantity={items[0]?.price} currency="INR" />
+              <Text className="text-xs text-gray-600">
+                <Currency quantity={items[0]?.price} currency="LKR" />
               </Text>
-
-              <TouchableOpacity>
-                <Text
-                  className="text-[#00ccbb] text-xs"
-                  onPress={() => dispatch(removeFromBasket({ id: key }))}
-                >
-                  <AntDesign name="minuscircle" size={16} color="#edd" />
-                </Text>
+              <TouchableOpacity
+                onPress={() => dispatch(removeFromBasket({ id: key }))}
+              >
+                <AntDesign name="minuscircle" size={16} color="#00ccbb" />
               </TouchableOpacity>
             </View>
           ))}
         </ScrollView>
 
-        <View className="p-5 bg-white mt-5 space-y-4 ">
+        <View className="p-5 mt-5 space-y-4 bg-white ">
           <View className="flex-row justify-between">
             <Text className="text-gray-400">Subtotal</Text>
             <Text className="text-gray-400">
-              <Currency quantity={basketTotal} currency="INR" />
+              <Currency quantity={basketTotal} currency="LKR" />
             </Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-gray-400">Delivery Fee</Text>
             <Text className="text-gray-400">
-              <Currency quantity={13.3} currency="INR" />
+              <Currency quantity={13.3} currency="LKR" />
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-400 font-bold">Order Total</Text>
+            <Text className="font-bold text-gray-400">Order Total</Text>
             <Text className=" text-[#1f1f20] font-extrabold">
-              <Currency quantity={basketTotal + 13.3} currency="INR" />
+              {/* {(Number(basketTotal) + 13.3).toFixed(2)} */}
+              <Currency quantity={basketTotal + 13.3} currency="LKR" />
             </Text>
           </View>
 
           <TouchableOpacity
             className="rounded-lg bg-[#00ccbb] p-4 shadow-xl"
-            onPress={() => navigation.navigate("Prepare")}
+            onPress={handlePlaceOrder}
           >
-            <Text className="text-center text-white text-lg font-bold">Place Order</Text>
+            <Text className="text-lg font-bold text-center text-white">
+              Place Order
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
