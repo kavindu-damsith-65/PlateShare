@@ -1,14 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
 import HomeScreen from "./HomeScreen";
 import BasketScreen from "./BasketScreen";
+import ProfileScreen from "./ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
-export default function BuyerTabs({ setProfileVisible }) {
-  const navigation = useNavigation();
+export default function BuyerTabs() {
 
   return (
     <Tab.Navigator
@@ -31,17 +30,7 @@ export default function BuyerTabs({ setProfileVisible }) {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Basket" component={BasketScreen} />
-      <Tab.Screen
-        name="Profile"
-        component={HomeScreen}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            navigation.navigate("Profile");
-            setProfileVisible(true);
-          },
-        }}
-      />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }

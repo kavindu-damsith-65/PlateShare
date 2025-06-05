@@ -417,3 +417,21 @@ exports.CreateProductOfRestaurant = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 }
+
+exports.getProductCountByRestaurant = async (req, res) => {
+    const { restaurantId } = req.params;
+
+    try {
+        const count = await Product.count({
+            where: {
+                restaurant_id: restaurantId,
+                available: true
+            }
+        });
+
+        res.status(200).json({ availableProductCount: count });
+    } catch (error) {
+        console.error('Error fetching product count:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};

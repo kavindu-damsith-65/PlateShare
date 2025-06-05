@@ -1,6 +1,6 @@
 const sequelize = require("../config/db");
 const { Review, Restaurant, User } = require("../models/AuthModel");
-const { Op } = require("sequelize");
+const { Op, fn, col } = require("sequelize");
 
 // Get all reviews related to a specific restaurant
 exports.getAllReviews = async (req, res) => {
@@ -146,4 +146,28 @@ exports.getUserRestaurantReviews = async (req, res) => {
         console.error("Error fetching user restaurant reviews:", error);
         res.status(500).json({ message: "Failed to fetch reviews" });
     }
+};
+
+exports.getAverageRating = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const avgRating = await getAverageRating(restaurantId);
+
+    res.status(200).json({ averageRating: avgRating });
+  } catch (error) {
+    console.error('Error fetching average rating:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+
+const getAverageRating = async (restaurantId) => {
+  const result = await Review.findOne({
+    attributes: [[fn('AVG', col('rating')), 'avgRating']],
+    where: { restaurant_id: restaurantId },
+    raw: true, // So it returns plain object instead of Sequelize instance
+  });
+
+  const avgRating = result.avgRating ? parseFloat(result.avgRating).toFixed(1) : null;
+  return avgRating;
 };
