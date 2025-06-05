@@ -1,5 +1,5 @@
 const sequelize = require("../config/db");
-const { Product, Restaurant, SellerDetails, SubProduct, FoodRequest, FoodBucket, Category, ProductSubProduct } = require("../models/AuthModel");
+const { Product, Restaurant, SellerDetails, SubProduct, FoodRequest, FoodBucket, Category, ProductSubProduct, FoodBucketProduct } = require("../models/AuthModel");
 const { Op } = require("sequelize");
 
 exports.showNearByProducts = async (req, res) => {
@@ -85,22 +85,28 @@ exports.getRecommendedProducts = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        // // Only check food bucket
-        // const foodBucketProducts = await FoodBucket.findAll({
-        //     where: { user_id: userId },
-        //     attributes: ["product_id"]
-        // });
-        //
-        // const productIds = foodBucketProducts.map(item => item.product_id);
-        //
-        // if (productIds.length > 0) {
-        //     const products = await Product.findAll({
-        //         where: { id: { [Op.in]: productIds } }
-        //     });
-        //
-        //     return res.status(200).json({ products });
-        // }
+        // Find the user's food bucket
+        const foodBucket = await FoodBucket.findOne({ where: { user_id: userId } });
 
+        if (foodBucket) {
+            // Get all product_ids from the user's food bucket
+            const foodBucketProducts = await FoodBucketProduct.findAll({
+                where: { food_bucket_id: foodBucket.id },
+                attributes: ["product_id"]
+            });
+
+            const productIds = foodBucketProducts.map(item => item.product_id);
+
+            if (productIds.length > 0) {
+                const products = await Product.findAll({
+                    where: { id: { [Op.in]: productIds }, available: true }
+                });
+
+                return res.status(200).json({ products });
+            }
+        }
+
+        // If no products in bucket, return random available products
         const randomProducts = await Product.findAll({
             where: { available: true },
             order: sequelize.random(),

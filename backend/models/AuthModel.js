@@ -127,10 +127,22 @@ const Admin = sequelize.define('admin', {
 
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
-    id: { type: DataTypes.STRING, primaryKey: true },
-    product_id: { type: DataTypes.STRING },
-    user_id: { type: DataTypes.STRING },
-    sub_products_ids: { type: DataTypes.STRING }
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    user_id: { type: DataTypes.STRING, unique: true }
+});
+
+const FoodBucketProduct = sequelize.define('food_bucket_product', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    food_bucket_id: { type: DataTypes.INTEGER, allowNull: false },
+    product_id: { type: DataTypes.STRING, allowNull: false },
+    quantity: { type: DataTypes.INTEGER, allowNull: false }
+}, {
+    indexes: [
+        {
+            unique: true,
+            fields: ['food_bucket_id', 'product_id']
+        }
+    ]
 });
 
 // Payment Model
@@ -223,8 +235,24 @@ Donation.belongsTo(Product, { foreignKey: "product_id" });
 Category.hasMany(Product, { foreignKey: 'category_id' });
 Product.belongsTo(Category, { foreignKey: 'category_id' });
 
+User.hasOne(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
+FoodBucket.belongsTo(User, { foreignKey: "user_id" });
+
+FoodBucket.belongsToMany(Product, {
+    through: FoodBucketProduct,
+    foreignKey: "food_bucket_id",
+    otherKey: "product_id",
+    onDelete: "CASCADE"
+});
+Product.belongsToMany(FoodBucket, {
+    through: FoodBucketProduct,
+    foreignKey: "product_id",
+    otherKey: "food_bucket_id",
+    onDelete: "CASCADE"
+});
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, FoodBucket, Payment, Order, ProductSubProduct, Review, Donation,
+    FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, Order, ProductSubProduct, Review, Donation,
     Category
 };
