@@ -90,8 +90,46 @@ const NearbyFoods = () => {
 
   if (loading) {
     return (
-      <View className="py-8">
-        <Text className="text-center text-gray-500">Loading nearby foods...</Text>
+      <View className="pb-4">
+        <View className="flex-row items-center justify-between px-4 pt-2">
+          <Text className="text-lg font-bold">Near By Foods</Text>
+          <View className="flex-row items-center">
+            <Text className="mr-1 font-medium text-gray-300">See All</Text>
+            <Icon name="chevron-right" size={16} color="#d1d5db" />
+          </View>
+        </View>
+
+        <FlatList
+          data={[1, 2, 3]} // Dummy data for skeleton loaders
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 15,
+            paddingTop: 10,
+          }}
+          renderItem={() => (
+            <View
+              className="mb-4 bg-gray-200 rounded-lg"
+              style={{
+                width: SCREEN_WIDTH - 30,
+                marginHorizontal: 5,
+                height: 150,
+                padding: 10,
+              }}
+            >
+              <View className="flex-row items-center px-3 py-2">
+                <View className="flex-1 pr-4">
+                  <View className="h-5 bg-gray-300 rounded w-3/4 mb-2" />
+                  <View className="h-4 bg-gray-300 rounded w-full mb-1" />
+                  <View className="h-4 bg-gray-300 rounded w-1/2 mb-2" />
+                  <View className="h-4 bg-gray-300 rounded w-1/4" />
+                </View>
+                <View className="w-28 h-28 bg-gray-300 rounded-lg" />
+              </View>
+            </View>
+          )}
+          keyExtractor={(_, index) => `skeleton-${index}`}
+        />
       </View>
     );
   }
