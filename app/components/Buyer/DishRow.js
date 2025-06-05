@@ -8,64 +8,36 @@ import {
   selectBasketItemsWithId,
   removeFromBasket,
 } from "../../slices/basketSlice";
-import useAxios from "../../hooks/useAxios";
 
 const DishRow = ({ id, name, description, price, image, sub_products }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [showSubProducts, setShowSubProducts] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const axios = useAxios();
 
   // Get items in basket for this dish
   const items = useSelector((state) => selectBasketItemsWithId(state, id));
-
-   // TODO: Replace with actual user ID 
-  const user_id = "user_1";
   
   const getImageUrl = (imageSource) => {
     if (!imageSource) return null;
     return imageSource;
   };
 
-   // Add item to backend and redux
-  const addItemToBasket = async () => {
-    setLoading(true);
-    try {
-      await axios.post("/api/foodbucket/add", {
-        user_id,
-        product_id: id,
-        amount: 1,
-      });
-      // Redux update
-      dispatch(addToBasket({
-        id,
-        name,
-        description,
-        price: parseFloat(price),
-        image: getImageUrl(image),
-        sub_products,
-      }));
-    } catch (error) {
-      Alert.alert("Error", "Could not add item to cart.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const addItemToBasket = () => {
+  dispatch(addToBasket({
+    id,
+    name,
+    description,
+    price: parseFloat(price),
+    image: getImageUrl(image),
+    sub_products,
+  }));
+};
 
-  // Remove item from backend and redux
-  const removeItemFromBasketHandler = async () => {
-    if (!items.length) return;
-    setLoading(true);
-    try {
-      await axios.delete(`/api/foodbucket/${user_id}/${id}`);
-      dispatch(removeFromBasket({ id }));
-    } catch (error) {
-      Alert.alert("Error", "Could not remove item from cart.");
-    } finally {
-      setLoading(false);
-    }
-  };
+const removeItemFromBasketHandler = () => {
+  if (!items.length) return;
+  dispatch(removeFromBasket({ id }));
+};
 
   const toggleSubProducts = (e) => {
     e.stopPropagation(); // Prevent triggering the parent TouchableOpacity
