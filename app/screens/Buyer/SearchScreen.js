@@ -210,15 +210,15 @@ const SearchScreen = () => {
       <View className="border-t border-gray-200 pt-2">
         {restaurants.length > 0 && (
           <View>
-            <Text className="px-4 font-bold text-lg mb-2">Restaurants</Text>
+            <Text className="px-4 font-bold text-lg mb-1">Restaurants</Text>
             {restaurants.slice(0, 3).map((item) => (
               <TouchableOpacity 
                 key={`restaurant-${item.id}`}
-                className="flex-row mx-4 mb-3 p-2 bg-white rounded-lg shadow-sm"
+                className="flex-row mx-4 mb-1 p-2 bg-white rounded-lg shadow-sm"
                 onPress={() => handleResultPress(item, 'restaurant')}
               >
                 <Image 
-                  source={{ uri: ite.m.image || "https://picsum.photos/100" }} 
+                  source={{ uri: item.image || "https://picsum.photos/100" }}
                   className="w-16 h-16 rounded-md"
                 />
                 <View className="ml-2 flex-1">
@@ -227,24 +227,16 @@ const SearchScreen = () => {
                 </View>
               </TouchableOpacity>
             ))}
-            {restaurants.length > 3 && (
-              <TouchableOpacity 
-                className="items-center py-2"
-                onPress={() => navigation.navigate('SearchResults', { searchQuery })}
-              >
-                <Text className="text-[#00CCBB] font-bold">See all {restaurants.length} restaurants</Text>
-              </TouchableOpacity>
-            )}
           </View>
         )}
 
         {products.length > 0 && (
           <View className="mt-2">
-            <Text className="px-4 font-bold text-lg mb-2">Food Items</Text>
+            <Text className="px-4 font-bold text-lg mb-1">Food Items</Text>
             {products.slice(0, 3).map((item) => (
               <TouchableOpacity 
                 key={`product-${item.id}`}
-                className="flex-row mx-4 mb-3 p-2 bg-white rounded-lg shadow-sm"
+                className="flex-row mx-4 mb-1 p-2 bg-white rounded-lg shadow-sm"
                 onPress={() => handleResultPress(item, 'product')}
               >
                 <Image 
@@ -261,14 +253,6 @@ const SearchScreen = () => {
                 </View>
               </TouchableOpacity>
             ))}
-            {products.length > 3 && (
-              <TouchableOpacity 
-                className="items-center py-2"
-                onPress={() => navigation.navigate('SearchResults', { searchQuery })}
-              >
-                <Text className="text-[#00CCBB] font-bold">See all {products.length} food items</Text>
-              </TouchableOpacity>
-            )}
           </View>
         )}
 

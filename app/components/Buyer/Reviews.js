@@ -107,7 +107,95 @@ const Reviews = ({ restaurantId }) => {
   }, [isUserScrolling, reviews]);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#00ccbb" />;
+    return (
+      <View>
+        <Text className="pb-3 text-xl font-bold">Your Feedback Lights Us Up</Text>
+
+        {/* Rating Summary Section Skeleton */}
+        <View className="p-4 mb-4 bg-white rounded-lg shadow-sm">
+          <View className="flex-row items-center justify-between mb-4">
+            <View className="items-center">
+              <View className="h-8 w-12 bg-gray-200 rounded mb-1" />
+              <View className="flex-row my-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <View
+                    key={star}
+                    className="w-4 h-4 mx-0.5 rounded-full bg-gray-200"
+                  />
+                ))}
+              </View>
+              <View className="h-3 w-16 bg-gray-200 rounded" />
+            </View>
+
+            <View className="flex-1 ml-6">
+              {[5, 4, 3, 2, 1].map((star) => (
+                <View key={star} className="flex-row items-center mb-1">
+                  <Text className="w-6 mr-2 text-xs text-gray-500">{star}</Text>
+                  <View className="h-2 flex-1 bg-gray-200 rounded-full" />
+                  <View className="w-8 ml-2 h-3 bg-gray-200 rounded" />
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View className="bg-gray-200 px-3 py-2 rounded-md self-start w-28 h-9" />
+        </View>
+
+        {/* Reviews List Skeleton */}
+        <View className="pb-5">
+          <View className="h-6 w-48 bg-gray-200 rounded mb-2" />
+
+          {/* Filter options skeleton */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="mb-4"
+          >
+            {["All", "5 ★", "4 ★", "3 ★", "2 ★", "1 ★"].map((filter, index) => (
+              <View
+                key={index}
+                className="mr-2 px-4 py-2 rounded-full bg-gray-200"
+                style={{ width: 60, height: 32 }}
+              />
+            ))}
+          </ScrollView>
+
+          {/* Review card skeletons */}
+          {[1, 2, 3].map((index) => (
+            <View key={index} className="mb-2 p-4 bg-white rounded-lg shadow-sm">
+              {/* Header with user info */}
+              <View className="flex-row items-center mb-2">
+                <View className="w-10 h-10 rounded-full bg-gray-200 mr-3" />
+                <View>
+                  <View className="h-5 w-32 bg-gray-200 rounded mb-1" />
+                  <View className="h-3 w-24 bg-gray-200 rounded" />
+                </View>
+              </View>
+
+              {/* Rating stars skeleton */}
+              <View className="flex-row mb-2">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <View
+                    key={i}
+                    className="w-4 h-4 mr-1 rounded-full bg-gray-200"
+                  />
+                ))}
+              </View>
+
+              {/* Review content skeleton */}
+              <View className="h-4 bg-gray-200 rounded w-full mb-1" />
+              <View className="h-4 bg-gray-200 rounded w-full mb-1" />
+              <View className="h-4 bg-gray-200 rounded w-3/4" />
+
+              {/* Photo skeleton (for some reviews) */}
+              {index === 1 && (
+                <View className="w-full h-40 rounded-lg mt-3 bg-gray-200" />
+              )}
+            </View>
+          ))}
+        </View>
+      </View>
+    );
   }
 
   if (!reviews || reviews.length === 0) {
