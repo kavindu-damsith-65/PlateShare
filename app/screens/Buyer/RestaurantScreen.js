@@ -167,7 +167,7 @@ const RestaurantScreen = ({ route, navigation }) => {
         {/* Tab Content */}
         <View className="bg-gray-50">
           {selectedTab === "menu" && (
-            <View className="pb-2 mt-3">
+            <View className="pb-24 mt-3">
               {restaurantData?.dishes?.length > 0 ? (
                 restaurantData.dishes.map((dish) => (
                   <View key={dish.id} className="mb-2">
@@ -182,8 +182,8 @@ const RestaurantScreen = ({ route, navigation }) => {
                   </View>
                 ))
               ) : (
-                <View className="px-4 py-8 items-center">
-                  <Text className="text-gray-500 text-center">No dishes available.</Text>
+                <View className="items-center px-4 py-8">
+                  <Text className="text-center text-gray-500">No dishes available.</Text>
                 </View>
               )}
             </View>

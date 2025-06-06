@@ -13,7 +13,7 @@ const BasketContainer = () => {
 if(items.length === 0)
 return null
   return (
-    <View className="absolute z-50 w-full bottom-14">
+    <View className="absolute z-50 w-full bottom-5">
       <TouchableOpacity  onPress={() => navigation.navigate("Basket")}  className="flex-row bg-[#00ccbb] p-4 rounded-lg shadow-lg items-center space-x-1 mx-5 ">
         <Text className="text-white font-extrabold text-xl rounded-md bg-[#01a296] py-1 px-2">
           {items.length}
