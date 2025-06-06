@@ -17,6 +17,7 @@ export default function ProfileScreen() {
   
   useEffect(() => {
     const fetchBuyerData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`/api/user/buyer/${uid}`);
         setBuyer(response.data.buyer);
@@ -45,9 +46,82 @@ export default function ProfileScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
-        <ActivityIndicator size="large" color="#00CCBB" />
-        <Text className="text-gray-500 mt-2">Loading profile...</Text>
+      <SafeAreaView className="flex-1 bg-gray-100 pt-5">
+        <StatusBar style="dark" />
+
+        <View className="px-5 py-4 bg-white border-b border-gray-200 flex-row justify-between items-center">
+          <Text className="text-xl font-bold text-gray-800">My Profile</Text>
+        </View>
+
+        <ScrollView className="flex-1 p-4">
+          {/* Profile header skeleton */}
+          <View className="items-center mb-5">
+            <View className="w-24 h-24 rounded-full bg-gray-200 mb-2" />
+            <View className="h-7 bg-gray-200 rounded w-40 mb-2" />
+            <View className="flex-row items-center">
+              <View className="h-4 bg-gray-200 rounded w-32" />
+            </View>
+          </View>
+
+          {/* Account Information skeleton */}
+          <View className="bg-white rounded-lg p-4 mb-5 shadow">
+            <View className="h-6 bg-gray-200 rounded w-48 mb-3" />
+
+            <View className="flex-row items-center mb-3">
+              <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+              <View className="h-4 bg-gray-200 rounded w-3/4" />
+            </View>
+
+            <View className="flex-row items-center mb-3">
+              <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+              <View className="h-4 bg-gray-200 rounded w-1/2" />
+            </View>
+
+            <View className="flex-row items-center">
+              <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+              <View className="h-4 bg-gray-200 rounded w-2/3" />
+            </View>
+          </View>
+
+          {/* Order History skeleton */}
+          <View className="bg-white rounded-lg p-4 mb-5 shadow">
+            <View className="h-6 bg-gray-200 rounded w-36 mb-3" />
+
+            <View className="flex-row items-center justify-between py-3 border-b border-gray-100">
+              <View className="flex-row items-center">
+                <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+                <View className="h-4 bg-gray-200 rounded w-28" />
+              </View>
+              <View className="w-4 h-4 rounded-full bg-gray-200" />
+            </View>
+
+            <View className="flex-row items-center justify-between py-3">
+              <View className="flex-row items-center">
+                <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+                <View className="h-4 bg-gray-200 rounded w-40" />
+              </View>
+              <View className="w-4 h-4 rounded-full bg-gray-200" />
+            </View>
+          </View>
+
+          {/* Settings skeleton */}
+          <View className="bg-white rounded-lg p-4 mb-5 shadow">
+            <View className="h-6 bg-gray-200 rounded w-24 mb-3" />
+
+            {[1, 2, 3, 4].map((_, index) => (
+              <View key={`setting-${index}`} className={`flex-row items-center justify-between py-3 ${index < 3 ? 'border-b border-gray-100' : ''}`}>
+                <View className="flex-row items-center">
+                  <View className="w-5 h-5 rounded-full bg-gray-200 mr-2" />
+                  <View className="h-4 bg-gray-200 rounded w-48" />
+                </View>
+                <View className="w-4 h-4 rounded-full bg-gray-200" />
+              </View>
+            ))}
+          </View>
+
+          {/* Logout button skeleton */}
+          <View className="rounded-lg p-4 mb-8 bg-gray-200 h-12" />
+        </ScrollView>
       </SafeAreaView>
     );
   }

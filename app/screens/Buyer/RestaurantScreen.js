@@ -182,9 +182,24 @@ const RestaurantScreen = ({ route, navigation }) => {
                   </View>
                 ))
               ) : (
-                <View className="items-center px-4 py-8">
-                  <Text className="text-center text-gray-500">No dishes available.</Text>
-                </View>
+                // Skeleton loaders for dishes
+                Array(3).fill().map((_, index) => (
+                  <View key={`skeleton-${index}`} className="self-center w-full max-w-[360px] mb-2">
+                    <View className="p-6 bg-white shadow-sm rounded-2xl">
+                      <View className="flex-row items-center justify-between">
+                        <View className="flex-1 pr-4">
+                          <View className="w-3/4 h-5 mb-2 bg-gray-200 rounded" />
+                          <View className="w-full h-4 mb-2 bg-gray-200 rounded" />
+                          <View className="w-1/2 h-4 bg-gray-200 rounded" />
+                        </View>
+                        <View
+                          className="w-24 h-24 bg-gray-200 rounded-lg"
+                          style={{ borderWidth: 1, borderColor: "#f3f3f4" }}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ))
               )}
             </View>
           )}
