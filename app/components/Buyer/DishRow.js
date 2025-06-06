@@ -129,12 +129,22 @@ const removeItemFromBasketHandler = () => {
                     backgroundColor: "#E0F7F4",
                   }}
                 >
-                  <TouchableOpacity
+                   <TouchableOpacity
                     onPress={removeItemFromBasketHandler}
                     disabled={loading}
-                    style={{ opacity: loading ? 0.5 : 1 }}
+                     style={{ 
+                      opacity: loading ? 0.5 : 1,
+                      minWidth: 20,
+                      alignItems: 'center',
+                      paddingHorizontal: 5
+                    }}
                   >
-                    <MinusCircleIcon size={22} color="#00CCBB" />
+                    <Text
+                      className="text-lg font-bold"
+                      style={{ color: "#00CCBB" }}
+                    >
+                      -
+                    </Text>
                   </TouchableOpacity>
                   <Text className="mx-2 text-base font-bold text-gray-950">
                     {items.length}
@@ -144,7 +154,12 @@ const removeItemFromBasketHandler = () => {
                     disabled={loading}
                     style={{ opacity: loading ? 0.5 : 1 }}
                   >
-                    <PlusCircleIcon size={22} color="#00CCBB" />
+                    <Text
+                      className="text-lg font-bold"
+                      style={{ color: "#00CCBB" }}
+                    >
+                      +
+                    </Text>
                   </TouchableOpacity>
                 </View>
               )}
