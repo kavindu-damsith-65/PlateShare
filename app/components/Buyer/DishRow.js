@@ -51,13 +51,15 @@ const removeItemFromBasketHandler = () => {
       <TouchableOpacity
         onPress={() => setIsPressed(!isPressed)}
         className={`bg-white p-4 rounded-2xl shadow-sm ${
-          (isPressed || showSubProducts) ? "border-b-0 rounded-b-none" : ""
+          isPressed || showSubProducts ? "border-b-0 rounded-b-none" : ""
         }`}
         activeOpacity={0.7}
       >
         <View className="flex-row items-center justify-between">
           <View className="flex-1 pr-4">
-            <Text className="text-lg font-bold text-left text-gray-800">{name}</Text>
+            <Text className="text-lg font-bold text-left text-gray-800">
+              {name}
+            </Text>
             <Text
               className="mt-1 text-xs text-left text-gray-500"
               numberOfLines={2}
@@ -67,7 +69,7 @@ const removeItemFromBasketHandler = () => {
             <Text className="text-[#00CCBB] font-semibold mt-2 text-left">
               <Currency quantity={parseFloat(price)} currency="LKR" />
             </Text>
-            
+
             {hasSubProducts && (
               <TouchableOpacity
                 onPress={toggleSubProducts}
@@ -79,18 +81,74 @@ const removeItemFromBasketHandler = () => {
                 <ChevronDownIcon
                   size={12}
                   color="#00CCBB"
-                  style={{ transform: [{ rotate: showSubProducts ? '180deg' : '0deg' }] }}
+                  style={{
+                    transform: [
+                      { rotate: showSubProducts ? "180deg" : "0deg" },
+                    ],
+                  }}
                 />
               </TouchableOpacity>
             )}
           </View>
 
           {image && (
-            <Image
-              style={{ borderWidth: 1, borderColor: "#f3f3f4" }}
-              source={{ uri: getImageUrl(image) }}
-              className="w-24 h-24 rounded-lg"
-            />
+            <View className="items-center">
+              <Image
+                style={{ borderWidth: 1, borderColor: "#f3f3f4" }}
+                source={{ uri: getImageUrl(image) }}
+                className="w-24 h-24 rounded-lg"
+              />
+              {items.length === 0 ? (
+                <TouchableOpacity
+                  onPress={addItemToBasket}
+                  disabled={loading}
+                  className="flex-row items-center px-4 py-1 mt-0 rounded-lg"
+                  style={{
+                    opacity: loading ? 0.5 : 1,
+                    borderWidth: 1,
+                    borderColor: "#00CCBB",
+                    backgroundColor: "#E0F7F4",
+                  }}
+                >
+                  <Text className="mr-1 text-base font-bold text-gray-950">
+                    Add{" "}
+                  </Text>
+                  <Text
+                    className="text-base font-bold"
+                    style={{ color: "#00CCBB" }}
+                  >
+                    +
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <View
+                  className="flex-row items-center px-4 py-1 mt-0 rounded-lg"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#00CCBB",
+                    backgroundColor: "#E0F7F4",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={removeItemFromBasketHandler}
+                    disabled={loading}
+                    style={{ opacity: loading ? 0.5 : 1 }}
+                  >
+                    <MinusCircleIcon size={22} color="#00CCBB" />
+                  </TouchableOpacity>
+                  <Text className="mx-2 text-base font-bold text-gray-950">
+                    {items.length}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={addItemToBasket}
+                    disabled={loading}
+                    style={{ opacity: loading ? 0.5 : 1 }}
+                  >
+                    <PlusCircleIcon size={22} color="#00CCBB" />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           )}
         </View>
       </TouchableOpacity>
@@ -99,10 +157,12 @@ const removeItemFromBasketHandler = () => {
         <View className="px-4 py-3 bg-white border-t border-gray-100">
           <View className="pl-3 border-l-2 border-[#00CCBB]">
             {sub_products.map((subProduct, index) => (
-              <View 
-                key={subProduct.id} 
+              <View
+                key={subProduct.id}
                 className={`flex-row justify-between py-2 ${
-                  index !== sub_products.length - 1 ? "border-b border-gray-100" : ""
+                  index !== sub_products.length - 1
+                    ? "border-b border-gray-100"
+                    : ""
                 }`}
               >
                 <Text className="flex-1 text-gray-700">{subProduct.name}</Text>
@@ -111,37 +171,6 @@ const removeItemFromBasketHandler = () => {
                 </Text>
               </View>
             ))}
-          </View>
-        </View>
-      )}
-
-      {isPressed && (
-        <View className={`bg-white px-4 pt-3 pb-4 rounded-b-2xl shadow-sm ${
-          showSubProducts ? "" : "border-t border-gray-100"
-        }`}>
-          <View className="flex-row items-center justify-center space-x-4">
-            <TouchableOpacity
-              onPress={removeItemFromBasketHandler}
-              disabled={items.length === 0 || loading}
-              style={{ opacity: items.length === 0 || loading ? 0.5 : 1 }}
-            >
-              <MinusCircleIcon
-                color={items?.length > 0 ? "#00ccbb" : "gray"}
-                size={40}
-              />
-           </TouchableOpacity>
-            {loading ? (
-              <ActivityIndicator size="small" color="#00ccbb" />
-            ) : (
-              <Text className="font-bold">{items.length}</Text>
-            )}
-            <TouchableOpacity
-              onPress={addItemToBasket}
-              disabled={loading}
-              style={{ opacity: loading ? 0.5 : 1 }}
-            >
-              <PlusCircleIcon size={40} color="#00ccbb" />
-            </TouchableOpacity>
           </View>
         </View>
       )}
