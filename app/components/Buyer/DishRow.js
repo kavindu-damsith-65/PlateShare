@@ -122,7 +122,7 @@ const removeItemFromBasketHandler = () => {
                 </TouchableOpacity>
               ) : (
                 <View
-                  className="flex-row items-center px-4 py-1 mt-0 rounded-lg"
+                  className="flex-row items-center px-4 py-1 mt-2 rounded-lg"
                   style={{
                     borderWidth: 1,
                     borderColor: "#00CCBB",
