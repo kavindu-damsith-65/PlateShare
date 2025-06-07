@@ -99,7 +99,7 @@ export default function SellerDashboard() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-100 pt-5">
+        <SafeAreaView className="flex-1 bg-gray-100 pt-7">
             <StatusBar style="dark" />
             <ScrollView className="flex-1 p-5">
                 {/* Header */}

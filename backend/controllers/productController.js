@@ -388,8 +388,10 @@ exports.updateProductOfRestaurant = async (req, res) => {
 exports.CreateProductOfRestaurant = async (req, res) => {
     try {
         const { restaurantId } = req.params;
-        const { name, description, price, quantity, available, categoryId, image } = req.body;
-
+        const { name, description, price, quantity, categoryId } = req.body;
+        const productCount = await Product.count({ where: { restaurant_id: restaurantId } });
+        const nextProductNumber = productCount + 1;
+        const id = `p${nextProductNumber}_${restaurantId}`;
         if (!restaurantId) {
             return res.status(400).json({ message: "Restaurant ID is required" });
         }
@@ -400,6 +402,7 @@ exports.CreateProductOfRestaurant = async (req, res) => {
         }
 
         const product = await Product.create({
+            id,
             name,
             description,
             price,
@@ -407,7 +410,7 @@ exports.CreateProductOfRestaurant = async (req, res) => {
             available: true,
             category_id: categoryId,
             restaurant_id: restaurantId,
-            image: image || 'https://picsum.photos/300/300?random'
+            image: 'https://picsum.photos/300/300?random'
         });
 
         return res.status(201).json({ message: "Product created successfully", product });

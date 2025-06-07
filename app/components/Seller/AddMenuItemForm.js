@@ -1,6 +1,5 @@
-import ={ useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, FlatList, Alert } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 
 const AddMenuItemForm = ({ restaurantId, onClose }) => {
@@ -11,8 +10,8 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
     const [quantity, setQuantity] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-    // Placeholder for image picker
-    // const [image, setImage] = useState(null);
+    const [selectedCategoryName, setSelectedCategoryName] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -38,10 +37,8 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
                 price: parseFloat(price),
                 quantity: parseInt(quantity, 10),
                 categoryId: selectedCategory,
-                restaurantId,
-                // image, // Add image logic if needed
             };
-            const response = await axios.post('/api/products', payload);
+            const response = await axios.post(`/api/products/seller/add/${restaurantId}`, payload);
             if (response.status === 201) {
                 Alert.alert('Success', 'Menu item added successfully');
                 onClose();
@@ -99,29 +96,47 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
             />
 
             <Text className="text-sm font-medium text-gray-700 mb-1">Category</Text>
-            <View className="border border-gray-300 rounded-lg mb-4 bg-gray-50">
-                <Picker
-                    selectedValue={selectedCategory}
-                    onValueChange={setSelectedCategory}
-                >
-                    <Picker.Item label="Select a category" value="" />
-                    {categories.map((category) => (
-                        <Picker.Item key={category.id} label={category.name} value={category.id} />
-                    ))}
-                </Picker>
-            </View>
-
-            {/*
-            <Text className="text-sm font-medium text-gray-700 mb-1">Image</Text>
             <TouchableOpacity
-                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
-                onPress={() => {
-                    // open image picker
-                }}
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50 flex-row items-center justify-between"
+                onPress={() => setModalVisible(true)}
             >
-                <Text className="text-gray-500">{image ? "Image Selected" : "Select Image"}</Text>
+                <Text className={selectedCategory ? "text-gray-900" : "text-gray-400"}>
+                    {selectedCategoryName || "Select a category"}
+                </Text>
             </TouchableOpacity>
-            */}
+
+            <Modal
+                visible={modalVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <TouchableOpacity
+                    style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)' }}
+                    activeOpacity={1}
+                    onPressOut={() => setModalVisible(false)}
+                >
+                    <View className="absolute left-6 right-6 top-1/4 bg-white rounded-lg p-4 shadow-lg">
+                        <Text className="text-lg font-bold mb-3">Select Category</Text>
+                        <FlatList
+                            data={categories}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    className="py-2"
+                                    onPress={() => {
+                                        setSelectedCategory(item.id);
+                                        setSelectedCategoryName(item.category);
+                                        setModalVisible(false);
+                                    }}
+                                >
+                                    <Text className="text-base text-gray-700">{item.category}</Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
 
             <View className="flex-row justify-end space-x-3 mt-4">
                 <TouchableOpacity
