@@ -14,8 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
 import SearchBar from '../../components/Buyer/SearchBar';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 const SearchCategoryCircle = ({ name, imageUrl, onPress }) => (
   <TouchableOpacity 
     className="items-center mr-3" 

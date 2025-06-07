@@ -7,8 +7,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { PlusIcon } from 'react-native-heroicons/outline';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL
-
 const Requests = () => {
   const axios = useAxios();
   const [requests, setRequests] = useState([]);
@@ -21,7 +19,7 @@ const Requests = () => {
   // TODO: Replace with actual user ID from authentication
   const orgUserId = "user_3";
 
-  // Fetch requests on initial load
+  // Fetch requests on an initial load
   useEffect(() => {
     fetchRequests();
   }, []);

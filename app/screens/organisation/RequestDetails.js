@@ -6,8 +6,6 @@ import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline
 import useAxios from '../../hooks/useAxios';
 import DonationItem from '../../components/organisation/DonationItem';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 export default function RequestDetails() {
   const axios = useAxios();
   const navigation = useNavigation();

@@ -13,8 +13,6 @@ import { ArrowLeftIcon, MagnifyingGlassIcon, XMarkIcon } from 'react-native-hero
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 const SearchResultsScreen = ({ route }) => {
   const axios = useAxios();
   const { searchQuery: initialQuery } = route.params;

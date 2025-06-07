@@ -5,8 +5,6 @@ import HistoryRequestCard from '../../components/organisation/HistoryRequestCard
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 const OrganizationHistory = () => {
   const axios = useAxios();
   const [completedRequests, setCompletedRequests] = useState([]);
@@ -17,7 +15,7 @@ const OrganizationHistory = () => {
   // TODO: Replace with actual user ID from authentication
   const orgUserId = "user_3";
 
-  // Fetch completed requests on initial load
+  // Fetch completed requests on an initial load
   useEffect(() => {
     fetchCompletedRequests();
   }, []);
