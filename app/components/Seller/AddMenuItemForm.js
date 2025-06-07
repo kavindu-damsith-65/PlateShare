@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import {Text} from 'react-native';
+import ={ useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import useAxios from '../../hooks/useAxios';
 
 const AddMenuItemForm = ({ restaurantId, onClose }) => {
@@ -10,7 +11,8 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
     const [quantity, setQuantity] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [image, setImage] = useState(null);
+    // Placeholder for image picker
+    // const [image, setImage] = useState(null);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -18,125 +20,124 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
                 const response = await axios.get(`/api/products/categories`);
                 setCategories(response.data.categories);
             } catch (error) {
-                console.error('Error fetching categories:', error);
+                Alert.alert('Error', 'Failed to fetch categories');
             }
         };
         fetchCategories();
     }, []);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
+        if (!name || !description || !price || !quantity || !selectedCategory) {
+            Alert.alert('Error', 'Please fill all fields');
+            return;
+        }
         try {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('description', description);
-            formData.append('price', price);
-            formData.append('quantity', quantity);
-            formData.append('categoryId', selectedCategory);
-            formData.append('restaurantId', restaurantId);
-            if (image) formData.append('image', image);
-
-            const response = await axios.post('/api/products', formData);
+            const payload = {
+                name,
+                description,
+                price: parseFloat(price),
+                quantity: parseInt(quantity, 10),
+                categoryId: selectedCategory,
+                restaurantId,
+                // image, // Add image logic if needed
+            };
+            const response = await axios.post('/api/products', payload);
             if (response.status === 201) {
-                console.log('Menu item added successfully:', response.data);
+                Alert.alert('Success', 'Menu item added successfully');
+                onClose();
             } else {
-                console.error('Failed to add menu item:', response.data);
+                Alert.alert('Error', 'Failed to add menu item');
             }
-            onClose();
         } catch (error) {
-            console.error('Error adding menu item:', error);
+            Alert.alert('Error', 'Error adding menu item');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 p-4">
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Name</Text>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-            </div>
+        <ScrollView className="flex-1 bg-white p-6">
+            <Text className="text-2xl font-bold text-gray-800 mb-6">Add Menu Item</Text>
 
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Description</Text>
-                <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-            </div>
+            <Text className="text-sm font-medium text-gray-700 mb-1">Name</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
+                value={name}
+                onChangeText={setName}
+                placeholder="Enter name"
+                placeholderTextColor="#9CA3AF"
+            />
 
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Price</Text>
-                <input
-                    type="number"
-                    step="0.01"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-            </div>
+            <Text className="text-sm font-medium text-gray-700 mb-1">Description</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
+                value={description}
+                onChangeText={setDescription}
+                placeholder="Enter description"
+                placeholderTextColor="#9CA3AF"
+                multiline
+                numberOfLines={3}
+                style={{ minHeight: 60, textAlignVertical: 'top' }}
+            />
 
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Quantity</Text>
-                <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
-            </div>
+            <Text className="text-sm font-medium text-gray-700 mb-1">Price</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
+                value={price}
+                onChangeText={setPrice}
+                placeholder="Enter price"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="decimal-pad"
+            />
 
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Category</Text>
-                <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            <Text className="text-sm font-medium text-gray-700 mb-1">Quantity</Text>
+            <TextInput
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
+                value={quantity}
+                onChangeText={setQuantity}
+                placeholder="Enter quantity"
+                placeholderTextColor="#9CA3AF"
+                keyboardType="number-pad"
+            />
+
+            <Text className="text-sm font-medium text-gray-700 mb-1">Category</Text>
+            <View className="border border-gray-300 rounded-lg mb-4 bg-gray-50">
+                <Picker
+                    selectedValue={selectedCategory}
+                    onValueChange={setSelectedCategory}
                 >
-                    <Text component="option" value="">Select a category</Text>
+                    <Picker.Item label="Select a category" value="" />
                     {categories.map((category) => (
-                        <Text component="option" key={category.id} value={category.id}>
-                            {category.name}
-                        </Text>
+                        <Picker.Item key={category.id} label={category.name} value={category.id} />
                     ))}
-                </select>
-            </div>
+                </Picker>
+            </View>
 
-            <div>
-                <Text className="block text-sm font-medium text-gray-700">Image</Text>
-                <input
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    accept="image/*"
-                    className="mt-1 block w-full"
-                />
-            </div>
+            {/*
+            <Text className="text-sm font-medium text-gray-700 mb-1">Image</Text>
+            <TouchableOpacity
+                className="border border-gray-300 rounded-lg px-3 py-2 mb-4 bg-gray-50"
+                onPress={() => {
+                    // open image picker
+                }}
+            >
+                <Text className="text-gray-500">{image ? "Image Selected" : "Select Image"}</Text>
+            </TouchableOpacity>
+            */}
 
-            <div className="flex justify-end space-x-3">
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            <View className="flex-row justify-end space-x-3 mt-4">
+                <TouchableOpacity
+                    onPress={onClose}
+                    className="rounded-md border border-gray-300 bg-white px-4 py-2"
                 >
-                    <Text>Cancel</Text>
-                </button>
-                <button
-                    type="submit"
-                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                    <Text className="text-gray-700 font-medium">Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    className="rounded-md bg-indigo-600 px-4 py-2"
                 >
-                    Add Item
-                </button>
-            </div>
-        </form>
+                    <Text className="text-white font-medium">Add Item</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     );
 };
 
