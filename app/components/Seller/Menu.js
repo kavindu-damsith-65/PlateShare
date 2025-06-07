@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FlatList, Modal, View, Text, TouchableOpacity, Alert } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 import MenuItem from './MenuItem';
+import UpdateMenuItemForm from './UpdateMenuItemForm';
 
 const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
     const axios = useAxios();
@@ -9,9 +10,10 @@ const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
     const [expandedId, setExpandedId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Modal state
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingDeleteId, setPendingDeleteId] = useState(null);
+
+    const [editingItem, setEditingItem] = useState(null);
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -51,12 +53,20 @@ const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
         setShowConfirm(true);
     };
 
+    const handleEdit = (item) => {
+        setEditingItem(item);
+    };
+
+    const handleUpdated = () => {
+        fetchData();
+    };
+
     const renderMenuItem = ({ item }) => (
         <MenuItem
             item={item}
             isExpanded={expandedId === item.id}
             onPress={() => setExpandedId(expandedId === item.id ? null : item.id)}
-            onEditItem={() => console.log('Edit item:', item.id)}
+            onEditItem={() => handleEdit(item)}
             onDeleteItem={() => confirmDelete(item.id)}
         />
     );
@@ -75,6 +85,7 @@ const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
                     contentContainerStyle,
                 ]}
             />
+            {/* Delete Confirmation Modal */}
             <Modal
                 visible={showConfirm}
                 transparent
@@ -105,6 +116,21 @@ const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
                         </View>
                     </View>
                 </View>
+            </Modal>
+            {/* Update Menu Item Modal */}
+            <Modal
+                visible={!!editingItem}
+                animationType="slide"
+                onRequestClose={() => setEditingItem(null)}
+            >
+                {editingItem && (
+                    <UpdateMenuItemForm
+                        restaurantId={restaurantId}
+                        item={editingItem}
+                        onClose={() => setEditingItem(null)}
+                        onUpdated={handleUpdated}
+                    />
+                )}
             </Modal>
         </>
     );
