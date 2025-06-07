@@ -103,7 +103,7 @@ const RestaurantScreen = ({ route, navigation }) => {
       <ScrollView>
         <View className="relative">
           <Image
-            source={{ uri: imgUrl }}
+            source={{ uri: restaurantData.image || imgUrl }}
             className="w-full h-56 p-4 bg-gray-300"
           />
           <TouchableOpacity
@@ -115,13 +115,13 @@ const RestaurantScreen = ({ route, navigation }) => {
         </View>
         <View className="bg-gray-200">
           <View className="px-4 pt-4">
-            <Text className="text-xl font-bold">{title}</Text>
+            <Text className="text-xl font-bold">{restaurantData.name || title}</Text>
             <View className="flex-row my-1 space-x-2">
               <View className="flex-row items-center space-x-1">
                 <StarIcon color="green" opacity={0.5} size={22} />
                 <Text className="text-xs text-gray-500">
                   <Text className="text-green-500">
-                    {rating}
+                    {restaurantData.averageRating || rating}
                   </Text>
                 </Text>
               </View>
@@ -133,7 +133,7 @@ const RestaurantScreen = ({ route, navigation }) => {
               </View>
             </View>
             <Text className="pb-4 mt-2 text-gray-500">
-              {short_description}
+              {restaurantData.description || short_description}
             </Text>
           </View>
         </View>

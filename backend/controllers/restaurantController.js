@@ -86,7 +86,14 @@ exports.showRestaurantDetails = async (req, res) => {
             return res.status(404).json({ message: "Restaurant not found" });
         }
 
-        return res.status(200).json({ restaurant });
+        const averageRating = await averageRatingForRestaurant(id);
+        
+        const restaurantWithRating = {
+            ...restaurant.toJSON(),
+            averageRating
+        };
+
+        return res.status(200).json({ restaurant: restaurantWithRating });
 
     } catch (error) {
         console.error(error);

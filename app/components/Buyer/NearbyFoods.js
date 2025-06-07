@@ -58,8 +58,8 @@ const NearbyFoods = () => {
           id: dish.restaurant_id,
           imgUrl: dish.restaurant?.image,
           title: dish.restaurant?.name,
-          rating: 4.5,
-          short_description: "Restaurant with this product",
+          rating: dish.restaurant?.averageRating,
+          short_description: dish.restaurant?.short_description,
           highlightedProductId: dish.id
         });
       }}
@@ -80,7 +80,7 @@ const NearbyFoods = () => {
           {/* Image */}
           <Image
             source={{ uri: dish.image }}
-            className="w-28 h-28 rounded-lg"
+            className="rounded-lg w-28 h-28"
             resizeMode="cover"
           />
         </View>
@@ -119,12 +119,12 @@ const NearbyFoods = () => {
             >
               <View className="flex-row items-center px-3 py-2">
                 <View className="flex-1 pr-4">
-                  <View className="h-5 bg-gray-300 rounded w-3/4 mb-2" />
-                  <View className="h-4 bg-gray-300 rounded w-full mb-1" />
-                  <View className="h-4 bg-gray-300 rounded w-1/2 mb-2" />
-                  <View className="h-4 bg-gray-300 rounded w-1/4" />
+                  <View className="w-3/4 h-5 mb-2 bg-gray-300 rounded" />
+                  <View className="w-full h-4 mb-1 bg-gray-300 rounded" />
+                  <View className="w-1/2 h-4 mb-2 bg-gray-300 rounded" />
+                  <View className="w-1/4 h-4 bg-gray-300 rounded" />
                 </View>
-                <View className="w-28 h-28 bg-gray-300 rounded-lg" />
+                <View className="bg-gray-300 rounded-lg w-28 h-28" />
               </View>
             </View>
           )}
