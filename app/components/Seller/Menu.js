@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 import MenuItem from './MenuItem';
 
-const Menu = ({ restaurantId}) => {
+const Menu = ({ restaurantId, ListHeaderComponent, contentContainerStyle }) => {
     const axios = useAxios();
     const [products, setProducts] = useState([]);
     const [expandedId, setExpandedId] = useState(null);
@@ -50,12 +50,16 @@ const Menu = ({ restaurantId}) => {
 
     return (
         <FlatList
-            className="flex-1 px-4"
             data={products}
             renderItem={renderMenuItem}
             keyExtractor={item => item.id}
             refreshing={isLoading}
             onRefresh={fetchData}
+            ListHeaderComponent={ListHeaderComponent}
+            contentContainerStyle={[
+                { paddingHorizontal: 16, paddingBottom: 100 },
+                contentContainerStyle,
+            ]}
         />
     );
 };
