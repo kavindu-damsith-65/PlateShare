@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { 
   View, 
   Text, 
@@ -13,7 +13,6 @@ import { ArrowLeftIcon, MagnifyingGlassIcon, XMarkIcon } from 'react-native-hero
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const SearchResultsScreen = ({ route }) => {
   const axios = useAxios();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -13,8 +13,6 @@ import { ClockIcon, ArrowLeftIcon } from 'react-native-heroicons/outline';
 import { useNavigation } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
 import SearchBar from '../../components/Buyer/SearchBar';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const SearchCategoryCircle = ({ name, imageUrl, onPress }) => (
   <TouchableOpacity 

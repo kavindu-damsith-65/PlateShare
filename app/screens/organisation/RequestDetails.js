@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
 import useAxios from '../../hooks/useAxios';
 import DonationItem from '../../components/organisation/DonationItem';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function RequestDetails() {
   const axios = useAxios();
