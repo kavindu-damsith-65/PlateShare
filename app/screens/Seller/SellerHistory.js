@@ -100,7 +100,7 @@ const SellerHistory = () => {
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-100 pt-7">
+        <SafeAreaView className="flex-1 bg-gray-100 pt-12">
             <View className="relative py-4 shadow-sm bg-white">
                 <Text className="text-center text-xl font-bold">Sales History</Text>
             </View>
@@ -115,7 +115,7 @@ const SellerHistory = () => {
                     onRefresh={fetchCompletedSales}
                 />
             ) : (
-                <View className="flex-1 justify-center items-center p-5">
+                <View className="flex-1 justify-center items-center p-7">
                     <Ionicons name="checkmark-done-outline" size={50} color="#DDD" />
                     <Text className="mt-2 text-base text-gray-500">No completed sales</Text>
                 </View>

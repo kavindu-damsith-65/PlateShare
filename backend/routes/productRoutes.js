@@ -9,7 +9,7 @@ router.get('/category/:categoryId/:location', getProductsByCategory);
 router.get('/search/:query/:location', searchProductsAndRestaurants);
 router.get('/seller/:restaurantId', getProductsByRestaurant);
 router.delete('/seller/remove/:productId/:restaurantId', removeProductOfRestaurant);
-router.post('/seller/add', CreateProductOfRestaurant);
+router.post('/seller/add/:restaurantId', CreateProductOfRestaurant);
 router.get("/count/:restaurantId", getProductCountByRestaurant);
 
 module.exports = router;
