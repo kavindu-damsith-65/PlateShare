@@ -355,41 +355,14 @@ exports.removeProductOfRestaurant = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 }
-exports.updateProductOfRestaurant = async (req, res) => {
-    try {
-        const { productId } = req.params;
-        const { name, description, price, quantity, available } = req.body;
-
-        if (!productId) {
-            return res.status(400).json({ message: "Product ID is required" });
-        }
-
-        const product = await Product.findByPk(productId);
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        product.name = name || product.name;
-        product.description = description || product.description;
-        product.price = price || product.price;
-        product.quantity = quantity || product.quantity;
-        product.available = available !== undefined ? available : product.available;
-
-        await product.save();
-
-        return res.status(200).json({ message: "Product updated successfully", product });
-
-    } catch (error) {
-        console.error("Error updating product:", error);
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
 
 exports.CreateProductOfRestaurant = async (req, res) => {
     try {
         const { restaurantId } = req.params;
-        const { name, description, price, quantity, available, categoryId, image } = req.body;
-
+        const { name, description, price, quantity, categoryId } = req.body;
+        const productCount = await Product.count({ where: { restaurant_id: restaurantId } });
+        const nextProductNumber = productCount + 1;
+        const id = `p${nextProductNumber}_${restaurantId}`;
         if (!restaurantId) {
             return res.status(400).json({ message: "Restaurant ID is required" });
         }
@@ -400,6 +373,7 @@ exports.CreateProductOfRestaurant = async (req, res) => {
         }
 
         const product = await Product.create({
+            id,
             name,
             description,
             price,
@@ -407,13 +381,48 @@ exports.CreateProductOfRestaurant = async (req, res) => {
             available: true,
             category_id: categoryId,
             restaurant_id: restaurantId,
-            image: image || 'https://picsum.photos/300/300?random'
+            image: 'https://picsum.photos/300/300?random'
         });
 
         return res.status(201).json({ message: "Product created successfully", product });
 
     } catch (error) {
         console.error("Error creating product:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+exports.updateProductOfRestaurant = async (req, res) => {
+    try {
+        const { productId, restaurantId } = req.params;
+        const { name, description, price, quantity, categoryId } = req.body;
+
+        if (!productId) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+        if (!restaurantId) {
+            return res.status(400).json({ message: "Restaurant ID is required" });
+        }
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        if (product.restaurant_id !== restaurantId) {
+            return res.status(403).json({ message: "You do not have permission to update this product" });
+        }
+
+        product.name = name || product.name;
+        product.description = description || product.description;
+        product.price = price || product.price;
+        product.quantity = quantity || product.quantity;
+        product.category_id = categoryId || product.category_id;
+
+        await product.save();
+
+        return res.status(200).json({ message: "Product updated successfully", product });
+
+    } catch (error) {
+        console.error("Error updating product:", error);
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 }

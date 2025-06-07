@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -11,8 +11,6 @@ import {
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
 import useAxios from '../../hooks/useAxios';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const CategoryResultsScreen = ({ route }) => {
   const axios = useAxios();

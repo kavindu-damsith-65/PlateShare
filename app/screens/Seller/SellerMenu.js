@@ -9,7 +9,7 @@ const SellerMenu = () => {
     const [showAddForm, setShowAddForm] = useState(false);
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-50">
+        <SafeAreaView className="flex-1 bg-gray-50 pt-7">
             {!showAddForm ? (
                 <>
                     <View className="pt-7">

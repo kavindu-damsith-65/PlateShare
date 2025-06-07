@@ -1,10 +1,8 @@
 import {Image, Modal, Text, TouchableOpacity, View, Alert} from "react-native";
 import {StarIcon, PencilIcon, TrashIcon} from "react-native-heroicons/outline";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import ReviewFormModal from "../Buyer/ReviewFormModal";
 import useAxios from '../../hooks/useAxios';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const DonationItem = ({ donation, isFromHistory }) => {
     const axios = useAxios();
