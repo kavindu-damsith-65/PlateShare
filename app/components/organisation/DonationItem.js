@@ -4,8 +4,6 @@ import React, {useEffect, useState} from "react";
 import ReviewFormModal from "../Buyer/ReviewFormModal";
 import useAxios from '../../hooks/useAxios';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 const DonationItem = ({ donation, isFromHistory }) => {
     const axios = useAxios();
     const [selectedRestaurant, setSelectedRestaurant] = useState(null);

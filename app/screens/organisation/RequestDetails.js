@@ -6,8 +6,6 @@ import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline
 import useAxios from '../../hooks/useAxios';
 import DonationItem from '../../components/organisation/DonationItem';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 export default function RequestDetails() {
   const axios = useAxios();
   const navigation = useNavigation();
@@ -21,11 +19,12 @@ export default function RequestDetails() {
 
   useEffect(() => {
     const fetchRequestDetails = async () => {
+      setLoading(true)
       try {
         // Fetch the specific request by ID using the dedicated endpoint
         const response = await axios.get(`/api/orgrequests/requests/${requestId}`);
         const foundRequest = response.data.foodRequest;
-        
+
         if (foundRequest) {
           setRequest(foundRequest);
         } else {
@@ -42,7 +41,7 @@ export default function RequestDetails() {
     fetchRequestDetails();
   }, [requestId]);
 
-  // Format date to be more readable
+  // Format dates to be more readable
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
@@ -74,14 +73,151 @@ export default function RequestDetails() {
       isComplete: percentage >= 100
     };
   };
-  
+
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-white">
-        <View className="flex-1 justify-center items-center">
-          <Text>Loading request details...</Text>
-        </View>
-      </SafeAreaView>
+        <SafeAreaView className="flex-1 bg-gray-100 pt-5">
+          <View className="relative py-4 shadow-sm bg-white">
+            <TouchableOpacity
+                className="absolute z-10 p-2 bg-gray-100 rounded-full top-4 left-4"
+                onPress={() => navigation.goBack()}
+            >
+              <ArrowLeftIcon size={20} color="#00CCBB" />
+            </TouchableOpacity>
+            <Text className="text-center text-xl font-bold">Request Details</Text>
+          </View>
+
+          <ScrollView className="flex-1 p-4">
+            {/* Main request card */}
+            <View className="bg-white rounded-lg p-4 mb-4 shadow">
+              {/* Title and urgency badge */}
+              <View className="flex-row justify-between items-center mb-2">
+                <View className="w-2/3 h-7 bg-gray-200 rounded" />
+                <View className="bg-gray-100 px-2 py-1 rounded-full">
+                  <View className="w-12 h-4 bg-gray-200 rounded" />
+                </View>
+              </View>
+
+              {/* Requested Items */}
+              <View className="mb-4">
+                <View className="h-5 w-32 bg-gray-200 rounded mb-1" />
+                <View className="h-5 w-full bg-gray-200 rounded" />
+              </View>
+
+              {/* Quantity Needed */}
+              <View className="mb-1">
+                <View className="h-5 w-32 bg-gray-200 rounded mb-1" />
+                <View className="h-5 w-28 bg-gray-200 rounded" />
+              </View>
+
+              {/* Progress bar */}
+              <View className="mb-4">
+                <View className="flex-row justify-between items-center mb-1">
+                  <View className="h-4 w-48 bg-gray-200 rounded" />
+                  <View className="h-4 w-8 bg-gray-200 rounded" />
+                </View>
+                <View className="h-2.5 w-full bg-gray-200 rounded-full">
+                  <View
+                      className="h-2.5 rounded-full bg-gray-400"
+                      style={{ width: '45%' }}
+                  />
+                </View>
+              </View>
+
+              {/* Needed By */}
+              <View className="mb-4">
+                <View className="h-5 w-24 bg-gray-200 rounded mb-1" />
+                <View className="h-5 w-48 bg-gray-200 rounded" />
+              </View>
+
+              {/* Additional Notes */}
+              <View className="mb-4">
+                <View className="h-5 w-36 bg-gray-200 rounded mb-1" />
+                <View className="h-5 w-full bg-gray-200 rounded" />
+              </View>
+
+              {/* Tags */}
+              <View className="flex-row mb-2">
+                <View className="bg-gray-100 px-2 py-1 rounded-full mr-2">
+                  <View className="w-24 h-4 bg-gray-200 rounded" />
+                </View>
+                <View className="bg-gray-100 px-2 py-1 rounded-full">
+                  <View className="w-24 h-4 bg-gray-200 rounded" />
+                </View>
+              </View>
+            </View>
+
+            {/* Donations section */}
+            <View className="mb-4">
+              <View className="flex-row items-center mb-2">
+                <View className="h-6 w-24 bg-gray-200 rounded" />
+                <View className="h-6 w-8 bg-gray-200 rounded-full ml-2" />
+              </View>
+
+              {/* Donation items */}
+              {Array(2).fill().map((_, index) => (
+                  <View key={`donation-${index}`} className="bg-white p-4 rounded-lg mb-3 shadow-sm">
+                    <View className="flex-row">
+                      <View className="w-20 h-20 rounded-md bg-gray-200" />
+                      <View className="ml-3 flex-1 justify-center">
+                        <View className="h-5 w-32 bg-gray-200 rounded mb-1" />
+                        <View className="h-4 w-48 bg-gray-200 rounded mb-1" />
+                        <View className="flex-row items-center mt-1">
+                          <View className="h-4 w-24 bg-gray-200 rounded" />
+                        </View>
+                      </View>
+                    </View>
+                    <View className="mt-2 pt-2 border-t border-gray-100">
+                      <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                          <View className="w-6 h-6 rounded-full bg-gray-200" />
+                          <View className="h-4 w-32 bg-gray-200 rounded ml-2" />
+                        </View>
+                        <View className="bg-gray-200 px-3 py-1.5 rounded-md">
+                          <View className="h-4 w-20 bg-gray-300 rounded" />
+                        </View>
+                      </View>
+                    </View>
+
+                    {/* Reviews section */}
+                    <View className="mt-3">
+                      <View className="h-4 w-28 bg-gray-200 rounded mb-1" />
+                      <View className="bg-gray-50 p-2 rounded mb-1">
+                        <View className="flex-row justify-between">
+                          <View className="flex-row items-center">
+                            <View className="h-4 w-14 bg-gray-200 rounded mr-2" />
+                            <View className="flex-row">
+                              {[...Array(5)].map((_, i) => (
+                                  <View key={i} className="w-3 h-3 rounded-full bg-gray-200 mr-1" />
+                              ))}
+                            </View>
+                          </View>
+                          <View className="flex-row">
+                            <View className="w-4 h-4 rounded bg-gray-200 mr-4" />
+                            <View className="w-4 h-4 rounded bg-gray-200" />
+                          </View>
+                        </View>
+                        <View className="h-4 w-full bg-gray-200 rounded mt-1" />
+                      </View>
+                    </View>
+                  </View>
+              ))}
+            </View>
+
+            {/* Action buttons */}
+            <View className="flex-row justify-between mb-10">
+              <View className="bg-gray-500/20 px-4 py-3 rounded-md flex-1 mr-2 flex-row justify-center items-center">
+                <EyeIcon size={18} color="#00CCBB" strokeWidth={2.5} />
+                <View className="h-5 w-24 bg-gray-500/30 rounded ml-2" />
+              </View>
+
+              <View className="bg-gray-500/20 px-4 py-3 rounded-md flex-1 ml-2 flex-row justify-center items-center">
+                <CheckIcon size={18} color="#f59e0b" strokeWidth={2.5} />
+                <View className="h-5 w-32 bg-gray-500/30 rounded ml-2" />
+              </View>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
     );
   }
   
@@ -115,7 +251,7 @@ export default function RequestDetails() {
       
       setRequest(updatedRequest);
 
-      // Show success message
+      // Show a success message
       Alert.alert(
         "Success",
         `Request is now ${updatedRequest.visibility ? 'public' : 'private'}`
@@ -128,7 +264,7 @@ export default function RequestDetails() {
     }
   };
 
-  // Add a function to mark request as complete
+  // Add a function to mark the request as complete
   const markRequestComplete = async () => {
     try {
       setLoading(true);
@@ -140,7 +276,7 @@ export default function RequestDetails() {
 
       setRequest(updatedRequest);
 
-      // Show success message
+      // Show a success message
       Alert.alert(
         "Success",
         "Request marked as complete",

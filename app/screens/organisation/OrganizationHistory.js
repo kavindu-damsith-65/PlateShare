@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, SafeAreaView, Alert, ScrollView } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 import HistoryRequestCard from '../../components/organisation/HistoryRequestCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const OrganizationHistory = () => {
   const axios = useAxios();
@@ -17,7 +15,7 @@ const OrganizationHistory = () => {
   // TODO: Replace with actual user ID from authentication
   const orgUserId = "user_3";
 
-  // Fetch completed requests on initial load
+  // Fetch completed requests on an initial load
   useEffect(() => {
     fetchCompletedRequests();
   }, []);
@@ -86,10 +84,71 @@ const OrganizationHistory = () => {
         <View className="relative py-4 shadow-sm bg-white">
           <Text className="text-center text-xl font-bold">Request History</Text>
         </View>
-        <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#00CCBB" />
-          <Text className="mt-2 text-gray-500">Loading request history...</Text>
-        </View>
+
+        <ScrollView className="flex-1" contentContainerStyle={{ padding: 16 }}>
+          {Array(3).fill().map((_, index) => (
+            <View key={`skeleton-${index}`} className="bg-white rounded-lg shadow-sm mb-4 overflow-hidden">
+              {/* Card content area */}
+              <View className="p-4">
+                {/* Title and status badge */}
+                <View className="flex-row justify-between items-start mb-2">
+                  <View className="flex-1 mr-2">
+                    <View className="h-6 bg-gray-200 rounded w-3/4 mb-1" />
+                    <View className="h-4 bg-gray-200 rounded w-1/2 mt-1" />
+                  </View>
+                  <View className="bg-gray-200 px-2 py-1 rounded-full w-20 h-5" />
+                </View>
+
+                {/* Requested items */}
+                <View className="mb-3">
+                  <View className="h-5 bg-gray-200 rounded w-1/3 mb-1" />
+                  <View className="h-5 bg-gray-200 rounded w-full" />
+                </View>
+
+                {/* Quantity and date */}
+                <View className="flex-row justify-between mb-3">
+                  <View>
+                    <View className="h-5 bg-gray-200 rounded w-20 mb-1" />
+                    <View className="h-5 bg-gray-200 rounded w-24" />
+                  </View>
+                  <View>
+                    <View className="h-5 bg-gray-200 rounded w-24 mb-1" />
+                    <View className="h-5 bg-gray-200 rounded w-20" />
+                  </View>
+                </View>
+
+                {/* Progress bar */}
+                <View className="mb-3">
+                  <View className="flex-row justify-between items-center mb-1">
+                    <View className="h-4 bg-gray-200 rounded w-1/2" />
+                    <View className="h-4 bg-gray-200 rounded w-10" />
+                  </View>
+                  <View className="h-2 w-full bg-gray-200 rounded-full" />
+                </View>
+
+                {/* Icons row */}
+                <View className="flex-row justify-between items-center">
+                  <View className="flex-row items-center">
+                    <View className="h-4 bg-gray-200 rounded w-20" />
+                  </View>
+
+                  <View className="flex-row items-center">
+                    <View className="h-4 bg-gray-200 rounded w-28" />
+                  </View>
+
+                  <View className="flex-row items-center">
+                    <View className="h-4 bg-gray-200 rounded w-16" />
+                  </View>
+                </View>
+              </View>
+
+              {/* Delete button */}
+              <View className="px-4 pb-3 flex-row justify-end">
+                <View className="bg-gray-200 px-3 py-2 rounded-md w-20 h-9" />
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </SafeAreaView>
     );
   }

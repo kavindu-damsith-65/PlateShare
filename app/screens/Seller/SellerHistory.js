@@ -5,8 +5,6 @@ import HistoryRequestCard from '../../components/organisation/HistoryRequestCard
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 const SellerHistory = () => {
     const axios = useAxios();
     const [completedSales, setCompletedSales] = useState([]);
