@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 import RequestCard from './RequestCard';
 import RequestFormModal from './RequestFormModal';
@@ -167,9 +167,64 @@ const Requests = () => {
 
   if (loading && requests.length === 0) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <ActivityIndicator size="large" color="#00CCBB" />
-        <Text className="mt-2 text-gray-500">Loading requests...</Text>
+      <View className="flex-1">
+        <View className="flex-row justify-between items-center px-5 py-4 bg-white border-b border-gray-200">
+          <Text className="text-xl font-bold text-gray-800">Donation Requests</Text>
+          <View className="bg-gray-200 px-3 py-2 rounded-md w-28 h-9" />
+        </View>
+
+        <ScrollView className="flex-1" contentContainerStyle={{ padding: 16 }}>
+          {Array(3).fill().map((_, index) => (
+            <View key={`skeleton-${index}`} className="bg-white rounded-lg shadow mb-4 overflow-hidden">
+              <View className="p-4">
+                {/* Title and urgency tag */}
+                <View className="flex-row justify-between items-center mb-2">
+                  <View className="w-2/3 h-7 bg-gray-200 rounded" />
+                  <View className="bg-gray-200 px-2 py-1 rounded-full w-16 h-5" />
+                </View>
+
+                {/* Needs text */}
+                <View className="w-full h-5 bg-gray-200 rounded mb-2" />
+
+                {/* Quantity */}
+                <View className="w-1/2 h-5 bg-gray-200 rounded mb-2" />
+
+                {/* Notes (optional) */}
+                <View className="w-3/4 h-5 bg-gray-200 rounded mb-2" />
+
+                {/* Tags row */}
+                <View className="flex-row mb-3">
+                  <View className="bg-gray-200 px-2 py-1 rounded-full mr-2 w-28 h-5" />
+                  <View className="bg-gray-200 px-2 py-1 rounded-full w-16 h-5" />
+                </View>
+
+                {/* Date and action buttons */}
+                <View className="flex-row justify-between items-center">
+                  <View className="w-1/3 h-4 bg-gray-200 rounded" />
+
+                  {/* Action buttons */}
+                  <View className="flex-row justify-end space-x-2">
+                    <View className="bg-gray-200 px-3 py-2 rounded-md w-20 h-9" />
+                    <View className="bg-gray-200 px-3 py-2 rounded-md w-24 h-9" />
+                  </View>
+                </View>
+
+                {/* Donations section */}
+                <View className="mt-3 pt-3 border-t border-gray-200">
+                  <View className="w-1/3 h-4 bg-gray-200 rounded mb-2" />
+                  <View className="flex-row">
+                    {[1, 2, 3].map((item) => (
+                      <View key={item} className="mr-2 items-center">
+                        <View className="w-10 h-10 rounded-full bg-gray-200" />
+                        <View className="w-8 h-3 bg-gray-200 rounded mt-1" />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     );
   }

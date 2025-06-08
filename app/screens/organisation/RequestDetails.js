@@ -40,7 +40,7 @@ export default function RequestDetails() {
     fetchRequestDetails();
   }, [requestId]);
 
-  // Format date to be more readable
+  // Format dates to be more readable
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
