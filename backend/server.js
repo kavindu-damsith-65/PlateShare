@@ -13,6 +13,7 @@ const organisationRequestsRoutes = require("./routes/organisationRequestsRoutes"
 const organisationHistoryRoutes = require("./routes/organisationHistoryRoutes");
 const organisationDashboardRoutes = require("./routes/organisationDashboardRoutes");
 const foodBucketRoutes = require("./routes/foodBucketRoutes");
+const donationRoutes = require("./routes/donationRoutes");
 
 const app = express();
 app.use(cors());
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/donations", donationRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/orgrequests", organisationRequestsRoutes);

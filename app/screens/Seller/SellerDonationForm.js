@@ -7,8 +7,6 @@ export default function SellerDonationForm({ route, navigation }) {
     const axios = useAxios();
     const { restaurantId, request } = route.params; // Extract restaurantId and request from route.params
 
-    console.log('Restaurant ID:', restaurantId, 'Request:', request);
-
     // Build a map of needed product quantities from the request
     const neededProducts = Array.isArray(request?.products)
         ? request.products.reduce((acc, item) => {
