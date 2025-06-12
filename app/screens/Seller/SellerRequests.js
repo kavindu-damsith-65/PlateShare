@@ -1,13 +1,12 @@
-import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-// import Requests from '../../components/seller/Requests';
+import SellerRequests from '../../components/Seller/SellerRequests';
 
-export default function SellerRequests() {
+export default function SellerRequestsScreen() {
     return (
         <SafeAreaView className="flex-1 bg-gray-100 pt-5">
             <StatusBar style="dark" />
-            {/* <Requests /> */}
+            <SellerRequests />
         </SafeAreaView>
     );
 }
