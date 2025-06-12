@@ -53,16 +53,33 @@ export default function SellerDonationForm({ route, navigation }) {
         });
     };
 
-    const handleSubmit = () => {
-        const donationData = selectedProducts.filter((p) => p.quantity > 0);
+    const handleSubmit = async () => {
+        const donationData = selectedProducts.filter((p) => p.quantity > 0).map((p) => ({
+            productId: p.id,
+            quantity: p.quantity
+        }));
+
         if (donationData.length === 0) {
             Alert.alert('Error', 'Please select at least one product to donate.');
             return;
         }
 
-        console.log('Donation Data:', donationData);
-        Alert.alert('Success', 'Donation submitted successfully!');
-        navigation.goBack();
+        try {
+            const response = await axios.post(`/api/donations/${restaurantId}`, {
+                requestId: request.id,
+                products: donationData
+            });
+
+            if (response.status === 201) {
+                Alert.alert('Success', 'Donation submitted successfully!');
+                navigation.goBack();
+            } else {
+                Alert.alert('Error', 'Failed to submit donation. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error submitting donation:', error);
+            Alert.alert('Error', 'Failed to submit donation. Please try again.');
+        }
     };
 
     if (loading) {
