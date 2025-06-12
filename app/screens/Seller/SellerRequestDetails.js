@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { EyeIcon, EyeSlashIcon, CheckIcon } from 'react-native-heroicons/outline';
 import useAxios from '../../hooks/useAxios';
@@ -39,6 +39,31 @@ export default function SellerRequest() {
 
         fetchRequestDetails();
     }, [requestId]);
+
+    // Refetch request details when the screen comes into focus
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetchRequestDetails = async () => {
+                try {
+                    const response = await axios.get(`/api/orgrequests/requests/${requestId}`);
+                    const foundRequest = response.data.foodRequest;
+
+                    if (foundRequest) {
+                        setRequest(foundRequest);
+                    } else {
+                        setError("Request not found");
+                    }
+                } catch (error) {
+                    console.error("Error fetching request details:", error);
+                    setError("Failed to load request details");
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchRequestDetails();
+        }, [requestId])
+    );
 
     // Format date to be more readable
     const formatDate = (dateString) => {
