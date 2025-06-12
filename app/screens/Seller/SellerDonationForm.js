@@ -40,15 +40,18 @@ export default function SellerDonationForm({ route, navigation }) {
     }, [restaurantId]);
 
     const handleQuantityChange = (productId, quantity) => {
+        const product = products.find((p) => p.id === productId);
+        const validQuantity = Math.min(parseInt(quantity, 10) || 0, product.quantity); // Ensure quantity is less than or equal to available
+
         setSelectedProducts((prev) => {
             const existingProduct = prev.find((p) => p.id === productId);
+
             if (existingProduct) {
                 return prev.map((p) =>
-                    p.id === productId ? { ...p, quantity: parseInt(quantity, 10) || 0 } : p
+                    p.id === productId ? { ...p, quantity: validQuantity } : p
                 );
             } else {
-                const product = products.find((p) => p.id === productId);
-                return [...prev, { ...product, quantity: parseInt(quantity, 10) || 0 }];
+                return [...prev, { ...product, quantity: validQuantity }];
             }
         });
     };
@@ -71,8 +74,16 @@ export default function SellerDonationForm({ route, navigation }) {
             });
 
             if (response.status === 201) {
-                Alert.alert('Success', 'Donation submitted successfully!');
-                navigation.goBack();
+                Alert.alert(
+                    'Success',
+                    '🎉 Your donation has been submitted successfully! Thank you for your generosity.',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => navigation.goBack()
+                        }
+                    ]
+                );
             } else {
                 Alert.alert('Error', 'Failed to submit donation. Please try again.');
             }
@@ -117,23 +128,38 @@ export default function SellerDonationForm({ route, navigation }) {
                 >
                     <ArrowLeftIcon size={20} color="#00CCBB" />
                 </TouchableOpacity>
-                <Text className="text-center text-xl font-bold">Donate Products</Text>
+                <Text className="text-center text-xl font-bold text-[#00CCBB]">Donate Products</Text>
             </View>
 
             <ScrollView className="flex-1 p-4">
                 <View className="bg-white rounded-lg p-4 mb-4 shadow">
                     <Text className="text-lg font-bold text-gray-800 mb-4">Select Products to Donate</Text>
-                    {products.map((product) => (
+                    {products.filter((product) => product.quantity > 0).map((product) => (
                         <View key={product.id} className="mb-4">
-                            <Text className="text-gray-800 font-medium">{product.name}</Text>
+                            <Text className="text-gray-800 font-medium text-lg">{product.name}</Text>
                             <Text className="text-gray-600 text-sm mb-2">{product.description}</Text>
                             <View className="flex-row items-center">
+                                <Text className="text-gray-800 font-medium mr-2">Quantity:</Text>
+                                <TouchableOpacity
+                                    className="bg-gray-200 px-3 py-2 rounded-md mr-2"
+                                    onPress={() => handleQuantityChange(product.id, (selectedProducts.find((p) => p.id === product.id)?.quantity || 0) - 1)}
+                                    disabled={(selectedProducts.find((p) => p.id === product.id)?.quantity || 0) <= 0}
+                                >
+                                    <Text className="text-gray-800 font-bold">-</Text>
+                                </TouchableOpacity>
                                 <TextInput
-                                    className="border border-gray-300 rounded-lg px-3 py-2 w-24"
+                                    className="border border-gray-300 rounded-lg px-3 py-2 w-24 text-center"
                                     keyboardType="number-pad"
-                                    placeholder="Quantity"
+                                    value={(selectedProducts.find((p) => p.id === product.id)?.quantity || 0).toString()}
                                     onChangeText={(quantity) => handleQuantityChange(product.id, quantity)}
                                 />
+                                <TouchableOpacity
+                                    className="bg-gray-200 px-3 py-2 rounded-md ml-2"
+                                    onPress={() => handleQuantityChange(product.id, (selectedProducts.find((p) => p.id === product.id)?.quantity || 0) + 1)}
+                                    disabled={(selectedProducts.find((p) => p.id === product.id)?.quantity || 0) >= product.quantity}
+                                >
+                                    <Text className="text-gray-800 font-bold">+</Text>
+                                </TouchableOpacity>
                                 <Text className="ml-2 text-gray-500">Available: {product.quantity}</Text>
                             </View>
                         </View>
@@ -141,10 +167,10 @@ export default function SellerDonationForm({ route, navigation }) {
                 </View>
 
                 <TouchableOpacity
-                    className="bg-[#00CCBB] px-4 py-3 rounded-md flex-row justify-center items-center"
+                    className="bg-[#00CCBB] px-4 py-3 rounded-md flex-row justify-center items-center shadow-lg"
                     onPress={handleSubmit}
                 >
-                    <Text className="text-white font-medium">Submit Donation</Text>
+                    <Text className="text-white font-medium text-lg">Submit Donation</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
