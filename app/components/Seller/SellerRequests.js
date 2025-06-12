@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import useAxios from '../../hooks/useAxios';
-import RequestCard from '../organisation/RequestCard';
+import SellerRequestCard from './SellerRequestCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SellerRequests = () => {
@@ -29,7 +29,7 @@ const SellerRequests = () => {
     };
 
     const renderRequestCard = ({ item }) => (
-        <RequestCard
+        <SellerRequestCard
             request={item}
             onEdit={() => console.log('Edit request:', item.id)} // Placeholder for edit functionality
             onDelete={() => console.log('Delete request:', item.id)} // Placeholder for delete functionality
