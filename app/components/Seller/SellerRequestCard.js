@@ -59,16 +59,6 @@ const SellerRequestCard = ({ request, onEdit, onDelete }) => {
                     <Text className="text-xs text-gray-500">
                         Needed by: {formatDate(request.dateTime)}
                     </Text>
-
-                    {/* Action buttons */}
-                    <View className="flex-row justify-end space-x-2">
-                        <TouchableOpacity
-                            className="bg-green-100 px-3 py-2 rounded-md flex-row items-center"
-                            onPress={() => navigation.navigate('Donate', { requestId: request.id })}
-                        >
-                            <Text className="text-green-800 font-medium ml-1">Donate</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
 
                 {request.donations && request.donations.length > 0 && (

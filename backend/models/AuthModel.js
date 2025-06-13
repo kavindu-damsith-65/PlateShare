@@ -174,6 +174,7 @@ const Review = sequelize.define('review', {
 const Donation = sequelize.define('donation', {
     id: { type: DataTypes.INTEGER, primaryKey: true },
     food_request_id: { type: DataTypes.INTEGER, allowNull: false },
+    restaurant_id: { type: DataTypes.STRING, allowNull: false },
     product_id: { type: DataTypes.STRING, allowNull: false },
     quantity: { type: DataTypes.INTEGER }
 });

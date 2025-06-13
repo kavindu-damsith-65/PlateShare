@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SellerDashboard from './SellerDashboard';
 import SellerRequests from './SellerRequests';
-import SellerHistory from './SellerHistory';
+import SellerDonations from './SellerDonations';
 import SellerMenu from './SellerMenu';
 import SellerProfile from './SellerProfile';
 
@@ -19,7 +19,7 @@ export default function SellerTabs() {
                         iconName = "home-outline";
                     } else if (route.name === "Requests") {
                         iconName = "time-outline";
-                    } else if (route.name === "History") {
+                    } else if (route.name === "Donations") {
                         iconName = "document-text-outline";
                     } else if (route.name === "Menu") {
                         iconName = "restaurant-outline";
@@ -35,7 +35,7 @@ export default function SellerTabs() {
         >
             <Tab.Screen name="Dashboard" component={SellerDashboard} />
             <Tab.Screen name="Requests" component={SellerRequests} />
-            <Tab.Screen name="History" component={SellerHistory} />
+            <Tab.Screen name="Donations" component={SellerDonations} />
             <Tab.Screen name="Menu" component={SellerMenu} />
             <Tab.Screen name="Profile" component={SellerProfile} />
         </Tab.Navigator>

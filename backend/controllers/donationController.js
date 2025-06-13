@@ -42,6 +42,7 @@ exports.createDonation = async (req, res) => {
             const donation = await Donation.create({
                 food_request_id: requestId,
                 product_id: productId,
+                restaurant_id: restaurantId,
                 quantity: quantity
             });
             Product.update(
@@ -56,3 +57,29 @@ exports.createDonation = async (req, res) => {
         return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+exports.getDonationsByRestaurantId = async (req, res) => {
+    try {
+        const restaurantId = req.params.restaurantId;
+
+        // Fetch donations for the restaurant
+        const donations = await Donation.findAll({
+            where: { restaurant_id: restaurantId },
+            include: [
+                {
+                    model: Product,
+                    as: 'product',
+                    attributes: ['id', 'name', 'image']
+                }
+            ]
+        });
+
+        if (!donations || donations.length === 0) {
+            return res.status(404).json({ message: "No donations found for this restaurant" });
+        }
+
+        return res.status(200).json({ donations });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
