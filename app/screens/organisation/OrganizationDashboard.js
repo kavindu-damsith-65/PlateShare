@@ -98,6 +98,7 @@ export default function OrganizationDashboard() {
     fulfilled: 0,
     pending: 0
   });
+  const [recentUpdates, setRecentUpdates] = useState([]);
 
   // Organization user ID - in a real app, this would come from authentication
   const orgUserId = "user_3";
@@ -106,23 +107,30 @@ export default function OrganizationDashboard() {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-
-        // Fetch stats
-        const statsResponse = await axios.get(`/api/orgdash/stats/${orgUserId}`);
+        
+        // Fetch all data in parallel
+        const [statsResponse, weeklyResponse, statusResponse, updatesResponse] = await Promise.all([
+          axios.get(`/api/orgdash/stats/${orgUserId}`),
+          axios.get(`/api/orgdash/weekly-activity/${orgUserId}`),
+          axios.get(`/api/orgdash/request-status/${orgUserId}`),
+          axios.get(`/api/orgdash/recent-updates/${orgUserId}`)
+        ]);
+        
+        // Update state with fetched data
         if (statsResponse.data && statsResponse.data.stats) {
           setStats(statsResponse.data.stats);
         }
-
-        // Fetch weekly activity data
-        const weeklyResponse = await axios.get(`/api/orgdash/weekly-activity/${orgUserId}`);
+        
         if (weeklyResponse.data && weeklyResponse.data.weeklyRequestData) {
           setWeeklyRequestData(weeklyResponse.data.weeklyRequestData);
         }
-
-        // Fetch request status
-        const statusResponse = await axios.get(`/api/orgdash/request-status/${orgUserId}`);
+        
         if (statusResponse.data && statusResponse.data.requestStatus) {
           setRequestStatus(statusResponse.data.requestStatus);
+        }
+        
+        if (updatesResponse.data && updatesResponse.data.updates) {
+          setRecentUpdates(updatesResponse.data.updates);
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -134,13 +142,6 @@ export default function OrganizationDashboard() {
     fetchDashboardData();
   }, []);
   
-  const notifications = [
-    { message: "Your request for 20 sandwiches was accepted by Tasty Bites", time: "2 hours ago", icon: "checkmark-circle-outline" },
-    { message: "Fresh Harvest added 5 new food items available for donation", time: "Yesterday", icon: "fast-food-outline" },
-    { message: "You claimed 10 rice packs from Spicy House", time: "2 days ago", icon: "cart-outline" },
-    { message: "Your request for vegetables expires tomorrow", time: "2 days ago", icon: "alert-circle-outline" }
-  ];
-
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-5">
@@ -227,13 +228,17 @@ export default function OrganizationDashboard() {
             </TouchableOpacity>
           </View>
           
-          {notifications.length > 0 ? (
-            notifications.map((notification, index) => (
+          {loading ? (
+            <View className="items-center justify-center py-8 bg-white rounded-lg shadow">
+              <ActivityIndicator size="large" color="#00CCBB" />
+            </View>
+          ) : recentUpdates.length > 0 ? (
+            recentUpdates.map((update, index) => (
               <NotificationItem 
                 key={index} 
-                message={notification.message} 
-                time={notification.time} 
-                icon={notification.icon} 
+                message={update.message}
+                time={update.time}
+                icon={update.icon}
               />
             ))
           ) : (

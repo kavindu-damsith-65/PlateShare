@@ -1,5 +1,5 @@
 
-const { FoodRequest, Donation, User, OrgDetails } = require("../models/AuthModel");
+const { FoodRequest, Donation, User, OrgDetails, Product, Restaurant } = require("../models/AuthModel");
 const { Op, fn, col, literal } = require("sequelize");
 const sequelize = require("../config/db");
 
@@ -140,6 +140,119 @@ exports.getRequestStatus = async (req, res) => {
         });
     } catch (error) {
         console.error("Error fetching request status:", error);
+        return res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Get recent updates for an organization (recent donations and expiring requests)
+exports.getRecentUpdates = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = [];
+
+        // Get recent donations (last 7 days)
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const recentDonations = await Donation.findAll({
+            include: [
+                {
+                    model: FoodRequest,
+                    where: { org_details_user_id: id },
+                    required: true
+                },
+                {
+                    model: Product,
+                    include: [
+                        {
+                            model: Restaurant,
+                            attributes: ['name']
+                        }
+                    ]
+                }
+            ],
+            order: [['createdAt', 'DESC']],
+            limit: 5
+        });
+
+        // Format recent donations for the frontend
+        for (const donation of recentDonations) {
+            const restaurantName = donation.product?.restaurant?.name || "Unknown Restaurant";
+            const timeDiff = Math.floor((new Date() - new Date(donation.createdAt)) / (1000 * 60 * 60));
+            let timeText;
+
+            if (timeDiff < 24) {
+                timeText = `${timeDiff} hours ago`;
+            } else {
+                const days = Math.floor(timeDiff / 24);
+                timeText = days === 1 ? "Yesterday" : `${days} days ago`;
+            }
+
+            updates.push({
+                message: `${restaurantName} donated ${donation.quantity} ${donation.product.name}`,
+                time: timeText,
+                icon: "gift-outline",
+                type: "donation"
+            });
+        }
+
+        // Get soon-to-expire requests (next 3 days)
+        const now = new Date();
+        const threeDaysFromNow = new Date();
+        threeDaysFromNow.setDate(now.getDate() + 3);
+
+        const expiringRequests = await FoodRequest.findAll({
+            where: {
+                org_details_user_id: id,
+                completed: false,
+                dateTime: {
+                    [Op.between]: [now, threeDaysFromNow]
+                }
+            },
+            order: [['dateTime', 'ASC']],
+            limit: 5
+        });
+
+        // Format expiring requests for the frontend
+        for (const request of expiringRequests) {
+            const daysToExpire = Math.ceil((new Date(request.dateTime) - now) / (1000 * 60 * 60 * 24));
+            let expiryText;
+
+            if (daysToExpire <= 0) {
+                expiryText = "today";
+            } else if (daysToExpire === 1) {
+                expiryText = "tomorrow";
+            } else {
+                expiryText = `in ${daysToExpire} days`;
+            }
+
+            updates.push({
+                message: `Your request "${request.title}" expires ${expiryText}`,
+                time: `Expires ${expiryText}`,
+                icon: "alert-circle-outline",
+                type: "expiring"
+            });
+        }
+
+        // Sort updates by recency (most recent first)
+        updates.sort((a, b) => {
+            // Convert time strings to comparable values (rough approximation)
+            const getTimeValue = (timeStr) => {
+                if (timeStr.includes("hours")) return parseInt(timeStr) || 0;
+                if (timeStr.includes("Yesterday")) return 24;
+                if (timeStr.includes("days")) return parseInt(timeStr) * 24 || 48;
+                return 0;
+            };
+
+            return getTimeValue(a.time) - getTimeValue(b.time);
+        });
+
+        return res.status(200).json({
+            updates: updates.slice(0, 5) // Return at most 5 updates
+        });
+
+    } catch (error) {
+        console.error("Error fetching recent updates:", error);
         return res.status(500).json({ message: "Server error" });
     }
 };

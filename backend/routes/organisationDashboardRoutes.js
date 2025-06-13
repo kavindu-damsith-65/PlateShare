@@ -2,7 +2,8 @@ const express = require("express");
 const {
     getOrgDashboardStats,
     getWeeklyActivity,
-    getRequestStatus
+    getRequestStatus,
+    getRecentUpdates
 } = require("../controllers/OrganisationDashboardController");
 
 const router = express.Router();
@@ -15,5 +16,8 @@ router.get("/weekly-activity/:id", getWeeklyActivity);
 
 // Get request status for the current month
 router.get("/request-status/:id", getRequestStatus);
+
+// Get recent updates (donations and expiring requests)
+router.get("/recent-updates/:id", getRecentUpdates);
 
 module.exports = router;
