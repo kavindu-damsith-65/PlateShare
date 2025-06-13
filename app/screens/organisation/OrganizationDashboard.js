@@ -88,27 +88,50 @@ export default function OrganizationDashboard() {
     { title: "Donations", value: "0", icon: "gift-outline" },
     { title: "Completed", value: "0", icon: "checkmark-circle-outline" }
   ]);
+
   const [loading, setLoading] = useState(true);
+  const [weeklyRequestData, setWeeklyRequestData] = useState({
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    values: [0, 0, 0, 0, 0, 0, 0]
+  });
+  const [requestStatus, setRequestStatus] = useState({
+    fulfilled: 0,
+    pending: 0
+  });
 
   // Organization user ID - in a real app, this would come from authentication
   const orgUserId = "user_3";
 
   useEffect(() => {
-    const fetchDashboardStats = async () => {
+    const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/orgdash/stats/${orgUserId}`);
-        if (response.data && response.data.stats) {
-          setStats(response.data.stats);
+
+        // Fetch stats
+        const statsResponse = await axios.get(`/api/orgdash/stats/${orgUserId}`);
+        if (statsResponse.data && statsResponse.data.stats) {
+          setStats(statsResponse.data.stats);
+        }
+
+        // Fetch weekly activity data
+        const weeklyResponse = await axios.get(`/api/orgdash/weekly-activity/${orgUserId}`);
+        if (weeklyResponse.data && weeklyResponse.data.weeklyRequestData) {
+          setWeeklyRequestData(weeklyResponse.data.weeklyRequestData);
+        }
+
+        // Fetch request status
+        const statusResponse = await axios.get(`/api/orgdash/request-status/${orgUserId}`);
+        if (statusResponse.data && statusResponse.data.requestStatus) {
+          setRequestStatus(statusResponse.data.requestStatus);
         }
       } catch (error) {
-        console.error("Error fetching dashboard stats:", error);
+        console.error("Error fetching dashboard data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDashboardStats();
+    fetchDashboardData();
   }, []);
   
   const notifications = [
@@ -117,12 +140,7 @@ export default function OrganizationDashboard() {
     { message: "You claimed 10 rice packs from Spicy House", time: "2 days ago", icon: "cart-outline" },
     { message: "Your request for vegetables expires tomorrow", time: "2 days ago", icon: "alert-circle-outline" }
   ];
-  
-  // Weekly request data
-  const weeklyRequestData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    values: [2, 3, 1, 5, 2, 3, 1]
-  };
+
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-5">
@@ -133,7 +151,7 @@ export default function OrganizationDashboard() {
       </View>
       
       <ScrollView className="flex-1 p-4">
-        {/* Welcome Section */}
+        {/* Welcome, Section */}
         <View className="mb-5">
           <Text className="text-2xl font-semibold text-gray-800">Welcome back, Happy Elders Home 👋</Text>
           <Text className="text-sm text-gray-500 mt-1">Here's what's happening with your food requests</Text>
@@ -156,17 +174,25 @@ export default function OrganizationDashboard() {
         <View className="bg-white rounded-lg p-4 mb-5 shadow">
           <Text className="text-lg font-bold mb-3 text-gray-800">Activity Trends</Text>
           
-          {/* Weekly Request Chart */}
-          <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">Weekly Request Activity</Text>
-            <SimpleBarChart data={weeklyRequestData} />
-          </View>
-          
-          {/* Request Status */}
-          <View className="mb-2">
-            <Text className="text-sm font-medium text-gray-700 mb-1">Request Status (This Month)</Text>
-            <ProgressBar fulfilled={15} pending={5} />
-          </View>
+          {loading ? (
+            <View className="items-center justify-center py-4">
+              <ActivityIndicator size="large" color="#00CCBB" />
+            </View>
+          ) : (
+            <>
+              {/* Weekly Request Chart */}
+              <View className="mb-4">
+                <Text className="text-sm font-medium text-gray-700 mb-2">Weekly Request Activity</Text>
+                <SimpleBarChart data={weeklyRequestData} />
+              </View>
+
+              {/* Request Status */}
+              <View className="mb-2">
+                <Text className="text-sm font-medium text-gray-700 mb-1">Request Status (This Month)</Text>
+                <ProgressBar fulfilled={requestStatus.fulfilled} pending={requestStatus.pending} />
+              </View>
+            </>
+          )}
         </View>
         
         {/* Quick Actions */}
