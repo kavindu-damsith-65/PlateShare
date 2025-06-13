@@ -155,7 +155,7 @@ const Payment = sequelize.define('payment', {
 // Order Model
 const Order = sequelize.define('order', {
     id: { type: DataTypes.STRING, primaryKey: true },
-    food_bucket_ids: { type: DataTypes.STRING },
+    food_bucket_id: { type: DataTypes.INTEGER },
     user_id: { type: DataTypes.STRING },
     status: { type: DataTypes.INTEGER },
     price: { type: DataTypes.DECIMAL(5,2) }
@@ -238,6 +238,9 @@ Product.belongsTo(Category, { foreignKey: 'category_id' });
 
 User.hasOne(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
 FoodBucket.belongsTo(User, { foreignKey: "user_id" });
+
+Order.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
+FoodBucketProduct.belongsTo(Order, { foreignKey: 'food_bucket_id', as: 'order' });
 
 FoodBucket.belongsToMany(Product, {
     through: FoodBucketProduct,

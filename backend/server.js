@@ -14,7 +14,7 @@ const organisationHistoryRoutes = require("./routes/organisationHistoryRoutes");
 const organisationDashboardRoutes = require("./routes/organisationDashboardRoutes");
 const foodBucketRoutes = require("./routes/foodBucketRoutes");
 const donationRoutes = require("./routes/donationRoutes");
-
+const orderRoutes = require("./routes/orderRoutes");
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -31,6 +31,7 @@ app.use("/api/orghistory", organisationHistoryRoutes);
 app.use("/api/orgdash", organisationDashboardRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/foodbucket", foodBucketRoutes);
+app.use("/api/orders", orderRoutes);
 
 sequelize.sync().then(() => {
     console.log("Database connected and synced");

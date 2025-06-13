@@ -124,17 +124,16 @@ export default function SellerDashboard() {
                     </View>
                 </View>
 
-                {/* Pie Chart */}
                 <View className="bg-white rounded-xl shadow p-4 mb-6 items-center">
-                    <Text className="text-lg font-bold text-gray-800 mb-2">Donation Distribution</Text>
+                    <Text className="text-lg font-bold text-gray-800 mb-2">Product Distribution</Text>
                     <PieChart
-                        data={pieData.map(d => ({
-                            name: d.name,
-                            population: d.quantity,
-                            color: d.color,
-                            legendFontColor: d.legendFontColor,
-                            legendFontSize: d.legendFontSize,
-                        }))}
+                        data={products.map((p, idx) => ({
+                            name: p.name,
+                            population: p.quantity || 0,
+                            color: ['#00CCBB', '#facc15', '#10B981', '#EC4899', '#6366F1'][idx % 5],
+                            legendFontColor: '#222',
+                            legendFontSize: 14,
+                        })).filter(d => d.population > 0)}
                         width={Dimensions.get('window').width - 64}
                         height={160}
                         chartConfig={{
@@ -170,8 +169,7 @@ export default function SellerDashboard() {
                     />
                 </View>
 
-                {/* Restaurant Info Card */}
-                <View className="bg-white rounded-lg p-4 mb-5 shadow rounded-2xl flex-row items-center">
+                <View className="bg-white rounded-lg p-4 mb-5 shadow flex-row items-center">
                     <View className="flex-1 pr-4">
                         <Text className="text-lg font-bold text-gray-800 mb-1">
                             {seller.restaurant.name.replace(/\b\w/g, c => c.toUpperCase())}
@@ -217,10 +215,13 @@ export default function SellerDashboard() {
                         </View>
                         <Ionicons name="chevron-forward" size={18} color="#6366F1" />
                     </TouchableOpacity>
-                    <TouchableOpacity className="flex-row items-center justify-between p-3 bg-pink-100 rounded-lg">
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Menu')}
+                        className="flex-row items-center justify-between p-3 bg-pink-100 rounded-lg"
+                    >
                         <View className="flex-row items-center">
                             <Ionicons name="bar-chart-outline" size={22} color="#EC4899" />
-                            <Text className="ml-2 text-pink-700 font-medium">Sales Analytics</Text>
+                            <Text className="ml-2 text-pink-700 font-medium">Manage Products/Menu</Text>
                         </View>
                         <Ionicons name="chevron-forward" size={18} color="#EC4899" />
                     </TouchableOpacity>

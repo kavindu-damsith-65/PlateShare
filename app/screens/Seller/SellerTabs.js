@@ -6,6 +6,7 @@ import SellerRequests from './SellerRequests';
 import SellerDonations from './SellerDonations';
 import SellerMenu from './SellerMenu';
 import SellerProfile from './SellerProfile';
+import SellerOrders from './SellerOrders';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +27,9 @@ export default function SellerTabs() {
                     } else if (route.name === "Profile") {
                         iconName = "person-outline";
                     }
+                    else if (route.name === "Orders") {
+                        iconName = "list-outline";
+                    }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: "#00CCBB",
@@ -37,7 +41,10 @@ export default function SellerTabs() {
             <Tab.Screen name="Requests" component={SellerRequests} />
             <Tab.Screen name="Donations" component={SellerDonations} />
             <Tab.Screen name="Menu" component={SellerMenu} />
+            <Tab.Screen name="Orders" component={SellerOrders} />
             <Tab.Screen name="Profile" component={SellerProfile} />
+
+
         </Tab.Navigator>
     );
 }
