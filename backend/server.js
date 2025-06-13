@@ -11,6 +11,7 @@ const restaurantRoutes = require("./routes/restaurantRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const organisationRequestsRoutes = require("./routes/organisationRequestsRoutes");
 const organisationHistoryRoutes = require("./routes/organisationHistoryRoutes");
+const organisationDashboardRoutes = require("./routes/organisationDashboardRoutes");
 const foodBucketRoutes = require("./routes/foodBucketRoutes");
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/orgrequests", organisationRequestsRoutes);
 app.use("/api/orghistory", organisationHistoryRoutes);
+app.use("/api/orgdash", organisationDashboardRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/foodbucket", foodBucketRoutes);
 
