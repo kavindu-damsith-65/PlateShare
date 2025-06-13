@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, FlatList, Image, Dimensions } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAxios from '../../hooks/useAxios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";

@@ -1,6 +1,6 @@
 import {Image, Modal, Text, TouchableOpacity, View, Alert} from "react-native";
 import {StarIcon, PencilIcon, TrashIcon} from "react-native-heroicons/outline";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import ReviewFormModal from "../Buyer/ReviewFormModal";
 import useAxios from '../../hooks/useAxios';
 

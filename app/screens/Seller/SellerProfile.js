@@ -42,7 +42,7 @@ export default function SellerProfile() {
 
     if (loading) {
         return (
-            <SafeAreaView className="flex-1 bg-gray-100 pt-5">
+            <SafeAreaView className="flex-1 bg-gray-100 pt-7">
                 <StatusBar style="dark" />
 
                 <View className="px-5 py-4 bg-white border-b border-gray-200">
@@ -117,14 +117,14 @@ export default function SellerProfile() {
 
     if (!seller) {
         return (
-            <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
+            <SafeAreaView className="flex-1 justify-center items-center bg-gray-100 pt-7">
                 <Text className="text-red-500">Failed to load seller data.</Text>
             </SafeAreaView>
         );
     }
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-100 pt-5">
+        <SafeAreaView className="flex-1 bg-gray-100 pt-7">
             <StatusBar style="dark" />
             
             <View className="px-5 py-4 bg-white border-b border-gray-200">
