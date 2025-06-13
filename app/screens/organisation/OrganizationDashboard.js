@@ -99,14 +99,20 @@ export default function OrganizationDashboard() {
     pending: 0
   });
   const [recentUpdates, setRecentUpdates] = useState([]);
+  const [orgName, setOrgName] = useState(""); // Add state for organization name
 
   // Organization user ID - in a real app, this would come from authentication
   const orgUserId = "user_3";
 
   useEffect(() => {
     const fetchDashboardData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
+        // Fetch organization details to get the name
+        const orgResponse = await axios.get(`/api/user/organization/${orgUserId}`);
+        if (orgResponse.data && orgResponse.data.organization) {
+          setOrgName(orgResponse.data.organization.user.name);
+        }
         
         // Fetch all data in parallel
         const [statsResponse, weeklyResponse, statusResponse, updatesResponse] = await Promise.all([
@@ -115,20 +121,20 @@ export default function OrganizationDashboard() {
           axios.get(`/api/orgdash/request-status/${orgUserId}`),
           axios.get(`/api/orgdash/recent-updates/${orgUserId}`)
         ]);
-        
+
         // Update state with fetched data
         if (statsResponse.data && statsResponse.data.stats) {
           setStats(statsResponse.data.stats);
         }
-        
+
         if (weeklyResponse.data && weeklyResponse.data.weeklyRequestData) {
           setWeeklyRequestData(weeklyResponse.data.weeklyRequestData);
         }
-        
+
         if (statusResponse.data && statusResponse.data.requestStatus) {
           setRequestStatus(statusResponse.data.requestStatus);
         }
-        
+
         if (updatesResponse.data && updatesResponse.data.updates) {
           setRecentUpdates(updatesResponse.data.updates);
         }
@@ -140,9 +146,7 @@ export default function OrganizationDashboard() {
     };
 
     fetchDashboardData();
-  }, []);
-  
-
+  }, []);  
   return (
     <SafeAreaView className="flex-1 bg-gray-100 pt-5">
       <StatusBar style="dark" />
@@ -152,18 +156,32 @@ export default function OrganizationDashboard() {
       </View>
       
       <ScrollView className="flex-1 p-4">
-        {/* Welcome, Section */}
+         {/* Welcome Section */}
         <View className="mb-5">
-          <Text className="text-2xl font-semibold text-gray-800">Welcome back, Happy Elders Home 👋</Text>
-          <Text className="text-sm text-gray-500 mt-1">Here's what's happening with your food requests</Text>
+          {loading ? (
+            <>
+              <View className="h-8 w-3/4 bg-gray-200 rounded mb-2" />
+              <View className="h-4 w-full bg-gray-200 rounded" />
+            </>
+          ) : (
+            <>
+              <Text className="text-2xl font-semibold text-gray-800">Welcome back, {orgName} 👋</Text>
+              <Text className="text-sm text-gray-500 mt-1">Here's what's happening with your food requests</Text>
+            </>
+          )}
         </View>
         
         {/* Stats Cards */}
         <View className="flex-row justify-between mb-5">
           {loading ? (
-            <View className="flex-1 items-center justify-center py-4">
-              <ActivityIndicator size="large" color="#00CCBB" />
-            </View>
+            <>
+              {Array(3).fill().map((_, index) => (
+                <View key={`stat-skeleton-${index}`} className="flex-1 bg-white rounded-lg p-4 mx-1 items-center shadow">
+                  <View className="h-8 w-12 bg-gray-200 rounded mb-1" />
+                  <View className="h-4 w-20 bg-gray-200 rounded mt-1" />
+                </View>
+              ))}
+            </>
           ) : (
             stats.map((stat, index) => (
               <StatCard key={index} title={stat.title} value={stat.value} icon={stat.icon} />
@@ -176,9 +194,48 @@ export default function OrganizationDashboard() {
           <Text className="text-lg font-bold mb-3 text-gray-800">Activity Trends</Text>
           
           {loading ? (
-            <View className="items-center justify-center py-4">
-              <ActivityIndicator size="large" color="#00CCBB" />
-            </View>
+            <>
+              {/* Weekly Request Chart Skeleton */}
+              <View className="mb-4">
+                <View className="h-5 w-40 bg-gray-200 rounded mb-2" />
+                <View className="mt-2">
+                  <View className="flex-row justify-between mb-6">
+                    {Array(7).fill().map((_, index) => (
+                      <View key={`label-skeleton-${index}`} className="h-3 w-8 bg-gray-200 rounded flex-1 mx-1" />
+                    ))}
+                  </View>
+                  <View className="flex-row justify-between h-32 items-end">
+                    {Array(7).fill().map((_, index) => (
+                      <View key={`bar-skeleton-${index}`} className="flex-1 mx-1 items-center">
+                        <View
+                          className="bg-gray-200 rounded-t-md w-8"
+                          style={{ height: `${Math.random() * 80 + 20}%` }}
+                        />
+                        <View className="h-3 w-6 bg-gray-200 rounded mt-1" />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+
+              {/* Request Status Skeleton */}
+              <View className="mb-2">
+                <View className="h-5 w-48 bg-gray-200 rounded mb-1" />
+                <View className="mt-2">
+                  <View className="h-4 w-full bg-gray-200 rounded-full mb-2" />
+                  <View className="flex-row justify-between">
+                    <View className="flex-row items-center">
+                      <View className="w-3 h-3 rounded-full bg-gray-300 mr-1" />
+                      <View className="h-4 w-32 bg-gray-200 rounded" />
+                    </View>
+                    <View className="flex-row items-center">
+                      <View className="w-3 h-3 rounded-full bg-gray-300 mr-1" />
+                      <View className="h-4 w-32 bg-gray-200 rounded" />
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </>
           ) : (
             <>
               {/* Weekly Request Chart */}
@@ -229,9 +286,17 @@ export default function OrganizationDashboard() {
           </View>
           
           {loading ? (
-            <View className="items-center justify-center py-8 bg-white rounded-lg shadow">
-              <ActivityIndicator size="large" color="#00CCBB" />
-            </View>
+            <>
+              {Array(3).fill().map((_, index) => (
+                <View key={`notification-skeleton-${index}`} className="flex-row items-center bg-white rounded-lg p-3 mb-3 shadow-sm">
+                  <View className="bg-gray-200 p-2 rounded-full mr-3" style={{ width: 36, height: 36 }} />
+                  <View className="flex-1">
+                    <View className="h-4 w-3/4 bg-gray-200 rounded mb-1" />
+                    <View className="h-3 w-1/3 bg-gray-200 rounded mt-1" />
+                  </View>
+                </View>
+              ))}
+            </>
           ) : recentUpdates.length > 0 ? (
             recentUpdates.map((update, index) => (
               <NotificationItem 
