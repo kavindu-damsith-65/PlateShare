@@ -156,15 +156,6 @@ const Payment = sequelize.define('payment', {
     price: { type: DataTypes.DECIMAL(5,2) }
 });
 
-// // Order Model
-// const Order = sequelize.define('order', {
-//     id: { type: DataTypes.STRING, primaryKey: true },
-//     food_bucket_id: { type: DataTypes.INTEGER },
-//     user_id: { type: DataTypes.STRING },
-//     status: { type: DataTypes.INTEGER },
-//     price: { type: DataTypes.DECIMAL(5,2) }
-// });
-
 // Reviews Model
 const Review = sequelize.define('review', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
