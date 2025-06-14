@@ -128,7 +128,7 @@ const Admin = sequelize.define('admin', {
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: DataTypes.STRING, unique: true },
+    user_id: { type: DataTypes.STRING },
     status: { type: DataTypes.INTEGER },
     price: { type: DataTypes.DECIMAL(5,2) },
     restaurant_id: { type: DataTypes.STRING }
@@ -231,7 +231,7 @@ Donation.belongsTo(Product, { foreignKey: "product_id" });
 Category.hasMany(Product, { foreignKey: 'category_id' });
 Product.belongsTo(Category, { foreignKey: 'category_id' });
 
-User.hasOne(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
+User.hasMany(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
 FoodBucket.belongsTo(User, { foreignKey: "user_id" });
 
 FoodBucket.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
