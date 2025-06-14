@@ -13,6 +13,8 @@ export default function LoginScreen({ navigation }) {
         navigation.replace('BuyerDashboard');
       } else if (role === 'seller') {
         navigation.replace('SellerDashboard');
+      } else if (role === 'delivery') {
+        navigation.replace('DeliveryDashboard');
       } else {
         navigation.replace('OrganizationDashboard');
       }
@@ -26,7 +28,6 @@ export default function LoginScreen({ navigation }) {
       <StatusBar style="dark" />
       
       <Animatable.View animation="fadeIn" duration={1000} className="items-center mb-16">
-
         <Text className="text-3xl font-bold text-[#00CCBB] mb-2">PlateShare</Text>
         <Text className="text-base text-gray-600 text-center">Reducing waste, feeding communities</Text>
       </Animatable.View>
@@ -45,11 +46,19 @@ export default function LoginScreen({ navigation }) {
         >
           <Text className="text-white text-lg font-bold">Continue as Organization</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+
+        <TouchableOpacity
           className="py-4 rounded-lg bg-[#542de4] items-center mb-4"
           onPress={() => handleLogin('seller')}
         >
           <Text className="text-white text-lg font-bold">Continue as Seller</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="py-4 rounded-lg bg-[#FF4500] items-center mb-4"
+          onPress={() => handleLogin('delivery')}
+        >
+          <Text className="text-white text-lg font-bold">Continue as Delivery Partner</Text>
         </TouchableOpacity>
       </Animatable.View>
     </View>
