@@ -1,4 +1,4 @@
-const { Order, Restaurant, FoodBucketProduct, User } = require("../models/AuthModel");
+const { FoodBucket, Restaurant, FoodBucketProduct, User } = require("../models/AuthModel");
 const Sequelize = require("sequelize");
 
 exports.getOrdersByRestaurantId = async (req, res) => {
@@ -10,14 +10,17 @@ exports.getOrdersByRestaurantId = async (req, res) => {
             return res.status(404).json({ message: "Restaurant not found" });
         }
 
-        const orders = await Order.findAll({
+        const orders = await FoodBucket.findAll({
             where: { restaurant_id: restaurantId },
             include: [
             {
                 model: FoodBucketProduct,
                 as: 'foodBucketProducts',
-                where: { food_bucket_id: Sequelize.col('order.food_bucket_id') },
                 required: false
+            },
+            {
+                model: User,
+                attributes: ['name', 'profile_picture']
             }
             ]
         });

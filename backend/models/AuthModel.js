@@ -27,7 +27,9 @@ const SellerDetails = sequelize.define('seller_details', {
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    createdAt: { type: DataTypes.DATE },
+    offers_delivery: { type: DataTypes.BOOLEAN, defaultValue: false },
+    delivery_fee: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 },
+    min_order_for_delivery: { type: DataTypes.DECIMAL(6, 2), defaultValue: 0.00 },
 });
 
 // Organization Details Model
@@ -39,6 +41,22 @@ const OrgDetails = sequelize.define('org_details', {
     location: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
+});
+
+// Delivery Details Model
+const DeliveryDetails = sequelize.define('delivery_details', {
+    user_id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
+    phone: { type: DataTypes.STRING },
+    address: { type: DataTypes.STRING },
+    location: { type: DataTypes.STRING },
+    availability: { type: DataTypes.BOOLEAN, defaultValue: true },
+    vehicle_type: { 
+        type: DataTypes.ENUM('bicycle', 'motorcycle', 'car', 'walking'),
+        allowNull: true 
+    },
+    total_deliveries: { type: DataTypes.INTEGER, defaultValue: 0 },
+    rating: { type: DataTypes.DECIMAL(3, 2), defaultValue: 5.00 },
 });
 
 // Restaurant Model
@@ -128,7 +146,11 @@ const Admin = sequelize.define('admin', {
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: DataTypes.STRING, unique: true }
+    user_id: { type: DataTypes.STRING },
+    status: { type: DataTypes.INTEGER },
+    price: { type: DataTypes.DECIMAL(5,2) },
+    restaurant_id: { type: DataTypes.STRING }
+
 });
 
 const FoodBucketProduct = sequelize.define('food_bucket_product', {
@@ -148,16 +170,7 @@ const FoodBucketProduct = sequelize.define('food_bucket_product', {
 // Payment Model
 const Payment = sequelize.define('payment', {
     id: { type: DataTypes.STRING, primaryKey: true },
-    order_id: { type: DataTypes.STRING },
-    price: { type: DataTypes.DECIMAL(5,2) }
-});
-
-// Order Model
-const Order = sequelize.define('order', {
-    id: { type: DataTypes.STRING, primaryKey: true },
-    food_bucket_id: { type: DataTypes.INTEGER },
-    user_id: { type: DataTypes.STRING },
-    status: { type: DataTypes.INTEGER },
+    order_id: { type: DataTypes.INTEGER},
     price: { type: DataTypes.DECIMAL(5,2) }
 });
 
@@ -177,6 +190,38 @@ const Donation = sequelize.define('donation', {
     restaurant_id: { type: DataTypes.STRING, allowNull: false },
     product_id: { type: DataTypes.STRING, allowNull: false },
     quantity: { type: DataTypes.INTEGER }
+});
+
+// Delivery Request Model
+const DeliveryRequest = sequelize.define('delivery_request', {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    order_id: { type: DataTypes.INTEGER, allowNull: false },
+    buyer_id: { type: DataTypes.STRING, allowNull: false },
+    volunteer_id: { type: DataTypes.STRING, allowNull: true }, // Set when accepted
+    status: {
+    type: DataTypes.ENUM('pending', 'accepted', 'picked_up', 'delivered'),
+    defaultValue: 'pending'
+    },
+    pickup_address: { type: DataTypes.TEXT, allowNull: false },
+    delivery_address: { type: DataTypes.TEXT, allowNull: false },
+    delivery_fee: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 },
+});
+
+const DeliveryReview = sequelize.define('delivery_review', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    delivery_request_id: { type: DataTypes.STRING, allowNull: false },
+    reviewer_id: { type: DataTypes.STRING, allowNull: false },
+    volunteer_id: { type: DataTypes.STRING, allowNull: false },
+    reviewer_type: { 
+        type: DataTypes.ENUM('buyer', 'restaurant'),
+        allowNull: false 
+    },
+    rating: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        validate: { min: 1, max: 5 }
+    },
+    comment: { type: DataTypes.TEXT, allowNull: true },
 });
 
 // Relationships
@@ -236,11 +281,11 @@ Donation.belongsTo(Product, { foreignKey: "product_id" });
 Category.hasMany(Product, { foreignKey: 'category_id' });
 Product.belongsTo(Category, { foreignKey: 'category_id' });
 
-User.hasOne(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
+User.hasMany(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
 FoodBucket.belongsTo(User, { foreignKey: "user_id" });
 
-Order.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
-FoodBucketProduct.belongsTo(Order, { foreignKey: 'food_bucket_id', as: 'order' });
+FoodBucket.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
+FoodBucketProduct.belongsTo(FoodBucket, { foreignKey: 'food_bucket_id', as: 'foodBucket' });
 
 FoodBucket.belongsToMany(Product, {
     through: FoodBucketProduct,
@@ -255,8 +300,32 @@ Product.belongsToMany(FoodBucket, {
     onDelete: "CASCADE"
 });
 
+// User - DeliveryDetails relationship (one-to-one)
+User.hasOne(DeliveryDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE" });
+DeliveryDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
+
+// DeliveryRequest relationships
+User.hasMany(DeliveryRequest, { foreignKey: "buyer_id", as: "buyerDeliveryRequests", onDelete: "CASCADE" });
+DeliveryRequest.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
+
+User.hasMany(DeliveryRequest, { foreignKey: "volunteer_id", as: "volunteerDeliveryRequests" });
+DeliveryRequest.belongsTo(User, { foreignKey: "volunteer_id", as: "volunteer" });
+
+FoodBucket.hasOne(DeliveryRequest, { foreignKey: "order_id", onDelete: "CASCADE" });
+DeliveryRequest.belongsTo(FoodBucket, { foreignKey: "order_id", constraints: false });
+
+// DeliveryReview relationships
+DeliveryRequest.hasMany(DeliveryReview, { foreignKey: "delivery_request_id", onDelete: "CASCADE" });
+DeliveryReview.belongsTo(DeliveryRequest, { foreignKey: "delivery_request_id" });
+
+User.hasMany(DeliveryReview, { foreignKey: "reviewer_id", as: "givenDeliveryReviews", onDelete: "CASCADE" });
+DeliveryReview.belongsTo(User, { foreignKey: "reviewer_id", as: "reviewer" });
+
+User.hasMany(DeliveryReview, { foreignKey: "volunteer_id", as: "receivedDeliveryReviews" });
+DeliveryReview.belongsTo(User, { foreignKey: "volunteer_id", as: "reviewedVolunteer" });
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, Order, ProductSubProduct, Review, Donation,
-    Category
+    FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, ProductSubProduct, Review, Donation,
+    Category, DeliveryDetails, DeliveryRequest, DeliveryReview
 };
