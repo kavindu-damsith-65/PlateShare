@@ -128,7 +128,11 @@ const Admin = sequelize.define('admin', {
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: DataTypes.STRING, unique: true }
+    user_id: { type: DataTypes.STRING, unique: true },
+    status: { type: DataTypes.INTEGER },
+    price: { type: DataTypes.DECIMAL(5,2) },
+    restaurant_id: { type: DataTypes.STRING }
+
 });
 
 const FoodBucketProduct = sequelize.define('food_bucket_product', {
@@ -152,14 +156,14 @@ const Payment = sequelize.define('payment', {
     price: { type: DataTypes.DECIMAL(5,2) }
 });
 
-// Order Model
-const Order = sequelize.define('order', {
-    id: { type: DataTypes.STRING, primaryKey: true },
-    food_bucket_id: { type: DataTypes.INTEGER },
-    user_id: { type: DataTypes.STRING },
-    status: { type: DataTypes.INTEGER },
-    price: { type: DataTypes.DECIMAL(5,2) }
-});
+// // Order Model
+// const Order = sequelize.define('order', {
+//     id: { type: DataTypes.STRING, primaryKey: true },
+//     food_bucket_id: { type: DataTypes.INTEGER },
+//     user_id: { type: DataTypes.STRING },
+//     status: { type: DataTypes.INTEGER },
+//     price: { type: DataTypes.DECIMAL(5,2) }
+// });
 
 // Reviews Model
 const Review = sequelize.define('review', {
@@ -239,8 +243,8 @@ Product.belongsTo(Category, { foreignKey: 'category_id' });
 User.hasOne(FoodBucket, { foreignKey: "user_id", onDelete: "CASCADE" });
 FoodBucket.belongsTo(User, { foreignKey: "user_id" });
 
-Order.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
-FoodBucketProduct.belongsTo(Order, { foreignKey: 'food_bucket_id', as: 'order' });
+FoodBucket.hasMany(FoodBucketProduct, { foreignKey: 'food_bucket_id', as: 'foodBucketProducts' });
+FoodBucketProduct.belongsTo(FoodBucket, { foreignKey: 'food_bucket_id', as: 'foodBucket' });
 
 FoodBucket.belongsToMany(Product, {
     through: FoodBucketProduct,
@@ -257,6 +261,6 @@ Product.belongsToMany(FoodBucket, {
 
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
-    FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, Order, ProductSubProduct, Review, Donation,
+    FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, ProductSubProduct, Review, Donation,
     Category
 };
