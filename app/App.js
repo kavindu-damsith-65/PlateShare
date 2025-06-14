@@ -18,6 +18,8 @@ import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import SellerTabs from "./screens/Seller/SellerTabs";
 import DeliveryTabs from "./screens/Delivery/DeliveryTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
+import SellerRequestDetails from "./screens/Seller/SellerRequestDetails";
+import SellerDonationForm from "./screens/Seller/SellerDonationForm";
 import SearchScreen from "./screens/Buyer/SearchScreen";
 import CategoryResultsScreen from "./screens/Buyer/CategoryResultsScreen";
 import SearchResultsScreen from "./screens/Buyer/SearchResultsScreen";
@@ -92,6 +94,20 @@ function App(){
                         <Stack.Screen
                             name="RequestDetails"
                             component={RequestDetails}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="SellerRequestDetails"
+                            component={SellerRequestDetails}
+                            options={{
+                                headerShown: false,
+                            }}
+                        />
+                        <Stack.Screen
+                            name="SellerDonationForm"
+                            component={SellerDonationForm}
                             options={{
                                 headerShown: false,
                             }}

@@ -2,15 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal, FlatList, Alert } from 'react-native';
 import useAxios from '../../hooks/useAxios';
 
-const AddMenuItemForm = ({ restaurantId, onClose }) => {
+const UpdateMenuItemForm = ({ restaurantId, item, onClose, onUpdated }) => {
     const axios = useAxios();
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [name, setName] = useState(item.name);
+    const [description, setDescription] = useState(item.description);
+    const [price, setPrice] = useState(item.price.toString());
+    const [quantity, setQuantity] = useState(item.quantity.toString());
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [selectedCategoryName, setSelectedCategoryName] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(
+        item.categoryId || (typeof item.category === 'object' ? item.category.id : '')
+    );
+    const [selectedCategoryName, setSelectedCategoryName] = useState(
+        typeof item.category === 'string'
+            ? item.category
+            : (item.category?.name || item.category?.category || '')
+    );
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
@@ -38,21 +44,25 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
                 quantity: parseInt(quantity, 10),
                 categoryId: selectedCategory,
             };
-            const response = await axios.post(`/api/products/seller/add/${restaurantId}`, payload);
-            if (response.status === 201) {
-                Alert.alert('Success', 'Menu item added successfully');
+            const response = await axios.put(
+                `/api/products/seller/update/${item.id}/${restaurantId}`,
+                payload
+            );
+            if (response.status === 200) {
+                Alert.alert('Success', 'Menu item updated successfully');
+                onUpdated && onUpdated();
                 onClose();
             } else {
-                Alert.alert('Error', 'Failed to add menu item');
+                Alert.alert('Error', 'Failed to update menu item');
             }
         } catch (error) {
-            Alert.alert('Error', 'Error adding menu item');
+            Alert.alert('Error', 'Error updating menu item');
         }
     };
 
     return (
         <ScrollView className="flex-1 bg-white p-6">
-            <Text className="text-2xl font-bold text-gray-800 mb-6">Add Menu Item</Text>
+            <Text className="text-2xl font-bold text-gray-800 mb-6">Update Menu Item</Text>
 
             <Text className="text-sm font-medium text-gray-700 mb-1">Name</Text>
             <TextInput
@@ -120,17 +130,17 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
                         <Text className="text-lg font-bold mb-3">Select Category</Text>
                         <FlatList
                             data={categories}
-                            keyExtractor={item => item.id}
-                            renderItem={({ item }) => (
+                            keyExtractor={cat => cat.id}
+                            renderItem={({ item: cat }) => (
                                 <TouchableOpacity
                                     className="py-2"
                                     onPress={() => {
-                                        setSelectedCategory(item.id);
-                                        setSelectedCategoryName(item.category);
+                                        setSelectedCategory(cat.id);
+                                        setSelectedCategoryName(cat.name || cat.category || '');
                                         setModalVisible(false);
                                     }}
                                 >
-                                    <Text className="text-base text-gray-700">{item.category}</Text>
+                                    <Text className="text-base text-gray-700">{cat.name || cat.category || ''}</Text>
                                 </TouchableOpacity>
                             )}
                         />
@@ -149,11 +159,11 @@ const AddMenuItemForm = ({ restaurantId, onClose }) => {
                     onPress={handleSubmit}
                     className="rounded-md bg-indigo-600 px-4 py-2"
                 >
-                    <Text className="text-white font-medium">Add Item</Text>
+                    <Text className="text-white font-medium">Update Item</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
     );
 };
 
-export default AddMenuItemForm;
+export default UpdateMenuItemForm;

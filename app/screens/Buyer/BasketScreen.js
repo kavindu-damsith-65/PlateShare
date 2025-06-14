@@ -31,29 +31,33 @@ const BasketScreen = ({ navigation }) => {
   const axios = useAxios();
 
   const handlePlaceOrder = async () => {
-    try {
-      const user_id = "user_1";
-      const itemMap = {};
-      items.forEach((item) => {
-        if (!itemMap[item.id]) {
-          itemMap[item.id] = 1;
-        } else {
-          itemMap[item.id]++;
-        }
-      });
-
-      for (const [product_id, amount] of Object.entries(itemMap)) {
-        await axios.post("/api/foodbucket/add", {
-          user_id,
-          product_id,
-          amount,
-        });
-      }
-      navigation.navigate("Prepare");
-    } catch (error) {
-      Alert.alert("Error", "Could not place order.");
+  try {
+    const user_id = "user_1";
+    
+    // Group items by their IDs and count quantities
+    const basketItems = Object.entries(groupItemsBasket).map(([id, items]) => ({
+      product_id: id,
+      quantity: items.length
+    }));
+    
+    if (basketItems.length === 0) {
+      Alert.alert("Error", "Your basket is empty");
+      return;
     }
-  };
+    
+    await axios.post("/api/foodbucket/add", {
+      user_id,
+      restaurant_id: restaurant.id,
+      items: basketItems,
+      total_price: basketTotal
+    });
+    
+    navigation.navigate("Prepare");
+  } catch (error) {
+    console.error("Order error:", error);
+    Alert.alert("Error", "Could not place order.");
+  }
+};
 
   useMemo(() => {
     const groupedItems = items.reduce((results, item) => {

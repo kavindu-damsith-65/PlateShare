@@ -1,6 +1,7 @@
 const express = require("express");
 const { 
-    getIncompleteRequests, 
+    getIncompleteRequests,
+    getAllRequests, 
     getRequestById, 
     markRequestCompleted,
     toggleRequestVisibility,
@@ -13,6 +14,9 @@ const router = express.Router();
 
 // Get all incomplete food requests for an organization
 router.get("/requests/incomplete/:orgUserId", getIncompleteRequests);
+
+// Get all food requests for sellers
+router.get("/requests", getAllRequests);
 
 // Get a specific food request with donations
 router.get("/requests/:requestId", getRequestById);

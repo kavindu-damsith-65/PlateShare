@@ -1,5 +1,5 @@
 import {View, Text, TouchableOpacity, FlatList, Dimensions} from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RestaurantCard from "./RestaurantCard";
 import useAxios from '../../hooks/useAxios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
