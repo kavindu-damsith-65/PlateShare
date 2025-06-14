@@ -170,7 +170,7 @@ const FoodBucketProduct = sequelize.define('food_bucket_product', {
 // Payment Model
 const Payment = sequelize.define('payment', {
     id: { type: DataTypes.STRING, primaryKey: true },
-    order_id: { type: DataTypes.STRING },
+    order_id: { type: DataTypes.INTEGER},
     price: { type: DataTypes.DECIMAL(5,2) }
 });
 
@@ -195,7 +195,7 @@ const Donation = sequelize.define('donation', {
 // Delivery Request Model
 const DeliveryRequest = sequelize.define('delivery_request', {
     id: { type: DataTypes.STRING, primaryKey: true },
-    order_id: { type: DataTypes.STRING, allowNull: false },
+    order_id: { type: DataTypes.INTEGER, allowNull: false },
     buyer_id: { type: DataTypes.STRING, allowNull: false },
     volunteer_id: { type: DataTypes.STRING, allowNull: true }, // Set when accepted
     status: {
