@@ -1,7 +1,7 @@
 const { FoodBucket, Product, FoodBucketProduct } = require("../models/AuthModel");
 
-// Add item to food bucket (cart)
-exports.addToFoodBucket = async (req, res) => {
+//  Place an order by creating a food bucket (cart)
+exports.placeOrder = async (req, res) => {
     try {
         const { user_id, restaurant_id, items, total_price } = req.body;
         
