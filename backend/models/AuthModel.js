@@ -27,7 +27,6 @@ const SellerDetails = sequelize.define('seller_details', {
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
-    createdAt: { type: DataTypes.DATE },
 });
 
 // Organization Details Model
@@ -39,6 +38,22 @@ const OrgDetails = sequelize.define('org_details', {
     location: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
+});
+
+// Delivery Details Model
+const DeliveryDetails = sequelize.define('delivery_details', {
+    user_id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
+    phone: { type: DataTypes.STRING },
+    address: { type: DataTypes.STRING },
+    location: { type: DataTypes.STRING },
+    availability: { type: DataTypes.BOOLEAN, defaultValue: true },
+    vehicle_type: { 
+        type: DataTypes.ENUM('bicycle', 'motorcycle', 'car', 'walking'),
+        allowNull: true 
+    },
+    total_deliveries: { type: DataTypes.INTEGER, defaultValue: 0 },
+    rating: { type: DataTypes.DECIMAL(3, 2), defaultValue: 5.00 },
 });
 
 // Restaurant Model
