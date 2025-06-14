@@ -27,6 +27,9 @@ const SellerDetails = sequelize.define('seller_details', {
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.STRING },
     location: { type: DataTypes.STRING },
+    offers_delivery: { type: DataTypes.BOOLEAN, defaultValue: false },
+    delivery_fee: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 },
+    min_order_for_delivery: { type: DataTypes.DECIMAL(6, 2), defaultValue: 0.00 },
 });
 
 // Organization Details Model
@@ -187,6 +190,38 @@ const Donation = sequelize.define('donation', {
     restaurant_id: { type: DataTypes.STRING, allowNull: false },
     product_id: { type: DataTypes.STRING, allowNull: false },
     quantity: { type: DataTypes.INTEGER }
+});
+
+// Delivery Request Model
+const DeliveryRequest = sequelize.define('delivery_request', {
+    id: { type: DataTypes.STRING, primaryKey: true },
+    order_id: { type: DataTypes.STRING, allowNull: false },
+    buyer_id: { type: DataTypes.STRING, allowNull: false },
+    volunteer_id: { type: DataTypes.STRING, allowNull: true }, // Set when accepted
+    status: {
+    type: DataTypes.ENUM('pending', 'accepted', 'picked_up', 'delivered'),
+    defaultValue: 'pending'
+    },
+    pickup_address: { type: DataTypes.TEXT, allowNull: false },
+    delivery_address: { type: DataTypes.TEXT, allowNull: false },
+    delivery_fee: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 },
+});
+
+const DeliveryReview = sequelize.define('delivery_review', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    delivery_request_id: { type: DataTypes.STRING, allowNull: false },
+    reviewer_id: { type: DataTypes.STRING, allowNull: false },
+    volunteer_id: { type: DataTypes.STRING, allowNull: false },
+    reviewer_type: { 
+        type: DataTypes.ENUM('buyer', 'restaurant'),
+        allowNull: false 
+    },
+    rating: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false,
+        validate: { min: 1, max: 5 }
+    },
+    comment: { type: DataTypes.TEXT, allowNull: true },
 });
 
 // Relationships
