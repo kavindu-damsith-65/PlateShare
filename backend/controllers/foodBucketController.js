@@ -3,48 +3,42 @@ const { FoodBucket, Product, FoodBucketProduct } = require("../models/AuthModel"
 // Add item to food bucket (cart)
 exports.addToFoodBucket = async (req, res) => {
     try {
-        const { user_id, product_id, amount, restaurant_id } = req.body;
-        if (!user_id || !product_id || !amount || !restaurant_id) {
-            return res.status(400).json({ message: "user_id, product_id, amount, and restaurant_id are required" });
+        const { user_id, restaurant_id, items, total_price } = req.body;
+        
+        if (!user_id || !restaurant_id || !items || !Array.isArray(items)) {
+            return res.status(400).json({ 
+                message: "user_id, restaurant_id, and items array are required" 
+            });
         }
 
-        // Find or create the user's food bucket
-        let foodBucket = await FoodBucket.findOne({ 
-            where: { 
-                user_id,
-                restaurant_id,
-                status: 0, // assuming status 0 means "active/cart" 
+        const foodBucket = await FoodBucket.create({ 
+            user_id,
+            restaurant_id,
+            status: 0, // active/cart status
+            price: total_price || 0 
+        });
+
+        // Create all items in bulk
+        const bulkItems = items.map(item => ({
+            food_bucket_id: foodBucket.id,
+            product_id: item.product_id,
+            quantity: item.quantity
+        }));
+
+        await FoodBucketProduct.bulkCreate(bulkItems);
+
+        return res.status(200).json({ 
+            message: "Order created successfully", 
+            basket: {
+                id: foodBucket.id,
+                price: foodBucket.price,
+                status: foodBucket.status
             }
         });
-         if (!foodBucket) {
-            foodBucket = await FoodBucket.create({ 
-                user_id,
-                restaurant_id,
-                status: 0,
-                price: 0 // initialize price
-            });
-        }
-
-        // Check if product already exists in the bucket
-        let bucketProduct = await FoodBucketProduct.findOne({
-            where: { food_bucket_id: foodBucket.id, product_id }
-        });
-
-        if (bucketProduct) {
-            bucketProduct.quantity += amount;
-            await bucketProduct.save();
-        } else {
-            bucketProduct = await FoodBucketProduct.create({
-                food_bucket_id: foodBucket.id,
-                product_id,
-                quantity: amount
-            });
-        }
-
-        return res.status(200).json({ message: "Item added to cart", item: bucketProduct });
+        
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
+        console.error("Error creating food bucket:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
