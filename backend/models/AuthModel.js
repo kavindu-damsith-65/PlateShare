@@ -300,8 +300,32 @@ Product.belongsToMany(FoodBucket, {
     onDelete: "CASCADE"
 });
 
+// User - DeliveryDetails relationship (one-to-one)
+User.hasOne(DeliveryDetails, { foreignKey: "user_id", constraints: false, onDelete: "CASCADE" });
+DeliveryDetails.belongsTo(User, { foreignKey: "user_id", constraints: false });
+
+// DeliveryRequest relationships
+User.hasMany(DeliveryRequest, { foreignKey: "buyer_id", as: "buyerDeliveryRequests", onDelete: "CASCADE" });
+DeliveryRequest.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
+
+User.hasMany(DeliveryRequest, { foreignKey: "volunteer_id", as: "volunteerDeliveryRequests" });
+DeliveryRequest.belongsTo(User, { foreignKey: "volunteer_id", as: "volunteer" });
+
+FoodBucket.hasOne(DeliveryRequest, { foreignKey: "order_id", onDelete: "CASCADE" });
+DeliveryRequest.belongsTo(FoodBucket, { foreignKey: "order_id", constraints: false });
+
+// DeliveryReview relationships
+DeliveryRequest.hasMany(DeliveryReview, { foreignKey: "delivery_request_id", onDelete: "CASCADE" });
+DeliveryReview.belongsTo(DeliveryRequest, { foreignKey: "delivery_request_id" });
+
+User.hasMany(DeliveryReview, { foreignKey: "reviewer_id", as: "givenDeliveryReviews", onDelete: "CASCADE" });
+DeliveryReview.belongsTo(User, { foreignKey: "reviewer_id", as: "reviewer" });
+
+User.hasMany(DeliveryReview, { foreignKey: "volunteer_id", as: "receivedDeliveryReviews" });
+DeliveryReview.belongsTo(User, { foreignKey: "volunteer_id", as: "reviewedVolunteer" });
+
 module.exports = {
     User, BuyerDetails, SellerDetails, OrgDetails, Product, Restaurant, SubProduct,
     FoodRequest, Admin, FoodBucket, FoodBucketProduct, Payment, ProductSubProduct, Review, Donation,
-    Category
+    Category, DeliveryDetails, DeliveryRequest, DeliveryReview
 };
