@@ -85,31 +85,3 @@ exports.getFoodBucketByUser = async (req, res) => {
     }
 };
 
-// Delete an item from user's food bucket (cart)
-exports.deleteFoodBucketItem = async (req, res) => {
-    try {
-        const { user_id, product_id } = req.params;
-        if (!user_id || !product_id) {
-            return res.status(400).json({ message: "user_id and product_id are required" });
-        }
-
-        const foodBucket = await FoodBucket.findOne({ where: { user_id } });
-        if (!foodBucket) {
-            return res.status(404).json({ message: "Food bucket not found" });
-        }
-
-        const bucketProduct = await FoodBucketProduct.findOne({
-            where: { food_bucket_id: foodBucket.id, product_id }
-        });
-
-        if (!bucketProduct) {
-            return res.status(404).json({ message: "Item not found in cart" });
-        }
-
-        await bucketProduct.destroy();
-        return res.status(200).json({ message: "Item removed from cart" });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
-    }
-};
