@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../../slices/restaurantSlice";
 import {
@@ -41,15 +41,19 @@ const BasketScreen = ({ navigation }) => {
           itemMap[item.id]++;
         }
       });
-
+      let res = {};
       for (const [product_id, amount] of Object.entries(itemMap)) {
-        await axios.post("/api/foodbucket/add", {
+        res = await axios.post("/api/foodbucket/add", {
           user_id,
           product_id,
           amount,
         });
       }
-      navigation.navigate("Prepare");
+      const id = res.data.item.id;
+      navigation.navigate('Checkout', {
+          user_id: user_id,
+          id: id,
+        });
     } catch (error) {
       Alert.alert("Error", "Could not place order.");
     }

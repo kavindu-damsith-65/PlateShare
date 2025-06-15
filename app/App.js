@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { TailwindProvider } from "tailwindcss-react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider } from "react-redux";
+import { StripeProvider } from '@stripe/stripe-react-native';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, ActivityIndicator, Platform } from 'react-native';
@@ -22,10 +23,11 @@ import SellerDonationForm from "./screens/Seller/SellerDonationForm";
 import SearchScreen from "./screens/Buyer/SearchScreen";
 import CategoryResultsScreen from "./screens/Buyer/CategoryResultsScreen";
 import SearchResultsScreen from "./screens/Buyer/SearchResultsScreen";
+import CheckoutScreen from "./screens/Buyer/CheckoutScreen";
 
 const Stack = createNativeStackNavigator();
 
-function App(){
+function App() {
     const [isProfileVisible, setProfileVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userRole, setUserRole] = useState(null);
@@ -60,6 +62,9 @@ function App(){
         <NavigationContainer>
             <Provider store={store}>
                 <TailwindProvider platform={Platform.OS}>
+                    <StripeProvider
+                    publishableKey={process.env.STRIPE_PUBLISHABLE_KEY}
+                    >
                     <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'BuyerDashboard' : userRole === 'seller' ? 'SellerDashboard' : 'OrganizationDashboard') : 'Login'}>
                         <Stack.Screen
                             name="Login"
@@ -107,6 +112,11 @@ function App(){
                             }}
                         />
                         <Stack.Screen
+                            name="Checkout"
+                            component={CheckoutScreen}
+                            options={{ headerShown: true, title: 'Payment' }}
+                        />
+                        <Stack.Screen
                             name="Prepare"
                             component={PreparingScreen}
                             options={{
@@ -150,6 +160,7 @@ function App(){
                             options={{ headerShown: false }}
                         />
                     </Stack.Navigator>
+                    </StripeProvider>
                 </TailwindProvider>
             </Provider>
         </NavigationContainer>

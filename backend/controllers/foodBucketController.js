@@ -11,7 +11,7 @@ exports.addToFoodBucket = async (req, res) => {
         // Find or create the user's food bucket
         let foodBucket = await FoodBucket.findOne({ where: { user_id } });
         if (!foodBucket) {
-            foodBucket = await FoodBucket.create({ user_id });
+            foodBucket = await FoodBucket.create({ user_id, status: 1 });
         }
 
         // Check if product already exists in the bucket
@@ -29,8 +29,7 @@ exports.addToFoodBucket = async (req, res) => {
                 quantity: amount
             });
         }
-
-        return res.status(200).json({ message: "Item added to cart", item: bucketProduct });
+        return res.status(200).json({ message: "Item added to cart", item: foodBucket });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
@@ -96,5 +95,27 @@ exports.deleteFoodBucketItem = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });
+    }
+};
+
+exports.getFoodBucketByUserIdAndStatus = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const foodBucket = await FoodBucket.findOne({
+            where: { user_id: user_id, status: 1 },
+            include: [{
+                model: Product,
+                through: { attributes: ['quantity'] }
+            }]
+        });
+
+        if (!foodBucket) {
+            return res.status(404).json({ message: 'Food bucket not found' });
+        }
+
+        res.json(foodBucket);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
