@@ -27,20 +27,36 @@ exports.createPaymentIntent = async (req, res) => {
 
         // Create Payment Intent
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(totalAmount * 100), // Convert to cents
+            amount: Math.round(totalAmount * 100),
             currency: 'lkr',
             metadata: {
-                foodBucketId: foodBucket.id,
-                userId: foodBucket.user_id
+            id: id,
+            userId: user_id
             },
             automatic_payment_methods: {
-                enabled: true,
+            enabled: true,
             },
-        });
-
-        res.json({
+        });res.json({
             clientSecret: paymentIntent.client_secret,
-            amount: totalAmount
+            amount: totalAmount,
+            foodBucket: {
+                id: foodBucket.id,
+                user_id: foodBucket.user_id,
+                restaurant_id: foodBucket.restaurant_id,
+                total_price: totalAmount,
+                status: foodBucket.status,
+                createdAt: foodBucket.createdAt,
+                products: foodBucket.products.map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    description: product.description,
+                    price: parseFloat(product.price),
+                    image: product.image,
+                    category: product.category,
+                    quantity: product.food_bucket_product.quantity,
+                    subtotal: parseFloat(product.price) * product.food_bucket_product.quantity
+                }))
+            }
         });
     } catch (error) {
         console.error('Payment Intent error:', error);

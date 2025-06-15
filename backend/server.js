@@ -16,8 +16,10 @@ const foodBucketRoutes = require("./routes/foodBucketRoutes");
 const donationRoutes = require("./routes/donationRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const webhookRoutes = require("./routes/webHookRoutes");
 
 const app = express();
+app.use("/api/webhook", webhookRoutes);
 app.use(cors());
 app.use(express.json());
 

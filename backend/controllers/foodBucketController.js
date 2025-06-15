@@ -9,7 +9,7 @@ exports.addToFoodBucket = async (req, res) => {
         }
 
         // Find or create the user's food bucket
-        let foodBucket = await FoodBucket.findOne({ where: { user_id } });
+        let foodBucket = await FoodBucket.findOne({ where: { user_id, status: 1 } });
         if (!foodBucket) {
             foodBucket = await FoodBucket.create({ user_id, status: 1 });
         }
