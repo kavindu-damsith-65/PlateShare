@@ -28,13 +28,13 @@ app.use("/api/orghistory", organisationHistoryRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-sequelize.sync({ alter: true }).then(() => {
-    console.log("Database connected and synced (altered)");
-    app.listen(process.env.PORT, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
-    });
-});
-
-// app.listen(process.env.PORT, () => {
-//     console.log(`Server running on port ${process.env.PORT}`);
+// sequelize.sync({ alter: true }).then(() => {
+//     console.log("Database connected and synced (altered)");
+//     app.listen(process.env.PORT, () => {
+//         console.log(`Server running on port ${process.env.PORT}`);
+//     });
 // });
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+});
