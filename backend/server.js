@@ -15,7 +15,11 @@ const organisationDashboardRoutes = require("./routes/organisationDashboardRoute
 const foodBucketRoutes = require("./routes/foodBucketRoutes");
 const donationRoutes = require("./routes/donationRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const webhookRoutes = require("./routes/webHookRoutes");
+
 const app = express();
+app.use("/api/webhook", webhookRoutes);
 app.use(cors());
 app.use(express.json());
 
@@ -32,6 +36,7 @@ app.use("/api/orgdash", organisationDashboardRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/foodbucket", foodBucketRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payment", paymentRoutes);
 
 sequelize.sync().then(() => {
     console.log("Database connected and synced");

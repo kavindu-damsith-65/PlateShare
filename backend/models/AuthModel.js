@@ -146,11 +146,10 @@ const Admin = sequelize.define('admin', {
 // Food Bucket Model
 const FoodBucket = sequelize.define('food_bucket', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    user_id: { type: DataTypes.STRING },
+    user_id: { type: DataTypes.STRING, unique: true },
     status: { type: DataTypes.INTEGER },
-    price: { type: DataTypes.DECIMAL(5,2) },
+    price: { type: DataTypes.DECIMAL(5, 2) },
     restaurant_id: { type: DataTypes.STRING }
-
 });
 
 const FoodBucketProduct = sequelize.define('food_bucket_product', {

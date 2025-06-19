@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../../slices/restaurantSlice";
 import {
@@ -31,18 +31,31 @@ const BasketScreen = ({ navigation }) => {
   const axios = useAxios();
 
   const handlePlaceOrder = async () => {
-  try {
-    const user_id = "user_1";
-    
-    // Group items by their IDs and count quantities
-    const basketItems = Object.entries(groupItemsBasket).map(([id, items]) => ({
-      product_id: id,
-      quantity: items.length
-    }));
-    
-    if (basketItems.length === 0) {
-      Alert.alert("Error", "Your basket is empty");
-      return;
+    try {
+      const user_id = "user_1";
+      const itemMap = {};
+      items.forEach((item) => {
+        if (!itemMap[item.id]) {
+          itemMap[item.id] = 1;
+        } else {
+          itemMap[item.id]++;
+        }
+      });
+      let res = {};
+      for (const [product_id, amount] of Object.entries(itemMap)) {
+        res = await axios.post("/api/foodbucket/add", {
+          user_id,
+          product_id,
+          amount,
+        });
+      }
+      const id = res.data.item.id;
+      navigation.navigate('Checkout', {
+          user_id: user_id,
+          id: id,
+        });
+    } catch (error) {
+      Alert.alert("Error", "Could not place order.");
     }
     
     await axios.post("/api/foodbucket/add", {
