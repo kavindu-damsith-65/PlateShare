@@ -67,7 +67,7 @@ function App() {
             <Provider store={store}>
                 <TailwindProvider platform={Platform.OS}>
                     <StripeProvider
-                    publishableKey={process.env.STRIPE_PUBLISHABLE_KEY}
+                    publishableKey={process.env.STRIPE_PUBLISHABLE_KEY || "pk_test_51PTpvf09I3fN7mCT7vXxyWe679a3SVfurihlsN1HlkS3WPffQW9uKyvmRnXv5xyyikN9TFMkFsYUyUjDYKOAzclw003rvNg99T"}
                     >
                     <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'BuyerDashboard' : userRole === 'seller' ? 'SellerDashboard' : userRole === 'delivery' ? 'DeliveryDashboard' : 'OrganizationDashboard') : 'Login'}>
                         <Stack.Screen
