@@ -40,13 +40,13 @@ app.use("/api/foodbucket", foodBucketRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 
-// sequelize.sync({ alter: true }).then(() => {
-//     console.log("Database connected and synced (altered)");
-//     app.listen(process.env.PORT, () => {
-//         console.log(`Server running on port ${process.env.PORT}`);
-//     });
-// });
-
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`);
+sequelize.sync({ alter: true }).then(() => {
+    console.log("Database connected and synced (altered)");
+    app.listen(process.env.PORT, () => {
+        console.log(`Server running on port ${process.env.PORT}`);
+    });
 });
+
+// app.listen(process.env.PORT, () => {
+//     console.log(`Server running on port ${process.env.PORT}`);
+// });

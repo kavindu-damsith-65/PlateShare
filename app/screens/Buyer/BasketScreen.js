@@ -57,20 +57,7 @@ const BasketScreen = ({ navigation }) => {
     } catch (error) {
       Alert.alert("Error", "Could not place order.");
     }
-    
-    await axios.post("/api/foodbucket/add", {
-      user_id,
-      restaurant_id: restaurant.id,
-      items: basketItems,
-      total_price: basketTotal
-    });
-    
-    navigation.navigate("Prepare");
-  } catch (error) {
-    console.error("Order error:", error);
-    Alert.alert("Error", "Could not place order.");
-  }
-};
+  };
 
   useMemo(() => {
     const groupedItems = items.reduce((results, item) => {

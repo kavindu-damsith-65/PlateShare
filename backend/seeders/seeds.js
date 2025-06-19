@@ -58,7 +58,8 @@ module.exports = {
         }));
 
     await queryInterface.bulkInsert('seller_details', sellers);
-
+      
+      
       const restaurants = sellers.map((seller, index) => ({
           id: `restaurant_${seller.user_id}`, // Only one restaurant per seller
           name: `Restaurant ${index + 1}`,
@@ -252,7 +253,6 @@ module.exports = {
               updatedAt: new Date(),
           },
       ]);
-
     await queryInterface.bulkInsert('sub_products', subProducts);
 
       const productSubProducts = [];
@@ -355,6 +355,7 @@ module.exports = {
     });
 
     await queryInterface.bulkInsert('donations', donations);
+
   },
 
   async down(queryInterface, Sequelize) {
