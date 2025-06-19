@@ -1,7 +1,7 @@
 const { FoodBucket, Product, FoodBucketProduct } = require("../models/AuthModel");
 
-// Add item to food bucket (cart)
-exports.addToFoodBucket = async (req, res) => {
+//  Place an order by creating a food bucket (cart)
+exports.placeOrder = async (req, res) => {
     try {
         const { user_id, product_id, amount } = req.body;
         if (!user_id || !product_id || !amount) {
@@ -14,9 +14,11 @@ exports.addToFoodBucket = async (req, res) => {
             foodBucket = await FoodBucket.create({ user_id, status: 1 });
         }
 
-        // Check if product already exists in the bucket
-        let bucketProduct = await FoodBucketProduct.findOne({
-            where: { food_bucket_id: foodBucket.id, product_id }
+        const foodBucket = await FoodBucket.create({ 
+            user_id,
+            restaurant_id,
+            status: 0, // active/cart status
+            price: total_price || 0 
         });
 
         if (bucketProduct) {
@@ -31,8 +33,8 @@ exports.addToFoodBucket = async (req, res) => {
         }
         return res.status(200).json({ message: "Item added to cart", item: foodBucket });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
+        console.error("Error creating food bucket:", error);
+        return res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 
@@ -44,7 +46,7 @@ exports.getFoodBucketByUser = async (req, res) => {
             return res.status(400).json({ message: "user_id is required" });
         }
 
-        const foodBucket = await FoodBucket.findOne({
+        const foodBuckets = await FoodBucket.findAll({
             where: { user_id },
             include: [{
                 model: Product,
@@ -52,46 +54,27 @@ exports.getFoodBucketByUser = async (req, res) => {
             }]
         });
 
-        if (!foodBucket) {
+        if (!foodBuckets || foodBuckets.length === 0) {
             return res.status(200).json({ items: [] });
         }
 
-        // Format response to include quantity
-        const items = foodBucket.products.map(product => ({
-            ...product.toJSON(),
-            quantity: product.food_bucket_product.quantity
-        }));
-
-        return res.status(200).json({ items });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
-    }
-};
-
-// Delete an item from user's food bucket (cart)
-exports.deleteFoodBucketItem = async (req, res) => {
-    try {
-        const { user_id, product_id } = req.params;
-        if (!user_id || !product_id) {
-            return res.status(400).json({ message: "user_id and product_id are required" });
-        }
-
-        const foodBucket = await FoodBucket.findOne({ where: { user_id } });
-        if (!foodBucket) {
-            return res.status(404).json({ message: "Food bucket not found" });
-        }
-
-        const bucketProduct = await FoodBucketProduct.findOne({
-            where: { food_bucket_id: foodBucket.id, product_id }
+        // Format response to include all buckets with their products
+        const buckets = foodBuckets.map(bucket => {
+            const items = bucket.products.map(product => ({
+                ...product.toJSON(),
+                quantity: product.food_bucket_product.quantity
+            }));
+            
+            return {
+                id: bucket.id,
+                restaurant_id: bucket.restaurant_id,
+                status: bucket.status,
+                price: bucket.price,
+                items
+            };
         });
 
-        if (!bucketProduct) {
-            return res.status(404).json({ message: "Item not found in cart" });
-        }
-
-        await bucketProduct.destroy();
-        return res.status(200).json({ message: "Item removed from cart" });
+        return res.status(200).json({ buckets });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error" });

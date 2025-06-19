@@ -17,6 +17,7 @@ import LoginScreen from "./screens/LoginScreen";
 import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import SellerTabs from "./screens/Seller/SellerTabs";
+import DeliveryTabs from "./screens/Delivery/DeliveryTabs";
 import RequestDetails from "./screens/organisation/RequestDetails";
 import SellerRequestDetails from "./screens/Seller/SellerRequestDetails";
 import SellerDonationForm from "./screens/Seller/SellerDonationForm";
@@ -65,7 +66,7 @@ function App() {
                     <StripeProvider
                     publishableKey={process.env.STRIPE_PUBLISHABLE_KEY}
                     >
-                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'BuyerDashboard' : userRole === 'seller' ? 'SellerDashboard' : 'OrganizationDashboard') : 'Login'}>
+                    <Stack.Navigator initialRouteName={userRole ? (userRole === 'buyer' ? 'BuyerDashboard' : userRole === 'seller' ? 'SellerDashboard' : userRole === 'delivery' ? 'DeliveryDashboard' : 'OrganizationDashboard') : 'Login'}>
                         <Stack.Screen
                             name="Login"
                             component={LoginScreen}
@@ -84,6 +85,11 @@ function App() {
                         <Stack.Screen
                             name="SellerDashboard"
                             component={SellerTabs}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="DeliveryDashboard"
+                            component={DeliveryTabs}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen

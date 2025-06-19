@@ -3,7 +3,7 @@ const { addToFoodBucket, getFoodBucketByUser, deleteFoodBucketItem, getFoodBucke
 
 const router = express.Router();
 
-router.post("/add", addToFoodBucket); 
+router.post("/add", placeOrder); 
 router.get("/:user_id", getFoodBucketByUser);
 router.get("/ordered/:user_id", getFoodBucketByUserIdAndStatus);
 router.delete("/:user_id/:product_id", deleteFoodBucketItem);
