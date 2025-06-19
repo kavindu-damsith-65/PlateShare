@@ -4,6 +4,7 @@ const sequelize = require("../config/db");
 // User Model
 const User = sequelize.define('user', {
     id: { type: DataTypes.STRING, primaryKey: true },
+    email: { type: DataTypes.STRING },
     name: { type: DataTypes.STRING },
     role: { type: DataTypes.STRING, defaultValue: 'user' },
     profile_picture: { type: DataTypes.STRING, allowNull: true },
@@ -30,6 +31,9 @@ const SellerDetails = sequelize.define('seller_details', {
     offers_delivery: { type: DataTypes.BOOLEAN, defaultValue: false },
     delivery_fee: { type: DataTypes.DECIMAL(5, 2), defaultValue: 0.00 },
     min_order_for_delivery: { type: DataTypes.DECIMAL(6, 2), defaultValue: 0.00 },
+    createdAt: { type: DataTypes.DATE },
+    description: { type: DataTypes.STRING },
+    additional_images: { type: DataTypes.STRING },
 });
 
 // Organization Details Model
@@ -41,6 +45,7 @@ const OrgDetails = sequelize.define('org_details', {
     location: { type: DataTypes.STRING },
     description: { type: DataTypes.STRING },
     additional_images: { type: DataTypes.STRING },
+    createdAt: { type: DataTypes.DATE }
 });
 
 // Delivery Details Model

@@ -13,7 +13,7 @@ import PreparingScreen from "./screens/PreparingScreen";
 import DeliveryScreen from "./screens/DeliveryScreen";
 import AllRestaurantsScreen from "./screens/Buyer/AllRestaurantsScreen";
 import AllNearbyFoodsScreen from "./screens/Buyer/AllNearbyFoodsScreen";
-import LoginScreen from "./screens/LoginScreen";
+import LoginScreen from "./screens/Auth/LoginScreen";
 import BuyerTabs from "./screens/Buyer/BuyerTabs";
 import OrganizationTabs from "./screens/organisation/OrganizationTabs";
 import SellerTabs from "./screens/Seller/SellerTabs";
@@ -25,6 +25,8 @@ import SearchScreen from "./screens/Buyer/SearchScreen";
 import CategoryResultsScreen from "./screens/Buyer/CategoryResultsScreen";
 import SearchResultsScreen from "./screens/Buyer/SearchResultsScreen";
 import CheckoutScreen from "./screens/Buyer/CheckoutScreen";
+import SignupScreen from "./screens/Auth/SignupScreen";
+import ForgotPassScreen from "./screens/Auth/ForgotPassScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,8 +40,9 @@ function App() {
         const checkUserRole = async () => {
             try {
                 const role = await AsyncStorage.getItem('userRole');
-                setUserRole(role);
-                setIsLoggedIn(!!role);
+
+                // setUserRole(role);
+                // setIsLoggedIn(!!role);
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error checking user role:', error);
@@ -70,6 +73,17 @@ function App() {
                         <Stack.Screen
                             name="Login"
                             component={LoginScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Signup"
+                            component={SignupScreen}
+                            options={{ headerShown: false }}
+                        />
+
+                        <Stack.Screen
+                            name="ForgotPassword"
+                            component={ForgotPassScreen}
                             options={{ headerShown: false }}
                         />
                         <Stack.Screen

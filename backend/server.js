@@ -18,6 +18,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const webhookRoutes = require("./routes/webHookRoutes");
 
+
 const app = express();
 app.use("/api/webhook", webhookRoutes);
 app.use(cors());
@@ -33,14 +34,19 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/orgrequests", organisationRequestsRoutes);
 app.use("/api/orghistory", organisationHistoryRoutes);
 app.use("/api/orgdash", organisationDashboardRoutes);
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/api/foodbucket", foodBucketRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 
-sequelize.sync().then(() => {
-    console.log("Database connected and synced");
-    app.listen(process.env.PORT, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
-    });
+// sequelize.sync({ alter: true }).then(() => {
+//     console.log("Database connected and synced (altered)");
+//     app.listen(process.env.PORT, () => {
+//         console.log(`Server running on port ${process.env.PORT}`);
+//     });
+// });
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
 });
